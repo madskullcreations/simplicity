@@ -1,0 +1,2 @@
+# simplicity
+Website made simple!
