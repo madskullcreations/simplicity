@@ -52,8 +52,8 @@ class InstallerSimplicity
     //    scss
     //    test
     //    ...also ignore files in root. 
-
-// TODO: composer.json-filen bör implementera scripts/post-update-cmd, så att jag kan dra ner senaste versionen av alla grejer och att de då flyttas på plats. (https://getcomposer.org/doc/articles/scripts.md)
+    // 
+    // https://getcomposer.org/doc/articles/scripts.md
 
     $io = $event->getIO();
 
@@ -73,6 +73,8 @@ class InstallerSimplicity
     $dest = $rootDir."/webroot/js/zurb/";
     static::xcopy($source, $dest);
     $io->write('Copied Zurb js files from "'.$source.'" to "'.$dest.'".');
+    
+    $io->write('Finished Simplicity file copying.');
   }
 
   /**
