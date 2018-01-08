@@ -8,8 +8,6 @@
 
 # Simplicity specific files #
 #############################
-/webroot/.htaccess
-.htaccess
 web.config
 
 # OS generated files #
