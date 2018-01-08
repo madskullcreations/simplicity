@@ -124,7 +124,7 @@ class InstallerSimplicity
 // TEST
         $source = $rootDir."/vendor/zurb/foundation/dist/css/";
         $dest = $rootDir."/webroot/css/";
-        xcopy($source, $dest);
+        static::xcopy($source, $dest);
         
         static::createAppConfig($rootDir, $io);
         static::createWritableDirectories($rootDir, $io);
