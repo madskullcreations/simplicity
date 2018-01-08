@@ -75,14 +75,19 @@ class InstallerSimplicity
 
         $io = $event->getIO();
 
+        // We are currently in src/Console folder, but need the root folder of the project.
         $rootDir = dirname(dirname(__DIR__));
 
-// TEST
-$io->write('__DIR__: '.__DIR__);
-$io->write('rootDir: '.$rootDir);
+        // $io->write('__DIR__: '.__DIR__);
+        // $io->write('rootDir: '.$rootDir);
 
+        // Copy the zurb css and js folder to where it belongs.
         $source = $rootDir."/vendor/zurb/foundation/dist/css/";
-        $dest = $rootDir."/webroot/css/";
+        $dest = $rootDir."/webroot/css/zurb/";
+        static::xcopy($source, $dest);
+
+        $source = $rootDir."/vendor/zurb/foundation/dist/js/";
+        $dest = $rootDir."/webroot/js/zurb/";
         static::xcopy($source, $dest);
         
         static::createAppConfig($rootDir, $io);
