@@ -1,4 +1,14 @@
 <?php
+/**
+ * Simplicity (https://github.com/madskullcreations/simplicity)
+ * Copyright (c) Madskull Creations (https://madskullcreations.com)
+ * 
+ * Licensed under the MIT license.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ * 
+ */
+ 
 namespace App\Model\Table;
 
 use Cake\ORM\Table;

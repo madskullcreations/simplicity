@@ -1,13 +1,14 @@
 <?php
 /**
- * Simplicity (https://github.com/Snorvarg/simplicity)
- * Copyright (c) Jon Lennryd (http://jonlennryd.madskullcreations.com)
- *
- * Licensed under The MIT License
+ * Simplicity (https://github.com/madskullcreations/simplicity)
+ * Copyright (c) Madskull Creations (https://madskullcreations.com)
+ * 
+ * Licensed under the MIT license.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
- *
+ * 
  */
+ 
 namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
