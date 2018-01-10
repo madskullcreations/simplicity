@@ -17,7 +17,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
-
+use Cake\Core\Configure; // Ta bort?
 
 /**
  * Application Controller
@@ -50,10 +50,10 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-
+        
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-
+        
         $kitchenSink = TableRegistry::get('KitchenSink');
         
         // Try get the chosen language as an url param, namely '?lang=SV-se'. 
@@ -63,22 +63,22 @@ class AppController extends Controller
         
         if(AppController::$selectedLanguage == null)
         {
-        	// No language found from url. Fetch default language.
-        	// Set default language to your like, but make sure it is present in table languages, i18n.
-        	// 
-        	AppController::$selectedLanguage = $kitchenSink->Retrieve('SimplicityDefaultLanguage', 'sv_SE');
+          // No language found from url. Fetch default language.
+          // Set default language to your like, but make sure it is present in table languages, i18n.
+          // 
+          AppController::$selectedLanguage = $kitchenSink->Retrieve('SimplicityDefaultLanguage', 'sv_SE');
         }
         
         // Fetch some site-global settings from the kitchen sink.
         AppController::$simplicity_site_title = $kitchenSink->Retrieve('SimplicitySiteTitle', 'Aurora Rizo Lopez');//Simplicity CMS');
         AppController::$simplicity_site_description = $kitchenSink->Retrieve(
-        		'SimplicitySiteDescription', 'Master in Business administration');
+            'SimplicitySiteDescription', 'Master in Business administration');
         AppController::$simplicity_footer_text = $kitchenSink->Retrieve(
-        		'SimplicityFooterText', 'Simplicity CMS - Simple. Simple. Simple. | Powered by CakePHP and Zurb Foundation | A Madskull Creations product');
+            'SimplicityFooterText', 'Simplicity CMS - Simple. Simple. Simple. | Powered by CakePHP and Zurb Foundation | A Madskull Creations product');
         
         // To make it available from views as well. TODO: Call function from view, as in cakephp2? 
         $this->set('userIsAdmin', AppController::UserIsAdmin());
-        	        
+                  
         // TESTING
         $languages = TableRegistry::get('Languages');
         // $variants = $languages->GetVariants('en');

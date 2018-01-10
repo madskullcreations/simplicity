@@ -170,6 +170,8 @@ class Installer
         $changePerms($dir . '/logs', $worldWritable, $io);
     }
 
+// TODO: När InstallerController fungerar, anropa denna då. Modifiera också detta scriptet så det inte sätter saltet. 
+//  <--Du drar ju ner cakephp/cakephp i composer.json, medan DENNA filen är simplicitys! (Sluta missförstå)
     /**
      * Set the security.salt value in the application's config file.
      *

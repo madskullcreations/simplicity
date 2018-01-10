@@ -79,6 +79,20 @@ try {
  */
 //Configure::load('app_local', 'default');
 
+/* During setup of Simplicity, there are still no database connection. During setup, disable Type among other things, 
+ * which will try to use database and fail.
+ * 
+ * Values on $simplicity_setup_state:
+ * 1 - First time setup, no database connection.
+ * 2 - Database connection available.
+ * 3 - User admin created. (This is also the final value)
+ * 
+ */
+if (Configure::check('simplicity_setup_state') == false) {
+  Configure::write('simplicity_setup_state', 1);
+}
+$simplicity_setup_state = Configure::read('simplicity_setup_state');
+
 /*
  * When debug = true the metadata cache should only last
  * for a short time.
@@ -178,14 +192,17 @@ ServerRequest::addDetector('tablet', function ($request) {
  * locale specific date formats. For details see
  * @link https://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
  */
-Type::build('time')
-    ->useImmutable();
-Type::build('date')
-    ->useImmutable();
-Type::build('datetime')
-    ->useImmutable();
-Type::build('timestamp')
-    ->useImmutable();
+if($simplicity_setup_state > 1)
+{
+  Type::build('time')
+      ->useImmutable();
+  Type::build('date')
+      ->useImmutable();
+  Type::build('datetime')
+      ->useImmutable();
+  Type::build('timestamp')
+      ->useImmutable();
+}
 
 /*
  * Custom Inflector rules, can be set to correctly pluralize or singularize
@@ -211,6 +228,6 @@ Type::build('timestamp')
  * Only try to load DebugKit in development mode
  * Debug Kit should not be installed on a production system
  */
-if (Configure::read('debug')) {
+if ($simplicity_setup_state > 1 && Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
 }

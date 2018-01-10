@@ -22,6 +22,7 @@ use Cake\Core\Plugin;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\Routing\Route\DashedRoute;
+use Cake\Core\Configure;
 
 /**
  * The default class to use for all routes
@@ -43,59 +44,71 @@ use Cake\Routing\Route\DashedRoute;
  */
 Router::defaultRouteClass(DashedRoute::class);
 
-Router::scope('/', function (RouteBuilder $routes) {
-    /**
-     * Here, we are connecting '/' (base path) to a controller called 'EditablePages',
-     * its action called 'display', and we pass a param to select what page to view. 
-     */
-    $routes->connect('/', ['controller' => 'EditablePages', 'action' => 'display', 'home']);
+$simplicity_setup_state = Configure::read('simplicity_setup_state');
 
-    /**
-     * The /pages/edit is reserved for editing pages.
-     */
-    $routes->connect('/pages/edit/*', ['controller' => 'EditablePages', 'action' => 'edit']);
+if($simplicity_setup_state > 1)
+{
+  Router::scope('/', function (RouteBuilder $routes) {
+      /**
+       * Here, we are connecting '/' (base path) to a controller called 'EditablePages',
+       * its action called 'display', and we pass a param to select what page to view. 
+       */
+      $routes->connect('/', ['controller' => 'EditablePages', 'action' => 'display', 'home']);
 
-    /**
-     * ..the /pages/delete is reserved for deleting pages.
-     */
-    $routes->connect('/pages/delete/*', ['controller' => 'EditablePages', 'action' => 'delete']);
+      /**
+       * The /pages/edit is reserved for editing pages.
+       */
+      $routes->connect('/pages/edit/*', ['controller' => 'EditablePages', 'action' => 'edit']);
 
-    /**
-     * ..the simplicity_settings/edit is reserved as well.
-     */
-    $routes->connect('/simplicity_settings/edit', ['controller' => 'SimplicitySettings', 'action' => 'edit']);
-    
-    /**
-     * ..and connect all other pages to the 'EditablePages' controller. 
-     */
-    $routes->connect('/*', ['controller' => 'EditablePages', 'action' => 'display']);
-    
-    /**
-     * ...and connect the rest of 'EditablePages' controller's URLs.
-     */
-    // $routes->connect('/pages/*', ['controller' => 'EditablePages', 'action' => 'display']);
+      /**
+       * ..the /pages/delete is reserved for deleting pages.
+       */
+      $routes->connect('/pages/delete/*', ['controller' => 'EditablePages', 'action' => 'delete']);
 
-    /**
-     * Connect catchall routes for all controllers.
-     *
-     * Using the argument `DashedRoute`, the `fallbacks` method is a shortcut for
-     *    `$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'DashedRoute']);`
-     *    `$routes->connect('/:controller/:action/*', [], ['routeClass' => 'DashedRoute']);`
-     *
-     * Any route class can be used with this method, such as:
-     * - DashedRoute
-     * - InflectedRoute
-     * - Route
-     * - Or your own route class
-     *
-     * You can remove these routes once you've connected the
-     * routes you want in your application.
-     */
-    $routes->fallbacks(DashedRoute::class);
-});
+      /**
+       * ..the simplicity_settings/edit is reserved as well.
+       */
+      $routes->connect('/simplicity_settings/edit', ['controller' => 'SimplicitySettings', 'action' => 'edit']);
+      
+      /**
+       * ..and connect all other pages to the 'EditablePages' controller. 
+       */
+      $routes->connect('/*', ['controller' => 'EditablePages', 'action' => 'display']);
+      
+      /**
+       * ...and connect the rest of 'EditablePages' controller's URLs.
+       */
+      // $routes->connect('/pages/*', ['controller' => 'EditablePages', 'action' => 'display']);
 
-/**
- * Load all plugin routes. See the Plugin documentation on
- * how to customize the loading of plugin routes.
- */
-Plugin::routes();
+      /**
+       * Connect catchall routes for all controllers.
+       *
+       * Using the argument `DashedRoute`, the `fallbacks` method is a shortcut for
+       *    `$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'DashedRoute']);`
+       *    `$routes->connect('/:controller/:action/*', [], ['routeClass' => 'DashedRoute']);`
+       *
+       * Any route class can be used with this method, such as:
+       * - DashedRoute
+       * - InflectedRoute
+       * - Route
+       * - Or your own route class
+       *
+       * You can remove these routes once you've connected the
+       * routes you want in your application.
+       */
+      $routes->fallbacks(DashedRoute::class);
+  });
+
+  /**
+   * Load all plugin routes. See the Plugin documentation on
+   * how to customize the loading of plugin routes.
+   */
+  Plugin::routes();
+}
+else
+{
+  Router::scope('/', function (RouteBuilder $routes) {
+    // During installation, user are always redirected to the installer.
+    $routes->connect('/*', ['controller' => 'Installer', 'action' => 'index']);
+  });
+}
