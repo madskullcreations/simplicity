@@ -74,6 +74,17 @@ class InstallerSimplicity
     static::xcopy($source, $dest);
     $io->write('Copied Zurb js files from "'.$source.'" to "'.$dest.'".');
     
+    // Copy the jquery files.
+    $source = $rootDir."/vendor/components/jquery/jquery.min.js";
+    $dest = $rootDir."/webroot/js/jquery.min.js";
+    static::xcopy($source, $dest);
+    $io->write('Copied jQuery js file from "'.$source.'" to "'.$dest.'".');
+    
+    $source = $rootDir."/vendor/components/jquery/jquery.js";
+    $dest = $rootDir."/webroot/js/jquery.js";
+    static::xcopy($source, $dest);
+    $io->write('Copied jQuery js file from "'.$source.'" to "'.$dest.'".');
+
     $io->write('Finished Simplicity file copying.');
   }
 
