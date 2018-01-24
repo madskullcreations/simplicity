@@ -229,11 +229,11 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'my_app',
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
+            'username' => '__DB_USERNAME__',
+            'password' => '__DB_PASSWORD__',
+            'database' => '__DB_DATABASENAME__',
+            'encoding' => '__DB_ENCODING__', // utf8
+            'timezone' => '__DB_TIMEZONE__', // UTC
             'flags' => [],
             'cacheMetadata' => true,
             'log' => false,
@@ -269,11 +269,11 @@ return [
             'persistent' => false,
             'host' => 'localhost',
             //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'test_myapp',
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
+            'username' => '__DB_USERNAME__',
+            'password' => '__DB_PASSWORD__',
+            'database' => 'test___DB_DATABASENAME__',
+            'encoding' => '__DB_ENCODING__',
+            'timezone' => '__DB_TIMEZONE__',
             'cacheMetadata' => true,
             'quoteIdentifiers' => false,
             'log' => false,

@@ -231,6 +231,36 @@ class CategoriesTable extends Table
 		return $path;
 	}
 
+  /**
+   * Create the table in the database.
+   */
+	public function CreateTable($connection)
+  {
+    $connection->execute("
+      CREATE TABLE `categories` (
+      `id` INT(10) NOT NULL AUTO_INCREMENT,
+      `parent_id` INT(10) NULL,
+      `lft` INT(10) NOT NULL,
+      `rght` INT(10) NOT NULL,
+      `level` INT(10) NOT NULL,
+      `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
+      `name` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
+      `created` DATETIME NULL,
+      `modified` DATETIME NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `uk_parent_id_name` (`parent_id`, `name`) 
+      )
+      COLLATE='utf8_unicode_ci'
+      ENGINE=InnoDB
+      ROW_FORMAT=COMPACT;          
+    ");
+
+    // TODO: UpdateTable() ? With some version parameter, so it can perform changes between versions.
+    // If you ever need to update an old database, this one works.
+    // $connection->execute("
+      // ALTER TABLE `categories` ADD `i18n` VARCHAR(12) NOT NULL DEFAULT 'sv_SE' COLLATE 'utf8_unicode_ci' AFTER `level`;
+    // ");
+  }
 
 	/* Tries to find the given category by its name and category.
 	 * Returns null if not found.
@@ -280,8 +310,7 @@ class CategoriesTable extends Table
 		
 		return $element;
 	}
-	
-	
+	  
 	// DONE: Använder Tree, som är en icke-rekursiv funktion för att skapa en trädstruktur i databasen. 
 	// 		Den kan med en enda query ta fram alla children för vilken del av trädet som helst. 
 	//    Med en annan query kan man lika enkelt ta fram 'path to a node', tex. red-roses ger plants/roses/red-roses.
@@ -304,24 +333,3 @@ class CategoriesTable extends Table
 	//    ..så min rekommendation för alla som vill använda mitt system är att ha samma url till samma sida, på
 	//    samtliga språk. 
 }
-
-/*
- ALTER TABLE `categories` ADD `i18n` VARCHAR(12) NOT NULL DEFAULT 'sv_SE' COLLATE 'utf8_unicode_ci' AFTER `level`;
- 
- CREATE TABLE `categories` (
- `id` INT(10) NOT NULL AUTO_INCREMENT,
- `parent_id` INT(10) NULL,
- `lft` INT(10) NOT NULL,
- `rght` INT(10) NOT NULL,
- `level` INT(10) NOT NULL,
- `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
- `name` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
- `created` DATETIME NULL,
- `modified` DATETIME NULL,
- PRIMARY KEY (`id`),
- UNIQUE KEY `uk_parent_id_name` (`parent_id`, `name`) 
- )
- COLLATE='utf8_unicode_ci'
- ENGINE=InnoDB
- ROW_FORMAT=COMPACT;
- */

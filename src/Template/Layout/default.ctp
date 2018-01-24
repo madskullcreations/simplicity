@@ -105,7 +105,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     
     
     <?php // Zurb Foundation js really have to be at the bottom of the html file, otherwise it wont initialize correctly. ?>
-		<?= $this->Html->script('zurb-foundation-6/vendor/jquery.min.js') ?>
+		<?= $this->Html->script('jquery.min.js') ?>
 		<?= $this->Html->script('zurb-foundation-6/vendor/what-input.min.js') ?>
 		<?= $this->Html->script('zurb-foundation-6/foundation.js') ?>
 		<?= $this->Html->script('zurb-foundation-6/app.js') ?>    

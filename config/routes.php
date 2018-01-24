@@ -45,7 +45,8 @@ use Cake\Core\Configure;
 Router::defaultRouteClass(DashedRoute::class);
 
 $simplicity_setup_state = Configure::read('simplicity_setup_state');
-
+debug($simplicity_setup_state);
+ 
 if($simplicity_setup_state > 1)
 {
   Router::scope('/', function (RouteBuilder $routes) {
@@ -55,6 +56,11 @@ if($simplicity_setup_state > 1)
        */
       $routes->connect('/', ['controller' => 'EditablePages', 'action' => 'display', 'home']);
 
+      /**
+       * The /installer/success is always ok.
+       */
+      $routes->connect('/installer/success', ['controller' => 'Installer', 'action' => 'success']);
+      
       /**
        * The /pages/edit is reserved for editing pages.
        */
@@ -108,6 +114,12 @@ if($simplicity_setup_state > 1)
 else
 {
   Router::scope('/', function (RouteBuilder $routes) {
+    
+    /**
+     * The /installer/success is always ok.
+     */
+    $routes->connect('/installer/success', ['controller' => 'Installer', 'action' => 'success']);
+    
     // During installation, user are always redirected to the installer.
     $routes->connect('/*', ['controller' => 'Installer', 'action' => 'index']);
   });

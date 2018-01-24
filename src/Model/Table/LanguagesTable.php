@@ -61,20 +61,26 @@ class LanguagesTable extends Table
 		
 		return $rows;
 	}
-}
-
-/*
- CREATE TABLE `languages` (
- `id` INT(10) NOT NULL AUTO_INCREMENT,
- `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
- `long_name` VARCHAR(64) NOT NULL COLLATE 'utf8_unicode_ci',
- PRIMARY KEY (`id`),
- UNIQUE KEY `uk_i18n` (`i18n`)
- )
- COLLATE='utf8_unicode_ci'
- ENGINE=InnoDB
- ROW_FORMAT=COMPACT;
- 
+  
+  /**
+   * Create the table in the database.
+   */
+	public function CreateTable($connection)
+  {
+    $connection->execute("
+      CREATE TABLE `languages` (
+      `id` INT(10) NOT NULL AUTO_INCREMENT,
+      `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
+      `long_name` VARCHAR(64) NOT NULL COLLATE 'utf8_unicode_ci',
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `uk_i18n` (`i18n`)
+      )
+      COLLATE='utf8_unicode_ci'
+      ENGINE=InnoDB
+      ROW_FORMAT=COMPACT;
+    ");
+    
+    $connection->execute("
 INSERT INTO languages 
 (i18n, long_name)
 VALUES
@@ -810,4 +816,6 @@ VALUES
 ('es', 'Spanish'),
 ('et', 'Estonian'),
 ('uk_UA', 'Ukrainian (Ukraine)');
- */
+    ");
+  }
+}

@@ -29,7 +29,7 @@ class KitchenSinkTable extends Table
 	{
 		$serialized = serialize($value);
 				
-		$element = $this->find()->where(['kitchen_key' => $key])->first();
+		$element = $this->find()->where(['KitchenSink.kitchen_key' => $key])->first();
 		// debug($element);
 		
 		if($element == null)
@@ -51,7 +51,7 @@ class KitchenSinkTable extends Table
 	 */
 	public function Retrieve($key, $default = null)
 	{
-		$element = $this->find()->where(['kitchen_key' => $key])->first();
+		$element = $this->find()->where(['KitchenSink.kitchen_key' => $key])->first();
 		
 		if($element == null)
 		{
@@ -70,26 +70,30 @@ class KitchenSinkTable extends Table
 	public function Forget($key)
 	{
 		$conditions = array(
-			'kitchen_key' => $key
+			'KitchenSink.kitchen_key' => $key
 		);
 				
 		$this->deleteAll($conditions);
 	}
+  
+  /**
+   * Create the table in the database.
+   */
+	public function CreateTable($connection)
+  {
+    $connection->execute("
+      CREATE TABLE `kitchen_sink` (
+        `id` INT(10) NOT NULL AUTO_INCREMENT,
+        `kitchen_key` VARCHAR(50) NOT NULL COLLATE 'utf8_unicode_ci',
+        `value` VARCHAR(4096) NOT NULL COLLATE 'utf8_unicode_ci',
+        PRIMARY KEY (`id`),
+        UNIQUE `u_kitchen_key` (`kitchen_key`)
+      )
+      COLLATE='utf8_unicode_ci'
+      ENGINE=InnoDB;
+    ");
+  }
 }
-
-/* 
-
-CREATE TABLE `kitchen_sink` (
-	`id` INT(10) NOT NULL AUTO_INCREMENT,
-	`kitchen_key` VARCHAR(50) NOT NULL COLLATE 'utf8_unicode_ci',
-	`value` VARCHAR(4096) NOT NULL COLLATE 'utf8_unicode_ci',
-	PRIMARY KEY (`id`),
-	UNIQUE `u_kitchen_key` (`kitchen_key`)
-)
-COLLATE='utf8_unicode_ci'
-ENGINE=InnoDB;
-
-*/
 
 /*
 

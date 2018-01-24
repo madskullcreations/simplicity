@@ -84,13 +84,23 @@ try {
  * 
  * Values on $simplicity_setup_state:
  * 1 - First time setup, no database connection.
- * 2 - Database connection available.
- * 3 - User admin created. (This is also the final value)
+ * 2 - Setup complete, time to show welcome-page.
+ * 3 - This is the final value.
  * 
  */
-if (Configure::check('simplicity_setup_state') == false) {
+$dbName = Configure::read('Datasources.default.database');
+if($dbName == '__DB_DATABASENAME__')
+{
+  // Database settings not yet given by user. 
   Configure::write('simplicity_setup_state', 1);
 }
+else
+{
+  // Database settings exist. Assume database connection works and continue.
+  // (AppController will check if simplicity_setup_state value exist in database, and if not, redirect to welcome-page)
+  Configure::write('simplicity_setup_state', 2);
+}
+
 $simplicity_setup_state = Configure::read('simplicity_setup_state');
 
 /*

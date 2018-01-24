@@ -208,6 +208,29 @@ class RichTextElementsTable extends Table
     return $element;
   }
   
+  /**
+   * Create the table in the database.
+   */
+	public function CreateTable($connection)
+  {
+    $connection->execute("
+CREATE TABLE `rich_text_elements` (
+	`id` INT(10) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
+  `category_id` INT(10) NULL,
+  `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
+  `content` MEDIUMTEXT NOT NULL COLLATE 'utf8_unicode_ci',
+	`created` DATETIME NULL,
+	`modified` DATETIME NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `uk_category_id_name_i18n` (`category_id`, `name`,`i18n`)
+)
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+ROW_FORMAT=COMPACT;
+    ");
+  }
+  
   /* Load and returns the element if it exists, otherwise returns null.
    * 
    */
@@ -235,20 +258,3 @@ class RichTextElementsTable extends Table
   	return $element;
   }
 }  
-
-/*
-CREATE TABLE `rich_text_elements` (
-	`id` INT(10) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
-  `category_id` INT(10) NULL,
-  `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
-  `content` MEDIUMTEXT NOT NULL COLLATE 'utf8_unicode_ci',
-	`created` DATETIME NULL,
-	`modified` DATETIME NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `uk_category_id_name_i18n` (`category_id`, `name`,`i18n`)
-)
-COLLATE='utf8_unicode_ci'
-ENGINE=InnoDB
-ROW_FORMAT=COMPACT;
-*/
