@@ -219,6 +219,9 @@ class InstallerController extends Controller
   {
     try
     {
+      $sessions = TableRegistry::get('SimplicitySessions');
+      $sessions->CreateTable($connection);
+      
       $categories = TableRegistry::get('Categories');
       $categories->CreateTable($connection);
 

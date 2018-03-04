@@ -45,7 +45,7 @@ use Cake\Core\Configure;
 Router::defaultRouteClass(DashedRoute::class);
 
 $simplicity_setup_state = Configure::read('simplicity_setup_state');
-debug($simplicity_setup_state);
+// debug($simplicity_setup_state);
  
 if($simplicity_setup_state > 1)
 {

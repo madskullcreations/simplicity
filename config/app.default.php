@@ -352,6 +352,16 @@ return [
      * To use database sessions, load the SQL file located at config/schema/sessions.sql
      */
     'Session' => [
-        'defaults' => 'php',
+        'defaults' => 'database',
+        'handler' => [
+            'engine' => 'DatabaseSession',
+            'model' => 'SimplicitySessions'
+        ],
+        'cookie' => 'SIMPLICITY',
+        
+        // Enable if you have both SSL and non-SSL mixed. 
+        // 'ini' => [
+        //   'session.cookie_secure' => false
+        // ]
     ],
 ];
