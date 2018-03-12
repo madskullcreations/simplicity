@@ -33,117 +33,117 @@ class EditablePagesController extends AppController
 		$this->categories = TableRegistry::get('Categories');
 		$this->richTextElements = TableRegistry::get('RichTextElements');
 	}
-	
-    /**
-     * Using the path as an identifier, it loads the content from database and tries to render a view 
-     * with the same name. If there is no view file (.ctp) with the given identifier, it renders the 
-     * default.cpt view file instead. 
-     * 
-     */
-    public function display()
+
+  /**
+   * Using the path as an identifier, it loads the content from database and tries to render a view 
+   * with the same name. If there is no view file (.ctp) with the given identifier, it renders the 
+   * default.cpt view file instead. 
+   * 
+   */
+  public function display()
+  {
+    $path = func_get_args();
+    //debug($path);
+    
+    $count = count($path);
+    if(!$count) 
     {
-			$path = func_get_args();
-			//debug($path);
-			
-			$count = count($path);
-			if(!$count) 
-			{
-				// Missing a path to use as identifier, just redirect home.
-				return $this->redirect('/');
-			}
-						
-			// The last element in path is always the page, all others are categories.
-			$categoryNames = $path;
-			$pageName = array_pop($categoryNames);			
-			
-			//debug($categoryNames);
-			//debug($pageName);
-			//debug(AppController::$selectedLanguage);
+      // Missing a path to use as identifier, just redirect home.
+      return $this->redirect('/');
+    }
+          
+    // The last element in path is always the page, all others are categories.
+    $categoryNames = $path;
+    $pageName = array_pop($categoryNames);			
+    
+    //debug($categoryNames);
+    //debug($pageName);
+    //debug(AppController::$selectedLanguage);
 
-			$language = AppController::$selectedLanguage;
-						
-			$createIfNotExist = false;
-			if(AppController::UserIsAdmin())
-			{
-				$createIfNotExist = true;
-			}
+    $language = AppController::$selectedLanguage;
+          
+    $createIfNotExist = false;
+    if($this->UserIsAdmin())
+    {
+      $createIfNotExist = true;
+    }
 
-			// If there are more parts of the url, lets make a category-tree out of it. 
-			if(count($categoryNames) > 0)
-			{
-				// Get the path, or null if it does not exist and is not allowed to create it. 
-	 			$lastCategory = $this->categories->GetPath($categoryNames, $language, true, $createIfNotExist);
-	 			// debug($lastCategory);
-				
-	 			if($lastCategory == null)
-	 			{
-	 				// The path does not exist, redirect home.
-	 				$this->Flash->error(__('Path does not exist.'));
-	 				return $this->redirect('/');
-	 			}
-	 			
-	 			$categoryId = $lastCategory->id;
-	 			$parentCategoryId = $lastCategory->parent_id;
-	 			$level = $lastCategory->level + 3;
-			}
-			else 
-			{
-				// This page is a root page, it has no parent category.
-				$categoryId = null;
-				$parentCategoryId = null;
-				$level = 2;
-			}
- 			
-			// Load the content of the current page.
-			$this->richTextElements = TableRegistry::get('RichTextElements');
-				
- 			$element = $this->richTextElements->GetElement(
- 					$pageName, $categoryId, $language, $createIfNotExist);
- 			// debug($element);
- 			
- 			if($element == null)
- 			{
- 				// Element did not exist and visitor was not allowed to create a page.
- 				$this->Flash->error(__('Page does not exist.'));
- 				return $this->redirect('/');
- 			}
- 			
- 			// Set the path so the Menu helper can use it to create the breadcrumb path correctly.
- 			$this->Menu->SetPathFor($element);
- 			// debug($element->path);
- 			
- 			$breadcrumbPath = $this->Menu->GetPath($categoryNames, $language);
- 			// debug($breadcrumbPath);
- 			
- 			// Get the menu tree with the root elements and their immediate children.
-  			$tree = $this->Menu->GetTree($parentCategoryId, $level, $language);
-	  		//	$tree = $this->Menu->GetTree(null, 20);
- 			// 			debug($tree);
- 			
- 			$homeTree = $this->Menu->GetTree(null, 5, $language); 			
- 			
- 			$this->set(compact('categoryNames', 'pageName', 'language', 'element', 'breadcrumbPath', 'tree', 'homeTree'));
+    // If there are more parts of the url, lets make a category-tree out of it. 
+    if(count($categoryNames) > 0)
+    {
+      // Get the path, or null if it does not exist and is not allowed to create it. 
+      $lastCategory = $this->categories->GetPath($categoryNames, $language, true, $createIfNotExist);
+      // debug($lastCategory);
+      
+      if($lastCategory == null)
+      {
+        // The path does not exist, redirect home.
+        $this->Flash->error(__('Path does not exist.'));
+        return $this->redirect('/');
+      }
+      
+      $categoryId = $lastCategory->id;
+      $parentCategoryId = $lastCategory->parent_id;
+      $level = $lastCategory->level + 3;
+    }
+    else 
+    {
+      // This page is a root page, it has no parent category.
+      $categoryId = null;
+      $parentCategoryId = null;
+      $level = 2;
+    }
+    
+    // Load the content of the current page.
+    $this->richTextElements = TableRegistry::get('RichTextElements');
+      
+    $element = $this->richTextElements->GetElement(
+        $pageName, $categoryId, $language, $createIfNotExist);
+    // debug($element);
+    
+    if($element == null)
+    {
+      // Element did not exist and visitor was not allowed to create a page.
+      $this->Flash->error(__('Page does not exist.'));
+      return $this->redirect('/');
+    }
+    
+    // Set the path so the Menu helper can use it to create the breadcrumb path correctly.
+    $this->Menu->SetPathFor($element);
+    // debug($element->path);
+    
+    $breadcrumbPath = $this->Menu->GetPath($categoryNames, $language);
+    // debug($breadcrumbPath);
+    
+    // Get the menu tree with the root elements and their immediate children.
+      $tree = $this->Menu->GetTree($parentCategoryId, $level, $language);
+      //	$tree = $this->Menu->GetTree(null, 20);
+    // 			debug($tree);
+    
+    $homeTree = $this->Menu->GetTree(null, 5, $language); 			
+    
+    $this->set(compact('categoryNames', 'pageName', 'language', 'element', 'breadcrumbPath', 'tree', 'homeTree'));
 
-			// Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
-			// Using DS as we will check for a file's existence on the server.
- 			$file = APP.'Template'.DS.'EditablePages'.DS.implode(DS, $path).'.ctp';
-			//debug($file);
-				
-			if (file_exists($file)) 
-			{
-				// debug("File exists");
-				$this->render(implode('/', $path));
-			}
-			else 
-			{
-				$this->viewBuilder()->layout('simplicity');
-				$this->render('default');
-			}
-		}
-	
+    // Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
+    // Using DS as we will check for a file's existence on the server.
+    $file = APP.'Template'.DS.'EditablePages'.DS.implode(DS, $path).'.ctp';
+    //debug($file);
+      
+    if (file_exists($file)) 
+    {
+      // debug("File exists");
+      $this->render(implode('/', $path));
+    }
+    else 
+    {
+      $this->viewBuilder()->layout('simplicity');
+      $this->render('default');
+    }
+  }
+
 	public function edit($id = null)
 	{
-		if(AppController::UserIsAdmin() == false)
+	    if($this->UserIsAdmin() == false)
 		{
 			$this->Flash->error(__('You are not allowed to edit content of this page.'));
 			return $this->redirect('/');
@@ -234,7 +234,7 @@ class EditablePagesController extends AppController
 
 	public function delete($id = null)
 	{
-		if(AppController::UserIsAdmin() == false)
+	    if($this->UserIsAdmin() == false)
 		{
 			$this->Flash->error(__('You do not have permission to delete this page.'));
 			return $this->redirect('/');

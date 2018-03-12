@@ -23,7 +23,7 @@ class SimplicitySettingsController extends AppController
 {
 	public function edit()
 	{
-		if(AppController::UserIsAdmin() == false)
+	    if($this->UserIsAdmin() == false)
 		{
 			$this->Flash->error(__('You do not have access permission.'));
 			return $this->redirect('/');

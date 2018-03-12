@@ -352,11 +352,15 @@ return [
      * To use database sessions, load the SQL file located at config/schema/sessions.sql
      */
     'Session' => [
-        'defaults' => 'database',
-        'handler' => [
-            'engine' => 'DatabaseSession',
-            'model' => 'SimplicitySessions'
-        ],
+        'defaults' => 'php',
+
+        // The InstallerController would have problems here since there are no database connection during installation. :)
+        // 'defaults' => 'database',
+        // 'handler' => [
+            // 'engine' => 'DatabaseSession',
+            // 'model' => 'SimplicitySessions'
+        // ],
+
         'cookie' => 'SIMPLICITY',
         
         // Enable if you have both SSL and non-SSL mixed. 

@@ -32,7 +32,9 @@
       Simplicity setup
 		</nav>
 		
-		<?= $this->Flash->render() ?>
+		<?php 
+      echo $this->Flash->render() 
+    ?>
 		
 		<div id="simplicity-content" class="row">
 			<div class="small-12 large-9 columns">

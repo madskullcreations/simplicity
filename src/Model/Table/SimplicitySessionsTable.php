@@ -17,6 +17,8 @@ use Cake\ORM\Table;
  * 
  * Simple explanation: The value in the id-field are exactly the same value as the SIMPLICITY-session-cookie has.
  * 
+ * NOTE: This works, but you will need to change accordingly in app.php. Make sure you change AFTER you have run the installation procedure, 
+ *  during installation there are no database connection. 
  */
 class SimplicitySessions extends Table
 {

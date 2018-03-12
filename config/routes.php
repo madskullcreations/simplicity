@@ -60,6 +60,13 @@ if($simplicity_setup_state > 1)
        * The /installer/success is always ok.
        */
       $routes->connect('/installer/success', ['controller' => 'Installer', 'action' => 'success']);
+
+      /**
+       * The /users/add is always ok.
+       */
+      $routes->connect('/users/add', ['controller' => 'Users', 'action' => 'add']);
+      $routes->connect('/users/login', ['controller' => 'Users', 'action' => 'login']);
+      $routes->connect('/users/logout', ['controller' => 'Users', 'action' => 'logout']);
       
       /**
        * The /pages/edit is reserved for editing pages.

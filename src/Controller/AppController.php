@@ -51,8 +51,21 @@ class AppController extends Controller
     {
         parent::initialize();
           
+        $this->loadComponent('Security');
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Auth', [
+            'loginRedirect' => [
+                'controller' => 'EditablePages',
+                'action' => 'display', 
+                'admin' // Test only, redirect to for example settings page or similar.
+            ],
+            'logoutRedirect' => [
+              'controller' => 'EditablePages', 
+              'action' => 'display', 
+              'home'
+            ]
+        ]);
         
         $kitchenSink = TableRegistry::get('KitchenSink');
         
@@ -76,7 +89,7 @@ class AppController extends Controller
         AppController::$simplicity_footer_text = $kitchenSink->Retrieve(
             'SimplicityFooterText', 'Simplicity CMS - Simple. Simple. Simple. | Powered by CakePHP and Zurb Foundation | A Madskull Creations product');
         
-        // To make it available from views as well. TODO: Call function from view, as in cakephp2? 
+        // To make it available from views as well. 
         $this->set('userIsAdmin', AppController::UserIsAdmin());
                   
         // TESTING
@@ -99,6 +112,25 @@ class AppController extends Controller
         // TESTING END
     }
 
+    /**
+     * Before filter callback.
+     * 
+     * Docs says:
+     *  "Called during the Controller.initialize event which occurs before every action in the controller. 
+     *  It’s a handy place to check for an active session or inspect user permissions."
+     */
+    public function beforeFilter(Event $event)
+    {
+      // TODO: Redirecta icke inloggade användare från sidor som kräver inloggning.
+      
+      // This allow every user to view those views in _every_ controller. (So care must be taken to rename certain views that should remain private)
+      $this->Auth->allow(['index', 'view', 'display']);
+      
+      // Test: Is null if no logged in user are present, otherwise a full user object. 
+      // $user = $this->Auth->user();
+      // debug($user);
+    }
+    
     /**
      * Before render callback.
      *
@@ -135,9 +167,34 @@ class AppController extends Controller
     	return parent::redirect($url, $status);
     }
     
-    public static function UserIsAdmin()
+    public function UserIsAdmin()
     {
-    	// TODO: Add session logic here.
-    	return true;
+    	$user = $this->Auth->user();
+      
+      if($user != null)
+      {
+        if($user['role'] == 'admin')
+        {
+          return true;
+        }
+      }
+      
+    	return false;
+    }
+    
+    public function UserIsAuthor()
+    {
+    	$user = $this->Auth->user();
+      
+      if($user != null)
+      {
+        if($user['role'] == 'author' || $user['role'] == 'admin')
+        {
+          // admin are always also author.
+          return true;
+        }
+      }
+      
+    	return false;
     }
 }
