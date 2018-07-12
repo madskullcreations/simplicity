@@ -35,7 +35,10 @@ class SimplicitySessions extends Table
         `data` blob DEFAULT NULL, -- for PostgreSQL use bytea instead of blob
         `expires` int(10) unsigned DEFAULT NULL,
         PRIMARY KEY (`id`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+      ) 
+      COLLATE='utf8_unicode_ci'
+      ENGINE=InnoDB
+      ROW_FORMAT=COMPACT;
     ");
   }
 }

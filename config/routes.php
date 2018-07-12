@@ -67,6 +67,8 @@ if($simplicity_setup_state > 1)
       $routes->connect('/users/add', ['controller' => 'Users', 'action' => 'add']);
       $routes->connect('/users/login', ['controller' => 'Users', 'action' => 'login']);
       $routes->connect('/users/logout', ['controller' => 'Users', 'action' => 'logout']);
+      $routes->connect('/users/index', ['controller' => 'Users', 'action' => 'index']);
+      $routes->connect('/users', ['controller' => 'Users', 'action' => 'index']);
       
       /**
        * The /pages/edit is reserved for editing pages.

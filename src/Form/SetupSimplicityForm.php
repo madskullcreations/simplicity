@@ -30,10 +30,6 @@ class SetupSimplicityForm extends Form
         'rule' => 'email',
         'message' => 'This must be a valid email address'
       ])
-      ->add('user_username', 'length', [
-        'rule' => ['minLength', 5],
-        'message' => 'The user name should be at least 5 characters'
-      ])
       ->add('user_password', 'length', [
         'rule' => ['minLength', 5],
         'message' => 'Choose a password with at least 5 characters'

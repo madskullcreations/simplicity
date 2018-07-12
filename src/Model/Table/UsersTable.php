@@ -31,7 +31,7 @@ class UsersTable extends Table
         'message' => __('Please enter a valid role')
       ]);
   }
-  
+
   /**
    * Create the table in the database.
    */
@@ -45,7 +45,10 @@ class UsersTable extends Table
           role VARCHAR(20) NOT NULL COLLATE 'utf8_unicode_ci',
           created DATETIME DEFAULT NULL,
           modified DATETIME DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+      )
+      COLLATE='utf8_unicode_ci'
+      ENGINE=InnoDB
+      ROW_FORMAT=COMPACT;
     ");
   }
   

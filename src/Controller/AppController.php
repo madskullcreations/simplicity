@@ -170,6 +170,7 @@ class AppController extends Controller
     public function UserIsAdmin()
     {
     	$user = $this->Auth->user();
+      // debug($user);
       
       if($user != null)
       {

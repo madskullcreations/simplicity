@@ -19,6 +19,9 @@ use Cake\ORM\Entity;
  */
 class User extends Entity
 {
+  // This will ensure toArray() and other functions do not export the password field.
+  protected $_hidden = ['password'];
+  
   /**
    * Cake will find this function and, when field password are set, it will be hashed.
    */

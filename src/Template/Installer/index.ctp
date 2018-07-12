@@ -20,8 +20,7 @@ echo $this->Form->controls(
 
 echo $this->Form->controls(
   [
-  'user_email' => ['label' => 'Email', 'title' => 'Your email. If you ever forget the password it can be sent to this email address'],
-  'user_username' => ['label' => 'Username', 'title' => 'The user name of your web page administrator account'],
+  'user_email' => ['label' => 'Email', 'title' => 'Your email. You will use it to login. If you ever forget the password it can be sent to this email address'],
   'user_password' => ['label' => 'Password', 'title' => 'Please choose a long password which are difficult to guess', 'type' => 'password'],
   ],
   ['legend' => 'Administrator user']

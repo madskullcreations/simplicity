@@ -43,7 +43,8 @@ class UsersController extends AppController
     
   public function index()
   {
-    $this->set('users', $this->Users->find('all'));
+    $users = $this->Users->find('all', ['fields' => ['Users.id', 'Users.username', 'Users.role']]);
+    $this->set('users', $users);
   }
 
   public function view($id)
@@ -59,15 +60,20 @@ class UsersController extends AppController
     if ($this->request->is('post')) 
     {
       // Prior to 3.4.0 $this->request->data() was used.
-      $user = $this->Users->patchEntity($user, $this->request->getData());
+      $data = $this->request->getData();
+      // debug($data);
+      
+      $user = $this->Users->patchEntity($user, $data);
 
       if ($this->Users->save($user)) 
       {
         $this->Flash->success(__('The user has been created.'));
-        return $this->redirect(['action' => 'add']);
+        return $this->redirect(['action' => 'index']);
       }
-      
-      $this->Flash->error(__('Unable to add the user.'));
+      else
+      {
+        $this->Flash->error(__('Unable to add the user.'));
+      }
     }
     
     $this->set('user', $user);

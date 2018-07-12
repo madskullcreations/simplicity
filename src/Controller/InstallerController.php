@@ -91,6 +91,9 @@ class InstallerController extends Controller
           {
             $this->Flash->error(__('Unable to connect to the database. Please check connection details.'));
           }
+          
+          // The log ends up in /logs/queries.log, useful for finding any problems.
+          $conn->logQueries(true);
         }
         catch(\Exception $connectionError) 
         {
@@ -113,10 +116,8 @@ class InstallerController extends Controller
         if($connected)
         {
           // Yo. A database connection could be established. Save these settings.
-          // TODO: Restore app.php from app.default.php! (Do the copy that happens in installer.php)
-
           $res = $this->setupInstallation($data, $conn);
-          debug($res);
+          // debug($res);
           
           $anyErrors = false;
           foreach($res as $msg)
@@ -198,6 +199,14 @@ class InstallerController extends Controller
     
     $this->setFolderPermissions($rootDir, $res);
     
+// NOTE: Cake ask for this file during it's primary steps, so we can't create it here.
+// TODO: Restore app.php from app.default.php! 
+//    <-If any settings turn out wrong, the app.php must be erased and replaced. 
+//      (It can be done, the page reloaded, and the reset app.php will be found.) 
+
+    // Create app.conf file if it does not exist.
+    // $this->createAppConfig($rootDir, $res);
+    
     $this->storeDatabaseConnection($rootDir, $data['db_database'], $data['db_username'], $data['db_password'], $res);
     
     $newKey = hash('sha256', Security::randomBytes(64));
@@ -207,7 +216,18 @@ class InstallerController extends Controller
     $this->createTables($connection, $res);
     
     // Create administrator account.
-// TODO: Create the user with choosen password.
+    $users = TableRegistry::get('Trolls', ['table' => 'users', 'connection' => $connection]);
+    $user = $users->newEntity();
+    
+// TODO: Password are not encrypted since we bypass the normal flow.
+    $user->username = $data['user_email'];
+    $user->password = $data['user_password'];
+    $user->role = 'admin';
+
+    if($users->save($user) == false) 
+    {
+      $res[] = array('result' => false, 'message' => __('Could not create the user account.'));
+    }
     
     return $res;
   }
@@ -403,4 +423,25 @@ class InstallerController extends Controller
     $changePerms($dir . '/tmp', $worldWritable, $res);
     $changePerms($dir . '/logs', $worldWritable, $res);
   }  
+  
+  /**
+   * Create the config/app.php file if it does not exist.
+   *
+   * @param string $dir The application's root directory.
+   * @return void
+   */
+  protected function createAppConfig($dir, &$res)
+  {
+    $appConfig = $dir . '/config/app.php';
+    $defaultConfig = $dir . '/config/app.default.php';
+    
+    if (!file_exists($appConfig))
+    {
+      copy($defaultConfig, $appConfig);
+      $gnarg = array();
+      $gnarg['result'] = true;
+      $gnarg['message'] = __('Created `config/app.php` file');
+      $res[] = $gnarg;
+    }
+  }
 }
