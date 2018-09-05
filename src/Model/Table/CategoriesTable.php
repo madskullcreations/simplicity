@@ -232,6 +232,14 @@ class CategoriesTable extends Table
 	}
 
   /**
+   * Drop the table from the database.
+   */
+	public function DropTable($connection)
+  {
+    $connection->execute("DROP TABLE `categories`;");
+  }
+  
+  /**
    * Create the table in the database.
    */
 	public function CreateTable($connection)

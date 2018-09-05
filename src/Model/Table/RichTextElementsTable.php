@@ -209,6 +209,14 @@ class RichTextElementsTable extends Table
   }
   
   /**
+   * Drop the table from the database.
+   */
+	public function DropTable($connection)
+  {
+    $connection->execute("DROP TABLE `rich_text_elements`;");
+  }
+  
+  /**
    * Create the table in the database.
    */
 	public function CreateTable($connection)

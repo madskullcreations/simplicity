@@ -93,22 +93,23 @@ class AppController extends Controller
         $this->set('userIsAdmin', AppController::UserIsAdmin());
                   
         // TESTING
-        $languages = TableRegistry::get('Languages');
-        // $variants = $languages->GetVariants('en');
-        // debug($variants);
-        
-        $richTextElements = TableRegistry::get('RichTextElements');
-        
-        $languages = $richTextElements->GetLanguageCodes();
-        
-        $home = $richTextElements->GetElement('home',null,'sv_SE');
-        $languagesForHome = $richTextElements->GetLanguagesFor($home->name, $home->category_id);
+        {
+          $languages = TableRegistry::get('Languages');
+          // $variants = $languages->GetVariants('en');
+          // debug($variants);
+          
+          $richTextElements = TableRegistry::get('RichTextElements');
+          
+          $languages = $richTextElements->GetLanguageCodes();
+          
+          $home = $richTextElements->GetElement('home',null,'sv_SE');
+          $languagesForHome = $richTextElements->GetLanguagesFor($home->name, $home->category_id);
 //         debug($home);
 //         debug($languagesForHome);
-        
-        $categories = TableRegistry::get('Categories');
-        // $children = $categories->GetChildren(4);
-                           
+          
+          $categories = TableRegistry::get('Categories');
+          // $children = $categories->GetChildren(4);
+        }
         // TESTING END
     }
 

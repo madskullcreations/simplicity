@@ -33,6 +33,14 @@ class UsersTable extends Table
   }
 
   /**
+   * Drop the table from the database.
+   */
+	public function DropTable($connection)
+  {
+    $connection->execute("DROP TABLE `users`;");
+  }
+  
+  /**
    * Create the table in the database.
    */
 	public function CreateTable($connection)

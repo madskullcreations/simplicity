@@ -9,6 +9,23 @@
 <?php
 echo $this->Form->create($form);
 
+if($showResetTablesSetting)
+{
+?>
+<div class="callout warning">
+  <p>Setup has detected the database tables already exists, but some step seem to be missing. If you know the database tables does not contain any important data (any data you have created, like pages) you can let setup destroy and recreate the tables for you.</p>
+  <p>NOTE! All data will be erased, and there are no undo!</p>
+</div>
+<?php
+
+  echo $this->Form->controls(
+    [
+    'db_recreate_tables' => ['label' => 'Destroy and recreate Simplicity database tables', 'type' => 'checkbox'],
+    ],
+    ['legend' => 'Troubleshooting']
+    );
+}
+
 echo $this->Form->controls(
   [
   'db_database' => ['label' => 'Database Name', 'title' => 'The name of the database'],

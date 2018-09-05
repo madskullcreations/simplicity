@@ -20,11 +20,12 @@ use Cake\Utility\Security;
 
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * Installer controller
  *
- * NOTE: It is not inheriting AppController, as it expect a database connection.
+ * NOTE: It is not inheriting AppController, which expects a database connection we do not yet have.
  * 
  */
 class InstallerController extends Controller
@@ -44,6 +45,8 @@ class InstallerController extends Controller
    */
 	public function index()
 	{
+    $showResetTablesSetting = false;
+    
     $simplicity_setup_state = Configure::read('simplicity_setup_state');
     // debug($simplicity_setup_state);
     
@@ -54,13 +57,13 @@ class InstallerController extends Controller
     
 		if($this->request->is(['post', 'put'])) 
 		{
-			// debug($this->request->data);
+			debug($this->request->data);
      
       if($form->execute($this->request->getData())) 
       {
         // Values seem correct. Check if database connection details are correct.
         $data = $this->request->data;
-        
+
         // TODO: User should be able to select advanced settings: port, encoding, timezone, host, and also other databases than MySql.
         // 
         $connDetails = [
@@ -115,8 +118,17 @@ class InstallerController extends Controller
         
         if($connected)
         {
-          // Yo. A database connection could be established. Save these settings.
-          $res = $this->setupInstallation($data, $conn);
+          // Yo. A database connection could be established. 
+          $res = array();
+          
+          if(isset($data['db_recreate_tables']) && $data['db_recreate_tables'] == 1)
+          {
+            // Simply delete tables.
+            $this->dropTables($conn, $res);
+          }
+          
+          // Save the settings, and create a user.
+          $this->setupInstallation($data, $conn, $res);
           // debug($res);
           
           $anyErrors = false;
@@ -130,6 +142,11 @@ class InstallerController extends Controller
               }
               
               $anyErrors = true;
+              
+              if(strpos($msg['message'], "SQLSTATE[42S01]") !== false)
+              {
+                $showResetTablesSetting = true;
+              }
               
               $this->Flash->error($msg['message']);
             }
@@ -155,6 +172,13 @@ class InstallerController extends Controller
             // Redirect user to the congrats-page.
             return $this->redirect(['controller' => 'installer', 'action' => 'success']);
           }
+          else
+          {
+            // One or more errors happened during setup. Reset the app.php file to enforce system to stay here.
+            $rootDir = dirname(dirname(__DIR__));
+            $res = array();
+            $this->createAppConfig($rootDir, $res, true);
+          }
         }
       } 
       else 
@@ -163,6 +187,7 @@ class InstallerController extends Controller
       }
     }
     
+    $this->set('showResetTablesSetting', $showResetTablesSetting);
     $this->set('form', $form);
         
     $this->viewBuilder()->layout('installer');
@@ -183,10 +208,10 @@ class InstallerController extends Controller
    * Tries to set folder permissions, store database connection details, create security salt, 
    * create tables necessary for Simplicity, and finally create the administrator account.
    * 
-   * Returns the result of the operations. Format: array(array('result','message'),array('result','message'), ..)
+   * @param string $res - the result of the operations. Format: array(array('result','message'),array('result','message'), ..)
    * 
    */
-  protected function setupInstallation($data, $connection)
+  protected function setupInstallation($data, $connection, &$res)
   {
     // We are currently in src/Controller folder, but need the root folder of the project.
     $rootDir = dirname(dirname(__DIR__));
@@ -194,18 +219,13 @@ class InstallerController extends Controller
     // Each step might succeed or fail, the total result are stored in $res.
     // Might mean that the database connection are stored, but setting the folder permissions failed. 
     // This is almost always good because we probably end up with a working installation even if some steps fail.
-    // 
-    $res = array();
     
     $this->setFolderPermissions($rootDir, $res);
     
-// NOTE: Cake ask for this file during it's primary steps, so we can't create it here.
-// TODO: Restore app.php from app.default.php! 
-//    <-If any settings turn out wrong, the app.php must be erased and replaced. 
-//      (It can be done, the page reloaded, and the reset app.php will be found.) 
-
-    // Create app.conf file if it does not exist.
-    // $this->createAppConfig($rootDir, $res);
+    // NOTE: Cake ask for this file during it's primary steps, so we can't create it here. Instead recreate it from app.default.php.
+    // 
+    // Create app.conf file. (Restore it if it already exist.)
+    $this->createAppConfig($rootDir, $res, false);
     
     $this->storeDatabaseConnection($rootDir, $data['db_database'], $data['db_username'], $data['db_password'], $res);
     
@@ -219,17 +239,49 @@ class InstallerController extends Controller
     $users = TableRegistry::get('Trolls', ['table' => 'users', 'connection' => $connection]);
     $user = $users->newEntity();
     
-// TODO: Password are not encrypted since we bypass the normal flow.
     $user->username = $data['user_email'];
-    $user->password = $data['user_password'];
+    $user->password = (new DefaultPasswordHasher)->hash($data['user_password']);
     $user->role = 'admin';
+    $user->created = date('Y-m-d H:i:s', time());
+    $user->modified = $user->created;
 
     if($users->save($user) == false) 
     {
       $res[] = array('result' => false, 'message' => __('Could not create the user account.'));
     }
+  }
+  
+  /**
+   * Drop Simplicity tables.
+   */
+  protected function dropTables($connection, &$res)
+  {
+    try
+    {
+      $users = TableRegistry::get('Users');
+      $users->DropTable($connection);
+      
+      $categories = TableRegistry::get('Categories');
+      $categories->DropTable($connection);
+
+      $kitchensink = TableRegistry::get('KitchenSink');
+      $kitchensink->DropTable($connection);
+
+      $languages = TableRegistry::get('Languages');
+      $languages->DropTable($connection);
+
+      $rte = TableRegistry::get('RichTextElements');
+      $rte->DropTable($connection);
+    }
+    catch(\PDOException $ex) 
+    {
+      $msg = $ex->getMessage();
+      
+      $res[] = array('result' => false, 'message' => __('Dropping of database tables failed with the following error: ').$msg);
+      return;
+    }
     
-    return $res;
+    $res[] = array('result' => true, 'message' => __('Database tables dropped.'));
   }
   
   /**
@@ -368,8 +420,6 @@ class InstallerController extends Controller
    */
   protected function setFolderPermissions($dir, &$res)
   {
-    $res = array();
-    
     // Change the permissions on a path and output the results.
     $changePerms = function ($path, $perms, &$res)
     {
@@ -425,23 +475,52 @@ class InstallerController extends Controller
   }  
   
   /**
-   * Create the config/app.php file if it does not exist.
+   * Create the config/app.php file by copying config/app.default.php. 
+   * If app.php already exists, it will be saved as app.old.php, or any serie of app.old_1.php.
    *
    * @param string $dir The application's root directory.
    * @return void
    */
-  protected function createAppConfig($dir, &$res)
+  protected function createAppConfig($dir, &$res, $stashOld)
   {
     $appConfig = $dir . '/config/app.php';
     $defaultConfig = $dir . '/config/app.default.php';
     
-    if (!file_exists($appConfig))
+    if(file_exists($appConfig) && $stashOld)
     {
-      copy($defaultConfig, $appConfig);
-      $gnarg = array();
-      $gnarg['result'] = true;
-      $gnarg['message'] = __('Created `config/app.php` file');
-      $res[] = $gnarg;
+      // Save away any old configuration. Name-pattern: app.old.php, app.old_1.php, etc.
+      // This is nice for debugging, and of course to return to a previous working configuration.
+      $sub = 'old';
+      $count = 1;
+      while(true)
+      {
+        $stash = $dir . '/config/app.'.$sub.'.php';
+        
+        if(!file_exists($stash))
+        {
+          break;
+        }
+        
+        $sub = 'old_'.$count;
+        $count++;
+      }
+      
+      copy($appConfig, $stash);
+    
+      $this->appendRes($res, __('Stashed away old app.php file to').' `'.$stash.'`.');
     }
+
+    // Create/restore app.php to original state.
+    copy($defaultConfig, $appConfig);
+
+    $this->appendRes($res, __('Created `config/app.php` file'));
+  }
+  
+  protected function appendRes(&$res, $message, $result = true)
+  {
+    $row = array();
+    $row['result'] = $result;
+    $row['message'] = $message;
+    $res[] = $row;
   }
 }

@@ -63,6 +63,14 @@ class LanguagesTable extends Table
 	}
   
   /**
+   * Drop the table from the database.
+   */
+	public function DropTable($connection)
+  {
+    $connection->execute("DROP TABLE `languages`;");
+  }
+  
+  /**
    * Create the table in the database.
    */
 	public function CreateTable($connection)

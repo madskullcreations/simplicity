@@ -23,6 +23,14 @@ use Cake\ORM\Table;
 class SimplicitySessions extends Table
 {
   /**
+   * Drop the table from the database.
+   */
+	public function DropTable($connection)
+  {
+    $connection->execute("DROP TABLE `simplicity_sessions`;");
+  }
+  
+  /**
    * Create the table in the database.
    */
 	public function CreateTable($connection)
