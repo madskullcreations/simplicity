@@ -78,6 +78,10 @@
 			font-family: inherit;
 			font-size: 1.5vw;
 		}
+    
+    footer{
+      padding: 40px;
+    }
 		
 @media (max-width: 600px){
 		.top-bar{
@@ -149,27 +153,8 @@
 			color: #333;
 			transition: all .25s ease-in-out; 
 		}
-		
-		#simplicity-content{
-			position: relative;
-		}
-		#simplicity-content:before{
-			background: url('/img/momotombo.jpg') no-repeat;
-			background-size: cover; 
-			
-			position: absolute;
-			top: 0;
-			left: 0;
-
-			content : "";
-	    opacity : 0.25;
-	    height: 700px;
-	    z-index: -1;
-    			
-			width: 100%;
-		}
 	</style>
-	<div id="simplicity-wrapper">
+	<section id="simplicity-wrapper">
 		<nav class="top-bar" data-topbar role="navigation" style="position: relative;">
 			<!-- This should be a cake block of course. -->
 			<div class="menu-background-image"></div>
@@ -265,11 +250,10 @@
 	    </div>
 	  </form>
 	</div-->    
-	<footer>
-		<?= $this->fetch('simplicity_footer_text'); ?>
-	</footer>
-</div> <!-- simplicity-wrapper -->    
-    
+</section> <!-- simplicity-wrapper -->    
+<footer>
+  <?= $this->fetch('simplicity_footer_text'); ?>
+</footer>
     
 <?php // Zurb Foundation js really have to be at the bottom of the html file, otherwise it wont initialize correctly. ?>
 <?= $this->Html->script('zurb-foundation-6/vendor/jquery.min.js') ?>
