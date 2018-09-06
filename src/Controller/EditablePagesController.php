@@ -11,6 +11,7 @@
  
 namespace App\Controller;
 
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -34,6 +35,20 @@ class EditablePagesController extends AppController
 		$this->richTextElements = TableRegistry::get('RichTextElements');
 	}
 
+  public function beforeFilter(Event $event)
+  {
+    parent::beforeFilter($event);
+    
+    if(AppController::UserIsAdmin())
+    {
+      $this->Auth->allow(); // Allow all actions, admin is king.
+    }
+    else
+    {
+      $this->Auth->allow(['display']); // Visitors can display all pages.
+    }
+  }
+    
   /**
    * Using the path as an identifier, it loads the content from database and tries to render a view 
    * with the same name. If there is no view file (.ctp) with the given identifier, it renders the 

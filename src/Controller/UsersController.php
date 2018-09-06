@@ -14,14 +14,61 @@ class UsersController extends AppController
     // Allow users to register and logout.
     // You should not add the "login" action to allow list. Doing so would
     // cause problems with normal functioning of AuthComponent.
-    $this->Auth->allow(['add', 'logout']);
+    // $this->Auth->allow(['add', 'logout']);
+        
+    if(AppController::UserIsAdmin() == true)
+    {
+      $this->Auth->allow(); // Allow all actions, admin is king.
+    }
+    else
+    {
+      // Allow any other user-types to logout. (Even non-logged in users can logout)
+      $this->Auth->allow('logout');
+    }
   }
+    
+  /** 
+   * For some reason Auth defaults to allow any type of user any type of action, $this->Auth->deny() does not help.
+   * So we must bypass it's defaults and specify here.
+   */
+  public function isAuthorized($user = null)
+  {
+    // debug($this->request);
+    // debug($this->request->getParam('action'));
+    
+    if(parent::isAuthorized($user) == false)
+      return false;
+   
+    if(AppController::UserIsAdmin() == true)
+    {
+      // Allow all actions, admin is king.
+      return true;
+    }
+    else if(AppController::UserIsAuthor() == true)
+    {
+      if($this->request->getParam('action') == 'index')
+      {
+        return true;
+      }
+    }
 
+    // Allow nothing.
+    return false;
+  }
+    
   /**
    * Upon login, a PHPSESSID cookie are created which will identify the logged in user.
    */
   public function login()
   {
+    if(AppController::UserIsLoggedIn())
+    {
+      // Already logged in.
+      $this->Flash->success(__('You have already logged in.'));
+      
+      return $this->redirect(['action' => 'index']);
+    }
+    
     if ($this->request->is('post')) 
     {
       $user = $this->Auth->identify();

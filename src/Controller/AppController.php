@@ -64,7 +64,8 @@ class AppController extends Controller
               'controller' => 'EditablePages', 
               'action' => 'display', 
               'home'
-            ]
+            ],
+            'authorize' => 'Controller', // Let the controller's isAuthorized() decide.
         ]);
         
         $kitchenSink = TableRegistry::get('KitchenSink');
@@ -122,14 +123,25 @@ class AppController extends Controller
      */
     public function beforeFilter(Event $event)
     {
-      // TODO: Redirecta icke inloggade användare från sidor som kräver inloggning.
-      
-      // This allow every user to view those views in _every_ controller. (So care must be taken to rename certain views that should remain private)
-      $this->Auth->allow(['index', 'view', 'display']);
+      // debug($event);
+            
+      $this->Auth->allow(['display']);
       
       // Test: Is null if no logged in user are present, otherwise a full user object. 
       // $user = $this->Auth->user();
       // debug($user);
+    }
+    
+    /** 
+     * Somewhat complicated: If a certain action are explicitly allowed, fex. $this->Auth->allow(['display']);
+     * this function is never called.
+     * 
+     * This function seem to be called when Auth have no instructions about what to do with a certain request.
+     */
+    public function isAuthorized($user = null)
+    {
+      // Base class cannot make any decisions.
+      return true;
     }
     
     /**
@@ -166,6 +178,18 @@ class AppController extends Controller
     	}
     	
     	return parent::redirect($url, $status);
+    }
+    
+    public function UserIsLoggedIn()
+    {
+      $user = $this->Auth->user();
+      
+      if($user != null)
+      {
+        return true;
+      }
+      
+      return false;
     }
     
     public function UserIsAdmin()
