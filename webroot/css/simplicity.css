@@ -1,0 +1,54 @@
+/**
+ * simplicity.css
+ *
+ * 
+ */
+ 
+/* Footer at bottom: https://matthewjamestaylor.com/bottom-footer */
+  body {
+     margin:0;
+     padding:0;
+     height:100%;
+  }
+  #simplicity-wrapper {
+     min-height:100%;
+     position:relative;
+  }
+  #simplicity-content {
+     padding:10px;
+     padding-bottom:80px;   /* Height including padding of the footer */
+  }
+  footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:60px; 
+    padding: 10px;
+    background-color: #dddddd;
+    overflow: hidden;
+  }  
+
+ul.simplicity.root{
+	background-color: #2199E8;
+	font-weight: bold;
+}
+ul.simplicity.dropdown, .dropdown.menu .simplicity.menu{
+	background-color: #1189D8;
+	border: 0px;
+	border-top: 1px solid #2199E8;
+	margin-top: -1px; /* Visual fix in zurb dropdown menu css. */
+}
+ul.simplicity.accordion li a::after{
+	border-color: white transparent transparent;
+}
+ul.simplicity.breadcrumbs{
+	padding: 10px;
+	border-bottom: 1px solid #1189D8;
+}
+li.simplicity a{
+	color: #FAFAFA;
+}
+
+.button.top-margin{
+	margin-top: 10px;
+}

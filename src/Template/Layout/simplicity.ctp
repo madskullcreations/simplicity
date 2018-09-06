@@ -79,10 +79,6 @@
 			font-family: inherit;
 			font-size: 1.5vw;
 		}
-    
-    footer{
-      padding: 40px;
-    }
 		
 @media (max-width: 600px){
 		.top-bar{
@@ -155,8 +151,8 @@
 			transition: all .25s ease-in-out; 
 		}
 	</style>
-	<section id="simplicity-wrapper">
-		<nav class="top-bar" data-topbar role="navigation" style="position: relative;">
+	<div id="simplicity-wrapper">
+		<nav class="top-bar" data-topbar role="navigation">
 			<!-- This should be a cake block of course. -->
 			<div class="menu-background-image"></div>
 			<div class="menu-top-stuff" style="">
@@ -183,71 +179,39 @@
 			// Nå-flaggorna först! De ska hamna uppe till höger, en bit från toppen. Snyggigt. 
 		?>
 		
-		<?= $this->fetch('simplicity_breadcrumbs') ?>
-						
-		<?= $this->Flash->render() ?>
-		
-		<div id="simplicity-content" class="row">
-			<div class="medium-9 columns">
-				<?= $this->fetch('content') ?>
-			</div>
-			<div class="medium-3 columns" data-sticky-container>
-				<div class="sticky" data-sticky data-anchor="content">
-					<?= $this->fetch('simplicity_side_menu') ?>
-				</div>
-			</div>
-		</div>
-		    
-    <!-- EXAMPLES -->
-    <!-- button class="button" type="button" data-toggle="example-dropdown">Toggle Dropdown</button>
-    <div class="dropdown-pane" id="example-dropdown" data-dropdown data-auto-focus="true">
-      Example form in a dropdown.
-      <form>
-        <div class="row">
-          <div class="medium-6 columns">
-            <label>Name
-              <input type="text" placeholder="Kirk, James T.">
-            </label>
+    <div id="simplicity-content">
+      <?= $this->fetch('simplicity_breadcrumbs') ?>
+              
+      <?= $this->Flash->render() ?>
+      
+      <div class="grid-container">
+        <div class="grid-x grid-margin-x">
+          <div class="cell small-9">
+            <?= $this->fetch('content') ?>
           </div>
-          <div class="medium-6 columns">
-            <label>Rank
-              <input type="text" placeholder="Captain">
-            </label>
+          <div class="cell small-3" data-sticky-container>
+            <div class="sticky" data-sticky data-anchor="content">
+              <?= $this->fetch('simplicity_side_menu') ?>
+            </div>
           </div>
         </div>
-      </form>
-    </div-->    
-  </section> <!-- simplicity-wrapper -->    
-  <footer>
-    <?= $this->fetch('simplicity_footer_text'); ?>
-  </footer>
+      </div>
+    </div>
+    <footer>
+      <div class="grid-container">
+        <div class="grid-x grid-margin-x">
+          <div class="cell small-10">
+            <?= $this->fetch('simplicity_footer_text'); ?>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
     
 <?php // Zurb Foundation js really have to be at the bottom of the html file, otherwise it wont initialize correctly. ?>
   <?= $this->Html->script('zurb/foundation.min.js') ?>
   <script>
     $(document).foundation();
-    
-    window.onload = function() {
-      FooterToBottom();
-    };
-    window.onresize = function() {
-      FooterToBottom();
-    };
-    
-    function FooterToBottom()
-    {
-      var footer = $("footer");
-      var pos = footer.position();
-      var height = $(window).height();
-      height = height - pos.top;
-      height = height - footer.height();
-      if (height > 0) 
-      {
-        footer.css({
-          'margin-top': height + 'px'
-        });
-      }
-    }    
   </script>
 </body>
 </html>
