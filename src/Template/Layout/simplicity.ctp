@@ -15,16 +15,17 @@
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('cake.css') ?>
-    <?= $this->Html->css('zurb-foundation-6/foundation.css') ?>    
-    <?= $this->Html->css('zurb-foundation-6/app.css') ?>
-    <?= $this->Html->css('simplicity.css') ?>
-		
-    <?= $this->fetch('meta') ?>
-    <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
-	</head>
+  <?= $this->Html->css('base.css') ?>
+  <?= $this->Html->css('cake.css') ?>
+  <?= $this->Html->css('zurb/foundation.css') ?>
+  <?= $this->Html->css('simplicity.css') ?>
+  
+  <?= $this->fetch('meta') ?>
+  <?= $this->fetch('css') ?>
+  <?= $this->fetch('script') ?>
+  
+  <?= $this->Html->script('jquery.min.js') ?>
+</head>
 <body>
 	<style>
 		.site-logo{
@@ -183,13 +184,7 @@
 		?>
 		
 		<?= $this->fetch('simplicity_breadcrumbs') ?>
-		
-		<!--div class="callout large primary">
-			<div class="row column text-center">
-				<h1>Screaming out loud</h1>
-			</div>
-		</div-->
-				
+						
 		<?= $this->Flash->render() ?>
 		
 		<div id="simplicity-content" class="row">
@@ -199,66 +194,60 @@
 			<div class="medium-3 columns" data-sticky-container>
 				<div class="sticky" data-sticky data-anchor="content">
 					<?= $this->fetch('simplicity_side_menu') ?>
-					
-					<!-- EXAMPLES -->
-					<!--h4>Overview</h4>
-					<ul class="vertical menu" data-accordion-menu>
-					  <li>
-					    <a href="#">Item 1</a>
-					    <ul class="menu vertical nested is-active">
-					      <li>
-					        <a href="#">Item 1A</a>
-					        <ul class="menu vertical nested">
-					          <li><a href="#">Item 1Ai</a></li>
-					          <li><a href="#">Item 1Aii</a></li>
-					          <li><a href="#">Item 1Aiii</a></li>
-					        </ul>
-					      </li>
-					      <li><a href="#">Item 1B</a></li>
-					      <li><a href="#">Item 1C</a></li>
-					    </ul>
-					  </li>
-					  <li>
-					    <a href="#">Item 2</a>
-					    <ul class="menu vertical nested">
-					      <li><a href="#">Item 2A</a></li>
-					      <li><a href="#">Item 2B</a></li>
-					    </ul>
-					  </li>
-					  <li><a href="#">Item 3</a></li>
-					</ul-->
 				</div>
 			</div>
 		</div>
 		    
-	<!-- EXAMPLES -->
-	<!-- button class="button" type="button" data-toggle="example-dropdown">Toggle Dropdown</button>
-	<div class="dropdown-pane" id="example-dropdown" data-dropdown data-auto-focus="true">
-	  Example form in a dropdown.
-	  <form>
-	    <div class="row">
-	      <div class="medium-6 columns">
-	        <label>Name
-	          <input type="text" placeholder="Kirk, James T.">
-	        </label>
-	      </div>
-	      <div class="medium-6 columns">
-	        <label>Rank
-	          <input type="text" placeholder="Captain">
-	        </label>
-	      </div>
-	    </div>
-	  </form>
-	</div-->    
-</section> <!-- simplicity-wrapper -->    
-<footer>
-  <?= $this->fetch('simplicity_footer_text'); ?>
-</footer>
+    <!-- EXAMPLES -->
+    <!-- button class="button" type="button" data-toggle="example-dropdown">Toggle Dropdown</button>
+    <div class="dropdown-pane" id="example-dropdown" data-dropdown data-auto-focus="true">
+      Example form in a dropdown.
+      <form>
+        <div class="row">
+          <div class="medium-6 columns">
+            <label>Name
+              <input type="text" placeholder="Kirk, James T.">
+            </label>
+          </div>
+          <div class="medium-6 columns">
+            <label>Rank
+              <input type="text" placeholder="Captain">
+            </label>
+          </div>
+        </div>
+      </form>
+    </div-->    
+  </section> <!-- simplicity-wrapper -->    
+  <footer>
+    <?= $this->fetch('simplicity_footer_text'); ?>
+  </footer>
     
 <?php // Zurb Foundation js really have to be at the bottom of the html file, otherwise it wont initialize correctly. ?>
-<?= $this->Html->script('zurb-foundation-6/vendor/jquery.min.js') ?>
-<?= $this->Html->script('zurb-foundation-6/vendor/what-input.min.js') ?>
-<?= $this->Html->script('zurb-foundation-6/foundation.js') ?>
-<?= $this->Html->script('zurb-foundation-6/app.js') ?>    
+  <?= $this->Html->script('zurb/foundation.min.js') ?>
+  <script>
+    $(document).foundation();
+    
+    window.onload = function() {
+      FooterToBottom();
+    };
+    window.onresize = function() {
+      FooterToBottom();
+    };
+    
+    function FooterToBottom()
+    {
+      var footer = $("footer");
+      var pos = footer.position();
+      var height = $(window).height();
+      height = height - pos.top;
+      height = height - footer.height();
+      if (height > 0) 
+      {
+        footer.css({
+          'margin-top': height + 'px'
+        });
+      }
+    }    
+  </script>
 </body>
 </html>

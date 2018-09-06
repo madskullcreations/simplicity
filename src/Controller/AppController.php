@@ -92,6 +92,7 @@ class AppController extends Controller
         
         // To make it available from views as well. 
         $this->set('userIsAdmin', AppController::UserIsAdmin());
+        $this->set('userIsAuthor', AppController::UserIsAuthor());
                   
         // TESTING
         {
@@ -125,6 +126,7 @@ class AppController extends Controller
     {
       // debug($event);
             
+      // Note: This allow visitors to access 'display'. Logged in users can access _any_ resource as long as isAuthorized() returns true!
       $this->Auth->allow(['display']);
       
       // Test: Is null if no logged in user are present, otherwise a full user object. 

@@ -35,7 +35,7 @@ $this->end();
 	// TODO: Nu ska RichTextElementsHelper komma till nytta, för den ska ha en funktion
 	// för att rendera en edit-knapp. Resten sköter ju vyn om, renderingen etc.
 
-	if($userIsAdmin)
+	if($userIsAuthor)
 	{
 		echo $this->Html->link(
 				__('Edit page'), 

@@ -39,16 +39,36 @@ class EditablePagesController extends AppController
   {
     parent::beforeFilter($event);
     
-    if(AppController::UserIsAdmin())
+    $this->Auth->allow(['display']); // Visitors can display all pages.
+  }  
+   
+  /** 
+   * Auth defaults to allow any type of user any type of action, so we must bypass it's defaults and specify here.
+   */
+  public function isAuthorized($user = null)
+  {
+    if(parent::isAuthorized($user) == false)
+      return false;
+   
+    if(AppController::UserIsAdmin() == true)
     {
-      $this->Auth->allow(); // Allow all actions, admin is king.
+      // Allow all actions, admin is king.
+      return true;
     }
-    else
+    else if(AppController::UserIsAuthor() == true)
     {
-      $this->Auth->allow(['display']); // Visitors can display all pages.
+      $action = $this->request->getParam('action');
+      
+      if($action == 'display' || $action == 'edit' || $action == 'delete')
+      {
+        return true;
+      }
     }
+
+    // Allow nothing. (Except 'display' which are explicitly allowed in beforeFilter().)
+    return false;
   }
-    
+   
   /**
    * Using the path as an identifier, it loads the content from database and tries to render a view 
    * with the same name. If there is no view file (.ctp) with the given identifier, it renders the 
@@ -158,11 +178,12 @@ class EditablePagesController extends AppController
 
 	public function edit($id = null)
 	{
-	    if($this->UserIsAdmin() == false)
+    // Handled by isAuthorized().
+    /*if($this->UserIsAuthor() == false)
 		{
 			$this->Flash->error(__('You are not allowed to edit content of this page.'));
 			return $this->redirect('/');
-		}
+		}*/
 				
 		if($this->richTextElements->exists(['id' => $id]) == false)
 		{
@@ -249,11 +270,12 @@ class EditablePagesController extends AppController
 
 	public function delete($id = null)
 	{
-	    if($this->UserIsAdmin() == false)
+    // Handled by isAuthorized().
+    /*if($this->UserIsAuthor() == false)
 		{
 			$this->Flash->error(__('You do not have permission to delete this page.'));
 			return $this->redirect('/');
-		}
+		}*/
 		
 		// Make sure only post and delete are allowed. Trying to load this page normally will yield an exception.
 		// It is a safety-precaution as web crawlers could accidentally delete all content while exploring all links.
