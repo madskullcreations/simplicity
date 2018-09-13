@@ -33,7 +33,9 @@ class InstallerSimplicity
   ];
   
   /**
-   * Move the zurb foundation files into place.
+   * Move various files into place: 
+   *  Zurb foundation files
+   *  Tinymce files
    *
    * @param \Composer\Script\Event $event The composer event object.
    * @throws \Exception Exception raised by validator.
@@ -53,6 +55,10 @@ class InstallerSimplicity
     //    test
     //    ...also ignore files in root. 
     // 
+    // Root: \vendor\tinymce\tinymce
+    //  Ignore: 
+    //   nothing at the moment.
+    // 
     // https://getcomposer.org/doc/articles/scripts.md
 
     $io = $event->getIO();
@@ -63,28 +69,38 @@ class InstallerSimplicity
     // $io->write('__DIR__: '.__DIR__);
     // $io->write('rootDir: '.$rootDir);
     
-    // Copy the zurb css and js folder to where it belongs.
-    $source = $rootDir."/vendor/zurb/foundation/dist/css/";
-    $dest = $rootDir."/webroot/css/zurb/";
-    static::xcopy($source, $dest);
-    $io->write('Copied Zurb css files from "'.$source.'" to "'.$dest.'".');
+    {
+      // Copy the zurb css and js folder to where it belongs.
+      $source = $rootDir."/vendor/zurb/foundation/dist/css/";
+      $dest = $rootDir."/webroot/css/zurb/";
+      static::xcopy($source, $dest);
+      $io->write('Copied Zurb css files from "'.$source.'" to "'.$dest.'".');
 
-    $source = $rootDir."/vendor/zurb/foundation/dist/js/";
-    $dest = $rootDir."/webroot/js/zurb/";
-    static::xcopy($source, $dest);
-    $io->write('Copied Zurb js files from "'.$source.'" to "'.$dest.'".');
+      $source = $rootDir."/vendor/zurb/foundation/dist/js/";
+      $dest = $rootDir."/webroot/js/zurb/";
+      static::xcopy($source, $dest);
+      $io->write('Copied Zurb js files from "'.$source.'" to "'.$dest.'".');
+      
+      // Copy the jquery files.
+      $source = $rootDir."/vendor/components/jquery/jquery.min.js";
+      $dest = $rootDir."/webroot/js/jquery.min.js";
+      static::xcopy($source, $dest);
+      $io->write('Copied jQuery js file from "'.$source.'" to "'.$dest.'".');
+      
+      $source = $rootDir."/vendor/components/jquery/jquery.js";
+      $dest = $rootDir."/webroot/js/jquery.js";
+      static::xcopy($source, $dest);
+      $io->write('Copied jQuery js file from "'.$source.'" to "'.$dest.'".');
+    }
     
-    // Copy the jquery files.
-    $source = $rootDir."/vendor/components/jquery/jquery.min.js";
-    $dest = $rootDir."/webroot/js/jquery.min.js";
-    static::xcopy($source, $dest);
-    $io->write('Copied jQuery js file from "'.$source.'" to "'.$dest.'".');
+    {
+      // Copy the tinymce folder to the project js folder.
+      $source = $rootDir."/vendor/tinymce/tinymce/";
+      $dest = $rootDir."/webroot/js/tinymce/";
+      static::xcopy($source, $dest);
+      $io->write('Copied Tinymce files from "'.$source.'" to "'.$dest.'".');
+    }
     
-    $source = $rootDir."/vendor/components/jquery/jquery.js";
-    $dest = $rootDir."/webroot/js/jquery.js";
-    static::xcopy($source, $dest);
-    $io->write('Copied jQuery js file from "'.$source.'" to "'.$dest.'".');
-
     $io->write('Finished Simplicity file copying.');
   }
 
