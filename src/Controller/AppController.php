@@ -73,6 +73,24 @@ class AppController extends Controller
         // Try get the chosen language as an url param, namely '?lang=SV-se'. 
         AppController::$selectedLanguage = $this->request->query('lang');
         
+        if(AppController::$selectedLanguage != null && AppController::$selectedLanguage != '')
+        {
+          // Make sure it is a valid language.
+          // TODO: Have a DoExist().
+          $languages = TableRegistry::get('Languages');
+          $variants = $languages->GetVariants(AppController::$selectedLanguage);
+          
+          // debug(AppController::$selectedLanguage);
+          // debug($variants);
+          // debug($variants->first());
+          
+          if($variants->first() == null)
+          {
+            AppController::$selectedLanguage = null;
+          }
+        }
+        
+        
         // TODO: Try to get from browser cookie, and if no cookie, use the default language of the site.
         
         if(AppController::$selectedLanguage == null)

@@ -4,6 +4,11 @@
  * 
  */
  
+/* Adaptations for clashes between prism and zurb */
+code[class*="language-"], pre[class*="language-"]{
+  border-width: 0;
+}
+ 
 /* Footer at bottom: https://matthewjamestaylor.com/bottom-footer */
   body {
      margin:0;

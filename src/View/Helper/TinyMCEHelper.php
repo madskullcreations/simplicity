@@ -3,6 +3,8 @@ namespace App\View\Helper;
 
 use Cake\View\Helper;
 
+// TODO: an element could be better? Read up about it.
+// NOTE: The GraphFilesController don't exist, where did you get this hack from?!
 class TinyMCEHelper extends Helper
 {
 	public $helpers = ['Html', 'Url'];
@@ -29,9 +31,10 @@ class TinyMCEHelper extends Helper
       tinymce.init({
         selector: "textarea",
         plugins: [
-            "advlist autolink lists link image charmap preview anchor",
-            "searchreplace visualblocks code",
-            "insertdatetime media table contextmenu paste"
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "searchreplace wordcount visualblocks visualchars fullscreen insertdatetime media nonbreaking",
+            "save table contextmenu directionality emoticons template paste textcolor",
+            "code codesample",
         ],
         relative_urls: false,
         file_browser_callback: fileBrowserCallBack,

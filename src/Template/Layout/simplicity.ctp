@@ -7,18 +7,19 @@
 ?>
 <!DOCTYPE html>
 <html>
-	<head>
-    <?= $this->Html->charset() ?>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-      <?= $this->fetch('simplicity_site_title').': '.$this->fetch('simplicity_page_name') ?>
-    </title>
-    <?= $this->Html->meta('icon') ?>
+<head>
+  <?= $this->Html->charset() ?>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <?= $this->fetch('simplicity_site_title').': '.$this->fetch('simplicity_page_name') ?>
+  </title>
+  <?= $this->Html->meta('icon') ?>
 
   <?= $this->Html->css('base.css') ?>
   <?= $this->Html->css('cake.css') ?>
   <?= $this->Html->css('zurb/foundation.css') ?>
-  <?= $this->Html->css('simplicity.css') ?>
+  <?= $this->Html->css('prism.css') ?>
+  <?= $this->Html->css('simplicity.css?version='.rand(0, 10000).'') ?>
   
   <?= $this->fetch('meta') ?>
   <?= $this->fetch('css') ?>
@@ -186,7 +187,7 @@
       
       <div class="grid-container">
         <div class="grid-x grid-margin-x">
-          <div class="cell small-9">
+          <div class="cell">
             <?= $this->fetch('content') ?>
           </div>
           <div class="cell small-3" data-sticky-container>
@@ -213,5 +214,7 @@
   <script>
     $(document).foundation();
   </script>
+  
+  <?= $this->Html->script('prism') ?>
 </body>
 </html>
