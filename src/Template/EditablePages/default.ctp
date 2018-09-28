@@ -22,6 +22,11 @@ $this->end();
 ?>
 
 <div>
+  <?php 
+    // debug($breadcrumbPath);
+    // debug($element);
+    // debug($this->Menu->GetBreadCrumb($breadcrumbPath, $element)); 
+  ?>
 	<?= $element->content ?>
 </div>
 <div>

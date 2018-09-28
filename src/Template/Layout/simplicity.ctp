@@ -14,9 +14,7 @@
     <?= $this->fetch('simplicity_site_title').': '.$this->fetch('simplicity_page_name') ?>
   </title>
   <?= $this->Html->meta('icon') ?>
-
-  <?= $this->Html->css('base.css') ?>
-  <?= $this->Html->css('cake.css') ?>
+  
   <?= $this->Html->css('zurb/foundation.css') ?>
   <?= $this->Html->css('prism.css') ?>
   <?= $this->Html->css('simplicity.css?version='.rand(0, 10000).'') ?>
@@ -153,60 +151,60 @@
 		}
 	</style>
 	<div id="simplicity-wrapper">
-		<nav class="top-bar" data-topbar role="navigation">
-			<!-- This should be a cake block of course. -->
-			<div class="menu-background-image"></div>
-			<div class="menu-top-stuff" style="">
-				<?= $this->Html->image('Mariposa.png', ['class' => 'site-logo']); ?>
-				<div class="site-title-description">
-					<h2 class="site-title"><?= $this->fetch('simplicity_site_title'); ?></h2>
-					<h5 class="site-description" ><?= $this->fetch('simplicity_site_description'); ?></h5>
-				</div>
-			</div>
-			<div class="top-menu-bar">
-				<?= $this->fetch('simplicity_top_menu') ?>
-			</div>
-		</nav>
-		<?php 
-			// Detta är ju en alternativ position för toppmenyn. Med rätt färgval så blir det fint. Men den skalar inte snyggt!
-			// ...det verkar som du får kolla in zurbs css för att ha toppmenyer som skalar fint. 
-			//
-			// NÄ! Sno css o alltsammans från denna: http://zurb.com/building-blocks/header-subnav
-			// 
-			// Såg också att man måste kunna sätta en titel på en sida, som blir url-friendly. 
-			// ..själva ursprungsidén med att skriva in adressen uppe i urlen o så skapas den är inte så kul i praktiken, man 
-			//  undrar fort hur urlen ska se ut, och måste kunna de reglerna! ..bara för att sen sätta korrekt titel på en gång. 
-			// 
-			// Nå-flaggorna först! De ska hamna uppe till höger, en bit från toppen. Snyggigt. 
-		?>
-		
-    <div id="simplicity-content">
-      <?= $this->fetch('simplicity_breadcrumbs') ?>
-              
-      <?= $this->Flash->render() ?>
-      
-      <div class="grid-container">
-        <div class="grid-x grid-margin-x">
-          <div class="cell">
-            <?= $this->fetch('content') ?>
+    <div id="simplicity-inner-wrapper">
+      <nav class="top-bar" data-topbar role="navigation">
+        <!-- This should be a cake block of course. -->
+        <div class="menu-background-image"></div>
+        <div class="menu-top-stuff" style="">
+          <?= $this->Html->image('Mariposa.png', ['class' => 'site-logo']); ?>
+          <div class="site-title-description">
+            <h2 class="site-title"><?= $this->fetch('simplicity_site_title'); ?></h2>
+            <h5 class="site-description" ><?= $this->fetch('simplicity_site_description'); ?></h5>
           </div>
-          <div class="cell small-3" data-sticky-container>
-            <div class="sticky" data-sticky data-anchor="content">
-              <?= $this->fetch('simplicity_side_menu') ?>
+        </div>
+        <div class="top-menu-bar">
+          <?= $this->fetch('simplicity_top_menu') ?>
+        </div>
+      </nav>
+      <?php 
+        // Detta är ju en alternativ position för toppmenyn. Med rätt färgval så blir det fint. Men den skalar inte snyggt!
+        // ...det verkar som du får kolla in zurbs css för att ha toppmenyer som skalar fint. 
+        //
+        // NÄ! Sno css o alltsammans från denna: http://zurb.com/building-blocks/header-subnav
+        // 
+        // Såg också att man måste kunna sätta en titel på en sida, som blir url-friendly. 
+        // ..själva ursprungsidén med att skriva in adressen uppe i urlen o så skapas den är inte så kul i praktiken, man 
+        //  undrar fort hur urlen ska se ut, och måste kunna de reglerna! ..bara för att sen sätta korrekt titel på en gång. 
+        // 
+        // Nå-flaggorna först! De ska hamna uppe till höger, en bit från toppen. Snyggigt. 
+      ?>
+      
+      <div id="simplicity-content">
+        <?= $this->fetch('simplicity_breadcrumbs') ?>
+                
+        <?= $this->Flash->render() ?>
+        
+        <div class="grid-container">
+          <div class="grid-x grid-margin-x">
+            <div class="cell">
+              <?= $this->fetch('content') ?>
+            </div>
+            <div class="cell small-3" data-sticky-container>
+              <div class="sticky" data-sticky data-anchor="content">
+                <?= $this->fetch('simplicity_side_menu') ?>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <footer>
-      <div class="grid-container">
-        <div class="grid-x grid-margin-x">
-          <div class="cell small-10">
+      <footer>
+        <div class="grid-container">
+          <div class="grid-x grid-margin-x">
             <?= $this->fetch('simplicity_footer_text'); ?>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
   </div>
     
 <?php // Zurb Foundation js really have to be at the bottom of the html file, otherwise it wont initialize correctly. ?>

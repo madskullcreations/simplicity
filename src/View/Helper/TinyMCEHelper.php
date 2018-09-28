@@ -33,12 +33,13 @@ class TinyMCEHelper extends Helper
         plugins: [
             "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
             "searchreplace wordcount visualblocks visualchars fullscreen insertdatetime media nonbreaking",
-            "save table contextmenu directionality emoticons template paste textcolor",
-            "code codesample",
+            "save table contextmenu directionality emoticons template paste",
+            
+            "code codesample textcolor colorpicker",
         ],
         relative_urls: false,
         file_browser_callback: fileBrowserCallBack,
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor",
         entity_encoding : "raw",
         setup: function (editor) {
             editor.on("init", function(args) {

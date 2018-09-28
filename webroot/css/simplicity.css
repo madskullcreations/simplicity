@@ -9,30 +9,35 @@ code[class*="language-"], pre[class*="language-"]{
   border-width: 0;
 }
  
-/* Footer at bottom: https://matthewjamestaylor.com/bottom-footer */
+/* Footer at bottom: https://foundation.zurb.com/forum/posts/53901-foundation-6-sticky-footer-pushed-down-with-off-canvas-and-flexbox-css-tutorial */
   body {
      margin:0;
-     padding:0;
-     height:100%;
   }
-  #simplicity-wrapper {
-     min-height:100%;
-     position:relative;
+  #simplicity-wrapper{
+    overflow: visible;
   }
-  #simplicity-content {
-     padding:10px;
-     padding-bottom:80px;   /* Height including padding of the footer */
+  #simplicity-inner-wrapper{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;    
+  }
+  #simplicity-content{
+    flex: 1 0 auto;
   }
   footer {
-    position:absolute;
-    bottom:0;
-    width:100%;
+    flex-shrink: 0;
+    
     height:60px; 
     padding: 10px;
     background-color: #dddddd;
     overflow: hidden;
-  }  
-
+  }
+  footer .cell{
+    display: flex;
+    align-items: center;  
+    justify-content: center;
+  }
+  
 ul.simplicity.root{
 	background-color: #2199E8;
 	font-weight: bold;

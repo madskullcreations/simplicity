@@ -102,16 +102,20 @@ class AppController extends Controller
         }
         
         // Fetch some site-global settings from the kitchen sink.
-        AppController::$simplicity_site_title = $kitchenSink->Retrieve('SimplicitySiteTitle', 'Aurora Rizo Lopez');//Simplicity CMS');
+        AppController::$simplicity_site_title = $kitchenSink->Retrieve('SimplicitySiteTitle', 'Simplicity CMS');
         AppController::$simplicity_site_description = $kitchenSink->Retrieve(
-            'SimplicitySiteDescription', 'Master in Business administration');
+            'SimplicitySiteDescription', 'So simple yet so powerful');
         AppController::$simplicity_footer_text = $kitchenSink->Retrieve(
-            'SimplicityFooterText', 'Simplicity CMS - Simple. Simple. Simple. | Powered by CakePHP and Zurb Foundation | A Madskull Creations product');
+            'SimplicityFooterText', '<div class="cell auto">Simplicity CMS - So simple yet so powerful</div><div class="cell auto">Powered by CakePHP and Zurb Foundation</div><div class="cell auto">A Madskull Creations product</div>');
         
         // To make it available from views as well. 
         $this->set('userIsAdmin', AppController::UserIsAdmin());
         $this->set('userIsAuthor', AppController::UserIsAuthor());
-                  
+
+        // Default layout is simplicity. To define your own, copy and rename src/Template/Layout/simplicity.ctp 
+        // and change here. Each controller can have their own layout, and you can even define a layout per view. 
+        $this->viewBuilder()->layout('simplicity');
+              
         // TESTING
         {
           $languages = TableRegistry::get('Languages');

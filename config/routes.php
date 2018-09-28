@@ -81,9 +81,10 @@ if($simplicity_setup_state > 1)
       $routes->connect('/pages/delete/*', ['controller' => 'EditablePages', 'action' => 'delete']);
 
       /**
-       * ..the simplicity_settings/edit is reserved as well.
+       * ..the simplicity_settings/* is reserved as well.
        */
-      $routes->connect('/simplicity_settings/edit', ['controller' => 'SimplicitySettings', 'action' => 'edit']);
+      $routes->connect('/simplicity_settings', ['controller' => 'SimplicitySettings']);
+      $routes->connect('/simplicity_settings/:action', ['controller' => 'SimplicitySettings']);
       
       /**
        * ..and connect all other pages to the 'EditablePages' controller. 

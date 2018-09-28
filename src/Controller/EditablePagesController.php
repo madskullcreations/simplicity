@@ -171,7 +171,6 @@ class EditablePagesController extends AppController
     }
     else 
     {
-      $this->viewBuilder()->layout('simplicity');
       $this->render('default');
     }
   }

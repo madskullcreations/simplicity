@@ -21,14 +21,12 @@ use Cake\ORM\TableRegistry;
  */
 class SimplicitySettingsController extends AppController
 {
-	public function edit()
+  public function index()
+  {
+  }
+  
+	public function language()
 	{
-	    if($this->UserIsAdmin() == false)
-		{
-			$this->Flash->error(__('You do not have access permission.'));
-			return $this->redirect('/');
-		}
-		
 		if ($this->request->is(['post', 'put']))
 		{
 			// debug($this->request->data);
