@@ -21,6 +21,8 @@ code[class*="language-"], pre[class*="language-"]{
     flex-direction: column;
     height: 100vh;    
   }
+  #simplicity-top-bar{
+  }
   #simplicity-content{
     flex: 1 0 auto;
   }

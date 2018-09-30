@@ -78,7 +78,7 @@ class EditablePagesController extends AppController
   public function display()
   {
     $path = func_get_args();
-    //debug($path);
+    // debug($path);
     
     $count = count($path);
     if(!$count) 
@@ -132,11 +132,11 @@ class EditablePagesController extends AppController
     // Load the content of the current page.
     $this->richTextElements = TableRegistry::get('RichTextElements');
       
-    $element = $this->richTextElements->GetElement(
+    $richTextElement = $this->richTextElements->GetElement(
         $pageName, $categoryId, $language, $createIfNotExist);
-    // debug($element);
+    // debug($richTextElement);
     
-    if($element == null)
+    if($richTextElement == null)
     {
       // Element did not exist and visitor was not allowed to create a page.
       $this->Flash->error(__('Page does not exist.'));
@@ -144,25 +144,35 @@ class EditablePagesController extends AppController
     }
     
     // Set the path so the Menu helper can use it to create the breadcrumb path correctly.
-    $this->Menu->SetPathFor($element);
-    // debug($element->path);
+    $this->Menu->SetPathFor($richTextElement);
+    // debug($richTextElement->path);
     
     $breadcrumbPath = $this->Menu->GetPath($categoryNames, $language);
     // debug($breadcrumbPath);
     
     // Get the menu tree with the root elements and their immediate children.
-      $tree = $this->Menu->GetTree($parentCategoryId, $level, $language);
-      //	$tree = $this->Menu->GetTree(null, 20);
-    // 			debug($tree);
+    $tree = $this->Menu->GetTree($parentCategoryId, $level, $language);
+    //	$tree = $this->Menu->GetTree(null, 20);
+    // debug($tree);
     
     $homeTree = $this->Menu->GetTree(null, 5, $language); 			
     
-    $this->set(compact('categoryNames', 'pageName', 'language', 'element', 'breadcrumbPath', 'tree', 'homeTree'));
+    $this->set(compact('categoryNames', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'tree', 'homeTree'));
 
     // Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
     // Using DS as we will check for a file's existence on the server.
+    // 
+    // Example:
+    //  You have a path to your blog, like this:
+    //    /fancy/path/to/my/blog
+    //  If you want to create your own design for this page, the .ctp file 
+    //  must then in this folder structure on the server:
+    //    /src/Template/EditablePages/fancy/path/to/my/blog.ctp
+    //  To create a .ctp file for the fancy-page, put it here:
+    //    /src/Template/EditablePages/fancy.ctp
+    // 
     $file = APP.'Template'.DS.'EditablePages'.DS.implode(DS, $path).'.ctp';
-    //debug($file);
+    // debug($file);
       
     if (file_exists($file)) 
     {

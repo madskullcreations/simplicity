@@ -1,39 +1,20 @@
 <?php
-
 use App\Controller\EditablePagesController;
-
-$this->start('simplicity_top_menu');
-	echo $this->Menu->GetMenu($homeTree, 'dropdown menu header-subnav', 'simplicity menu');
-	//echo $this->Menu->GetMenu($homeTree, 'simplicity dropdown menu', 'simplicity menu');
-$this->end();
-$this->start('simplicity_side_menu');
-	echo '<h4>Context menu</h4>';
-	echo $this->Menu->GetAccordionMenu($tree); 
-$this->end();
-$this->start('simplicity_breadcrumbs');
-	echo $this->Menu->GetBreadCrumb($breadcrumbPath, $element);
-$this->end();
-$this->start('simplicity_page_name');
-	// A bit odd, but to use a utility, we must give full path. 
-	echo Cake\Utility\Inflector::camelize($element->name);
-$this->end();
-
-//debug($element->identifier);
 ?>
 
 <div>
   <?php 
     // debug($breadcrumbPath);
-    // debug($element);
-    // debug($this->Menu->GetBreadCrumb($breadcrumbPath, $element)); 
+    // debug($richTextElement);
+    // debug($this->Menu->GetBreadCrumb($breadcrumbPath, $richTextElement)); 
   ?>
-	<?= $element->content ?>
+	<?= $richTextElement->content ?>
 </div>
 <div>
-	<?php $element->created ?>
+	<?php $richTextElement->created ?>
 </div>
 <div>
-	<?php $element->modified ?>
+	<?php $richTextElement->modified ?>
 </div>
 
 <?php
@@ -46,7 +27,7 @@ $this->end();
 				__('Edit page'), 
 				[
 						'action' => 'edit', 
-						$element->id,
+						$richTextElement->id,
 						'?' => ['korvar' => '42']
 				],
 				[
@@ -59,7 +40,7 @@ $this->end();
 				__('Erase page'), 
 				[
 						'action' => 'delete', 
-						$element->id,
+						$richTextElement->id,
 						'?' => ['franken' => 'stein']
 				],
 				[

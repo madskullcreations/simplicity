@@ -109,8 +109,38 @@ class AppController extends Controller
             'SimplicityFooterText', '<div class="cell auto">Simplicity CMS - So simple yet so powerful</div><div class="cell auto">Powered by CakePHP and Zurb Foundation</div><div class="cell auto">A Madskull Creations product</div>');
         
         // To make it available from views as well. 
+        $this->set('userIsLoggedIn', AppController::UserIsLoggedIn());
         $this->set('userIsAdmin', AppController::UserIsAdmin());
         $this->set('userIsAuthor', AppController::UserIsAuthor());
+
+        // All (simplicity) controllers except EditablePagesController follow the structure /controller/action, 
+        // so create a breadcrumb path from the current url.
+        if($this->request->getParam('controller') != 'EditablePages')
+        {
+          $url = explode('/', $this->request->url);
+          // debug($url);
+          
+          if(count($url) > 1)
+          {
+            $controllerUrlName = $url[0];
+            $actionUrlName = $url[1];
+          }
+          else
+          {
+            $controllerUrlName = '';
+            $actionUrlName = '';
+          }
+          
+          // No worries, EditablePagesController set these too.
+          $this->set('breadcrumbPath', array());
+          $this->set('homeTree', array());
+          $rte = (object)['name' => $actionUrlName, 'path' => $controllerUrlName.DS];
+          $this->set('richTextElement', $rte);
+        }
+        
+        // debug($this->request);
+        // debug($this->request->getParam('controller'));
+        // debug($this->request->url);
 
         // Default layout is simplicity. To define your own, copy and rename src/Template/Layout/simplicity.ctp 
         // and change here. Each controller can have their own layout, and you can even define a layout per view. 

@@ -35,15 +35,15 @@ class MenuComponent extends Component
 		$richTextElement->path = $this->categories->PathFor($richTextElement->category_id);
 	}
 	
-	/* Returns the given path as an array of category elements, or null if not the entire path exists.
+	/* Returns the given path as an array of category elements, or empty array if not the entire path exists.
 	 * 
 	 */
 	public function GetPath($categoryNames, $language)
 	{
 		$elements = $this->categories->GetPath($categoryNames, $language, false, false);
-		
-		if($elements == null)
-			return null;
+    
+		if($elements == null || count($elements) == 0)
+			return array();
 		
 		foreach($elements as &$element)
 		{

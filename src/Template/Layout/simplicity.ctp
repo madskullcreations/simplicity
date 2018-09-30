@@ -4,6 +4,27 @@
  * 
  */
 
+
+/* Please feel free to re-define these in your own views. 
+ * 
+ */
+$this->start('simplicity_top_menu');
+	echo $this->Menu->GetMenu($homeTree, 'dropdown menu header-subnav', 'simplicity menu');
+	//echo $this->Menu->GetMenu($homeTree, 'simplicity dropdown menu', 'simplicity menu');
+$this->end();
+$this->start('simplicity_side_menu');
+	echo '<h4>Menu</h4>';
+	echo $this->Menu->GetAccordionMenu($tree); 
+$this->end();
+$this->start('simplicity_breadcrumbs');
+	echo $this->Menu->GetBreadCrumb($breadcrumbPath, $richTextElement);
+$this->end();
+$this->start('simplicity_page_name');
+	// A bit odd, but to use a utility, we must give full path. 
+	echo Cake\Utility\Inflector::camelize($richTextElement->name);
+$this->end();
+
+//debug($richTextElement->identifier);
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,111 +49,38 @@
 <body>
 	<style>
 		.site-logo{
-			max-width: 100px;
-		}
-		.top-bar{
-			height: 120px;
-			padding: 0;
-		}
-		.menu-background-image{
-			background: url('/img/butterflies.jpg') no-repeat center center;
-			background-size: cover; 
-			position: absolute;
-			top: 0px; 
-			left: 0px;
-			
-			height: auto;
-			min-height: 120px;
-			width: 100%;
-		}
-		.top-menu-bar{
-			position: absolute;
-			bottom: 0px;
-			right: 0px;
-			
-			max-width: 70%;
-		}
-		
-		.menu-top-stuff{
-			position: relative; 
-			width: 30%;
-			height: 100%;
-			padding: 10px;
-			background-color: rgba(255,255,255,0.3);
-			
-			color: white;
+			max-width: 140px;
 		}
 		.site-title-description{
-			position: absolute; 
-			left: 100px; 
-			top: 40px; 
 			font-family: "Open Sans";
+      display: flex;
+      align-items: center;  
+      justify-content: center;      
 		}
 		.site-title{
 			margin-bottom: 0px;
 			line-height: 0.95;
-			font-family: inherit;
 			font-size: 2.5vw;
 		}
 		.site-description{
-			font-family: inherit;
 			font-size: 1.5vw;
 		}
-		
-@media (max-width: 600px){
-		.top-bar{
-			height: auto;
-			padding: 0;
-		}
-		.menu-background-image{
-			background: url('/img/butterflies.jpg') no-repeat center center;
-			background-size: cover; 
-			position: absolute;
-			top: 0px; 
-			left: 0px;
-			
-			height: auto;
-			min-height: 100%;
-			width: 100%;
-		}		
-		.menu-top-stuff{
-			width: 100%;
-			padding: 10px;
-			background-color: rgba(255,255,255,0.3);
-			
-			color: white;
-		}
 		.top-menu-bar{
-			position: relative;
-			max-width: 100%;
-		}
-		.site-title{
-			margin-bottom: 0px;
-			line-height: 0.95;
-			font-family: inherit;
-			font-size: 4.5vw;
-		}
-		.site-description{
-			font-family: inherit;
-			font-size: 3.5vw;
-		}		
-}
-		
-		.top-bar ul{
+    }
+		.top-menu-bar ul{
 			background-color: rgba(255,255,255,0.3);
 		}
-		
-		.header-subnav {
+		.top-menu-bar .header-subnav {
 		  float: none;
 		  position: relative;
 		  text-align: center;
 		  margin-bottom: 0;
 		}
-		.header-subnav li {
+		.top-menu-bar .header-subnav li {
 			float: none;
 			display: inline-block; 
 		}
-		.header-subnav li a {
+		.top-menu-bar .header-subnav li a {
 			padding: 0.9rem 1rem 0.75rem;
 			font-size: 0.875rem;
 			color: #fff;
@@ -140,11 +88,11 @@
 			font-weight: bold;
 			letter-spacing: 1px; 
 		}
-		.header-subnav li a.is-active {
+		.top-menu-bar .header-subnav li a.is-active {
 			background: rgba(250, 250, 250, 0.7);
 			color: #333; 
 		}
-		.header-subnav li a:hover {
+		.top-menu-bar .header-subnav li a:hover {
 			background: rgba(250, 250, 250, 0.7);
 			color: #333;
 			transition: all .25s ease-in-out; 
@@ -152,18 +100,22 @@
 	</style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
-      <nav class="top-bar" data-topbar role="navigation">
-        <!-- This should be a cake block of course. -->
-        <div class="menu-background-image"></div>
-        <div class="menu-top-stuff" style="">
-          <?= $this->Html->image('Mariposa.png', ['class' => 'site-logo']); ?>
-          <div class="site-title-description">
-            <h2 class="site-title"><?= $this->fetch('simplicity_site_title'); ?></h2>
-            <h5 class="site-description" ><?= $this->fetch('simplicity_site_description'); ?></h5>
+      <nav id="simplicity-top-bar" class="top-bar">
+        <div class="grid-container">
+          <div class="grid-x grid-margin-x site-title-description">
+            <div class="cell small-4">
+              <?= $this->Html->image('simplicity.png', ['class' => 'site-logo']); ?>
+            </div>
+            <div class="cell auto">
+              <h2 class="site-title"><?= $this->fetch('simplicity_site_title'); ?></h2>
+              <h5 class="site-description" ><?= $this->fetch('simplicity_site_description'); ?></h5>          
+            </div>            
           </div>
-        </div>
-        <div class="top-menu-bar">
-          <?= $this->fetch('simplicity_top_menu') ?>
+          <div class="grid-x grid-margin-x top-menu-bar">
+            <div class="cell">
+              <?= $this->fetch('simplicity_top_menu') ?>
+            </div>
+          </div>
         </div>
       </nav>
       <?php 
@@ -186,13 +138,18 @@
         
         <div class="grid-container">
           <div class="grid-x grid-margin-x">
-            <div class="cell">
-              <?= $this->fetch('content') ?>
+            <?php
+              if($userIsLoggedIn)
+              {
+            ?>
+            <div class="cell small-3">
+              <?= $this->fetch('simplicity_side_menu') ?>
             </div>
-            <div class="cell small-3" data-sticky-container>
-              <div class="sticky" data-sticky data-anchor="content">
-                <?= $this->fetch('simplicity_side_menu') ?>
-              </div>
+            <?php
+              }
+            ?>
+            <div class="cell auto">
+              <?= $this->fetch('content') ?>
             </div>
           </div>
         </div>

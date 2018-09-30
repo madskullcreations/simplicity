@@ -15,6 +15,9 @@ class MenuHelper extends Helper
 	 */
 	public function GetBreadCrumb($path, $richTextElement, $ulClass = 'simplicity breadcrumbs', $liClass = 'crumb')
 	{
+    // debug($path);
+    // debug($richTextElement);
+    
 		$html = '';
 		
 		$html .= '<ul class="'.$ulClass.'">';
@@ -93,7 +96,7 @@ class MenuHelper extends Helper
 // OBS: Kryss-grejen måste du så klart kolla upp om det inte finns en härlig js/css plugin som du kan använda. 
 //   <-Vägra bygga saker som redan finns. 
 
-			$html .= $this->Html->link($element->name.' - '.$element->level, $element->path.$element->name);
+			$html .= $this->Html->link($element->name.' ('.$element->level.')', $element->path.$element->name);
 			
 			if(count($element->children) > 0)
 			{
