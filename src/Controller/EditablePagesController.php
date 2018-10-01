@@ -151,13 +151,13 @@ class EditablePagesController extends AppController
     // debug($breadcrumbPath);
     
     // Get the menu tree with the root elements and their immediate children.
-    $tree = $this->Menu->GetTree($parentCategoryId, $level, $language);
-    //	$tree = $this->Menu->GetTree(null, 20);
-    // debug($tree);
+    $sideMenuTree = $this->Menu->GetTree($parentCategoryId, $level, $language);
+    //	$sideMenuTree = $this->Menu->GetTree(null, 20);
+    // debug($sideMenuTree);
     
     $homeTree = $this->Menu->GetTree(null, 5, $language); 			
     
-    $this->set(compact('categoryNames', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'tree', 'homeTree'));
+    $this->set(compact('categoryNames', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'sideMenuTree', 'homeTree'));
 
     // Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
     // Using DS as we will check for a file's existence on the server.

@@ -54,6 +54,7 @@ class AppController extends Controller
         $this->loadComponent('Security');
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Menu');
         $this->loadComponent('Auth', [
             'loginRedirect' => [
                 'controller' => 'EditablePages',
@@ -113,10 +114,11 @@ class AppController extends Controller
         $this->set('userIsAdmin', AppController::UserIsAdmin());
         $this->set('userIsAuthor', AppController::UserIsAuthor());
 
-        // All (simplicity) controllers except EditablePagesController follow the structure /controller/action, 
-        // so create a breadcrumb path from the current url.
         if($this->request->getParam('controller') != 'EditablePages')
         {
+          // Not EditablePagesController, so we should create content for the menus and breadcrumbs following the cake-pattern controller/action.
+          // NOTE: EditablePagesController set these on its own, following it's own patterns.
+          
           $url = explode('/', $this->request->url);
           // debug($url);
           
@@ -131,11 +133,24 @@ class AppController extends Controller
             $actionUrlName = '';
           }
           
-          // No worries, EditablePagesController set these too.
           $this->set('breadcrumbPath', array());
           $this->set('homeTree', array());
-          $rte = (object)['name' => $actionUrlName, 'path' => $controllerUrlName.DS];
+          $rte = (object)['name' => $actionUrlName, 'path' => $controllerUrlName.DS.$actionUrlName];
           $this->set('richTextElement', $rte);
+          
+          $sideMenuTree = array();
+          $this->set('sideMenuTree', $sideMenuTree);
+        }
+        
+        if(AppController::UserIsLoggedIn())
+        {
+          $sideMenuTreeAdmin = array();
+          
+          $sub = array();
+          $sub[] = $this->Menu->CreateMenuElement(__("Add new language"), 1, 'simplicity_settings/language');
+          $sideMenuTreeAdmin[] = $this->Menu->CreateMenuElement(__("Overview"), 0, 'simplicity_settings', 'Categories', $sub);
+                    
+          $this->set('sideMenuTreeAdmin', $sideMenuTreeAdmin);
         }
         
         // debug($this->request);

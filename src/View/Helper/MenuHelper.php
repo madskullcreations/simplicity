@@ -32,7 +32,7 @@ class MenuHelper extends Helper
 		}
 		
 		$html .= '<li class="'.$liClass.' current">';
-		$html .= $this->Html->link($richTextElement->name, $richTextElement->path.$richTextElement->name);
+		$html .= $this->Html->link($richTextElement->name, $richTextElement->path);
 		$html .= '</li>';
 		$html .= '</ul>';
 		
@@ -54,6 +54,14 @@ class MenuHelper extends Helper
 			$first = '';
 		}
 		$html .= '</ul>';
+
+    $html .= '
+      <script>
+        $("li.simplicity > a").click(function(){
+          $(this).unbind("click");
+          $(this).addClass("fancy-link");
+        });
+      </script>';
 		
 		return $html;
 	}
@@ -79,24 +87,22 @@ class MenuHelper extends Helper
 	
 	/* Recursively build the menu out of <ul> and <li> elements.
 	 * 
+   * $element must be an object with the following properties:
+   *   string name, 
+   *   string class_name, // Should be 'Categories' to be a tree-element with children elements.
+   *   string level, 
+   *   string path, 
+   *   array  children.
 	 */
 	protected function _GetMenu(&$element, $ulClass, $liClass, $first, $level)
 	{
 		$html = '<li class="'.$liClass.' '.$first.' level_'.$level.'">';
 		
-		$repository = $element->source();
-		
 // TODO: css 'active_page' for the page currently active. 
 
-		if($repository == 'Categories')
+		if($element->class_name == 'Categories')
 		{
-// TODO: Det kan ju finnas varianter på denna funktion: (och GetMenu() så klart) 
-//  En som lägger in ett 'kryss' framför, så man kan stänga en kategori som har barn i sig.
-//  En som funkar som denna gör nu. (Denna är bra för att bygga css för en left-to-right meny högst opp på sidan)
-// OBS: Kryss-grejen måste du så klart kolla upp om det inte finns en härlig js/css plugin som du kan använda. 
-//   <-Vägra bygga saker som redan finns. 
-
-			$html .= $this->Html->link($element->name.' ('.$element->level.')', $element->path.$element->name);
+			$html .= $this->Html->link($element->name.' ('.$element->level.')', $element->path);
 			
 			if(count($element->children) > 0)
 			{
@@ -112,7 +118,7 @@ class MenuHelper extends Helper
 		}
 		else // RichTextElements 
 		{
-			$html .= $this->Html->link($element->name, $element->path.$element->name);
+			$html .= $this->Html->link($element->name, $element->path, ['class' => 'fancy-link']);
 		}
 		
 		$html .= '</li>';

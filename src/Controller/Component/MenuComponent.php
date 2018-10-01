@@ -27,12 +27,33 @@ class MenuComponent extends Component
 		$this->richTextElements = TableRegistry::get('RichTextElements');
 	}
 	
-	/* Set the $richTextElement->path for the given rte as an url-path, like 'trolls/eat/' for the page named 'snails'.
+  /* If you create a menu tree without RichTextElements, you can use this helper.
+   * NOTE: The $name is the visible name, while $path is the actual url. This is different from RichTextElements where the elements name 
+   *  are part of the url.
+   * 
+   * To create a menu element with no children (no sub-menu-elements below) simply call:
+   *  $elm = CreateMenuElement('Stuff', 0, 'my_controller/do_stuff');
+   * To create a  menu element with children elements, make sure $class_name is set to 'Categories', and give 
+   * an array of $children elements:
+   *  $elm = CreateMenuElement('My Top Menu Element', 0, 'my_controller/index', 'Categories', $children);
+   * 
+   */
+  public function CreateMenuElement($name, $level, $path, $class_name = 'RichTextElements', $children = array())
+  {
+    return (object)[
+      'name' => $name, 
+      'class_name' => $class_name, 
+      'level' => $level, 
+      'path' => $path, 
+      'children' => $children];
+  }
+  
+	/* Set the $richTextElement->path for the given rte as an url-path, like 'trolls/eat/snails' for the page named 'snails'.
 	 * 
 	 */
 	public function SetPathFor(&$richTextElement)
 	{
-		$richTextElement->path = $this->categories->PathFor($richTextElement->category_id);
+		$richTextElement->path = $this->categories->PathFor($richTextElement->category_id).$richTextElement->name;
 	}
 	
 	/* Returns the given path as an array of category elements, or empty array if not the entire path exists.
@@ -102,7 +123,10 @@ class MenuComponent extends Component
 		{
 			$names[] = $category->name;
 			$this->_MergeContent($category, $level - 1);
+      
+      $category->class_name = $category->source();
 		}
+    unset($category);
 		// debug($names);
 		
 		// Get the RTEs for the root node.
@@ -121,7 +145,9 @@ class MenuComponent extends Component
 		
 		foreach($rtes as &$rte)
 		{
-			$rte->path = $this->_GetPath($rte->category_id);
+			$rte->path = $this->_GetPath($rte->category_id).$rte->name;
+      
+      $rte->class_name = $rte->source();
 		}
 		unset($rte);
 		
@@ -162,14 +188,17 @@ class MenuComponent extends Component
 	 */
 	protected function _MergeContent(&$category, $level)
 	{
-		$category->path = $this->_GetPath($category->parent_id);
+		$category->path = $this->_GetPath($category->parent_id).$category->name;
 		
 		$names = array();
 		foreach($category->children as &$child)
 		{
 			$names[] = $child->name;
 			$this->_MergeContent($child, $level);
+      
+      $child->class_name = $child->source();
 		}
+    unset($child);
 	
 		if($category->level < $level)
 		{
@@ -188,7 +217,8 @@ class MenuComponent extends Component
 				
 			foreach($rtes as &$rte)
 			{
-				$rte->path = $this->_GetPath($rte->category_id);
+				$rte->path = $this->_GetPath($rte->category_id).$rte->name;
+        $rte->class_name = $rte->source();
 			}
 			unset($rte);
 			

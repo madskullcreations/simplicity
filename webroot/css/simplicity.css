@@ -22,11 +22,12 @@ code[class*="language-"], pre[class*="language-"]{
     height: 100vh;    
   }
   #simplicity-top-bar{
+    flex-shrink: 0;
   }
   #simplicity-content{
     flex: 1 0 auto;
   }
-  footer {
+  .simplicity-footer{
     flex-shrink: 0;
     
     height:60px; 
@@ -34,7 +35,7 @@ code[class*="language-"], pre[class*="language-"]{
     background-color: #dddddd;
     overflow: hidden;
   }
-  footer .cell{
+  .simplicity-footer .cell{
     display: flex;
     align-items: center;  
     justify-content: center;
@@ -59,6 +60,9 @@ ul.simplicity.breadcrumbs{
 }
 li.simplicity a{
 	color: #FAFAFA;
+}
+li.simplicity a.fancy-link{
+	color: #DADAFF;
 }
 
 .button.top-margin{

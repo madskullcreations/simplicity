@@ -14,7 +14,27 @@ $this->start('simplicity_top_menu');
 $this->end();
 $this->start('simplicity_side_menu');
 	echo '<h4>Menu</h4>';
-	echo $this->Menu->GetAccordionMenu($tree); 
+  
+  if($userIsLoggedIn)
+  {
+?>
+  <div style="margin-bottom: 30px;">
+    <h6><?= __('Administrator') ?></h6>
+    <?= $this->Menu->GetAccordionMenu($sideMenuTreeAdmin); ?>
+  </div>
+<?php
+  }
+  
+  // Normal users have this menu, or the side-menu are not shown at all.
+  if(count($sideMenuTree) > 0)
+  {
+?>
+  <div style="margin-bottom: 30px;">
+    <h6><?= __('Local Content') ?></h6>
+    <?= $this->Menu->GetAccordionMenu($sideMenuTree); ?>
+  </div>
+<?php
+  }
 $this->end();
 $this->start('simplicity_breadcrumbs');
 	echo $this->Menu->GetBreadCrumb($breadcrumbPath, $richTextElement);
@@ -154,7 +174,7 @@ $this->end();
           </div>
         </div>
       </div>
-      <footer>
+      <footer class="simplicity-footer">
         <div class="grid-container">
           <div class="grid-x grid-margin-x">
             <?= $this->fetch('simplicity_footer_text'); ?>
