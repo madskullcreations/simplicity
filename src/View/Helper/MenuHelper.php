@@ -42,14 +42,17 @@ class MenuHelper extends Helper
 	/* Accordion - Fancy word for a top-down menu with collapsible sub-menus. 
 	 * 
 	 */
-	public function GetAccordionMenu($menuTree, $ulClass = 'simplicity accordion', $subUlClass = 'menu vertical nested', $liClass = 'simplicity')
+	public function GetAccordionMenu($menuTree, $ulClass = 'simplicity-accordion-menu', $subUlClass = 'menu vertical nested', $liClass = 'simplicity')
 	{
 		$html = '';
 		
-		$html .= '<ul class="'.$ulClass.' vertical menu root level_1" aria-autoclose="false" data-accordion-menu>';
+		$html .= '<ul class="'.$ulClass.' accordion vertical menu root level_1" aria-autoclose="false" data-accordion-menu>';
 		$first = 'first';
 		foreach($menuTree as &$element)
 		{
+      if($element->class_name == 'Categories')
+        $element->name = '∘ '.$element->name;
+    
 			$html .= $this->_GetMenu($element, $subUlClass, $liClass, $first, 1);
 			$first = '';
 		}
@@ -57,7 +60,7 @@ class MenuHelper extends Helper
 
     $html .= '
       <script>
-        $("li.simplicity > a").click(function(){
+        $(".'.$ulClass.'").find("a").click(function(){
           $(this).unbind("click");
           $(this).addClass("fancy-link");
         });
@@ -98,11 +101,9 @@ class MenuHelper extends Helper
 	{
 		$html = '<li class="'.$liClass.' '.$first.' level_'.$level.'">';
 		
-// TODO: css 'active_page' for the page currently active. 
-
 		if($element->class_name == 'Categories')
 		{
-			$html .= $this->Html->link($element->name.' ('.$element->level.')', $element->path);
+			$html .= $this->Html->link($element->name, $element->path);
 			
 			if(count($element->children) > 0)
 			{

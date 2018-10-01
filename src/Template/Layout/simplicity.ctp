@@ -67,64 +67,13 @@ $this->end();
   <?= $this->Html->script('jquery.min.js') ?>
 </head>
 <body>
-	<style>
-		.site-logo{
-			max-width: 140px;
-		}
-		.site-title-description{
-			font-family: "Open Sans";
-      display: flex;
-      align-items: center;  
-      justify-content: center;      
-		}
-		.site-title{
-			margin-bottom: 0px;
-			line-height: 0.95;
-			font-size: 2.5vw;
-		}
-		.site-description{
-			font-size: 1.5vw;
-		}
-		.top-menu-bar{
-    }
-		.top-menu-bar ul{
-			background-color: rgba(255,255,255,0.3);
-		}
-		.top-menu-bar .header-subnav {
-		  float: none;
-		  position: relative;
-		  text-align: center;
-		  margin-bottom: 0;
-		}
-		.top-menu-bar .header-subnav li {
-			float: none;
-			display: inline-block; 
-		}
-		.top-menu-bar .header-subnav li a {
-			padding: 0.9rem 1rem 0.75rem;
-			font-size: 0.875rem;
-			color: #fff;
-			display: block;
-			font-weight: bold;
-			letter-spacing: 1px; 
-		}
-		.top-menu-bar .header-subnav li a.is-active {
-			background: rgba(250, 250, 250, 0.7);
-			color: #333; 
-		}
-		.top-menu-bar .header-subnav li a:hover {
-			background: rgba(250, 250, 250, 0.7);
-			color: #333;
-			transition: all .25s ease-in-out; 
-		}
-	</style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
       <nav id="simplicity-top-bar" class="top-bar">
         <div class="grid-container">
           <div class="grid-x grid-margin-x site-title-description">
             <div class="cell small-4">
-              <?= $this->Html->image('simplicity.png', ['class' => 'site-logo']); ?>
+              <a href="/"><?= $this->Html->image('simplicity.png', ['class' => 'site-logo']); ?></a>
             </div>
             <div class="cell auto">
               <h2 class="site-title"><?= $this->fetch('simplicity_site_title'); ?></h2>
@@ -188,6 +137,8 @@ $this->end();
   <?= $this->Html->script('zurb/foundation.min.js') ?>
   <script>
     $(document).foundation();
+    
+    $('.site-logo').attr('draggable', false);
   </script>
   
   <?= $this->Html->script('prism') ?>
