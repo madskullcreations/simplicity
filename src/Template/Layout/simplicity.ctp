@@ -10,7 +10,6 @@
  */
 $this->start('simplicity_top_menu');
 	echo $this->Menu->GetMenu($homeTree, 'dropdown menu header-subnav', 'simplicity menu');
-	//echo $this->Menu->GetMenu($homeTree, 'simplicity dropdown menu', 'simplicity menu');
 $this->end();
 $this->start('simplicity_side_menu');
 	echo '<h4>Menu</h4>';
@@ -73,7 +72,10 @@ $this->end();
         <div class="grid-container">
           <div class="grid-x grid-margin-x site-title-description">
             <div class="cell small-4">
-              <a href="/"><?= $this->Html->image('simplicity.png', ['class' => 'site-logo']); ?></a>
+              <?php 
+                $img = $this->Html->image('simplicity.png', ['class' => 'site-logo']);
+                echo $this->Html->link($img, '/', ['escape' => false]); 
+              ?>
             </div>
             <div class="cell auto">
               <h2 class="site-title"><?= $this->fetch('simplicity_site_title'); ?></h2>

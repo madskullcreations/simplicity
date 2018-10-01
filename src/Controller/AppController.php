@@ -114,28 +114,38 @@ class AppController extends Controller
         $this->set('userIsAdmin', AppController::UserIsAdmin());
         $this->set('userIsAuthor', AppController::UserIsAuthor());
 
-        if($this->request->getParam('controller') != 'EditablePages')
+        if($this->request->getParam('controller') != 'EditablePages' || $this->request->getParam('action') != 'display')
         {
-          // Not EditablePagesController, so we should create content for the menus and breadcrumbs following the cake-pattern controller/action.
+          // Not EditablePagesController::display(), so we should create content for the menus and breadcrumbs following the cake-pattern controller/action.
           // NOTE: EditablePagesController set these on its own, following it's own patterns.
           
-          $url = explode('/', $this->request->url);
-          // debug($url);
+          $urlParts = explode('/', $this->request->url);
+          // debug($urlParts);
           
-          if(count($url) > 1)
+          if(count($urlParts) > 1)
           {
-            $controllerUrlName = $url[0];
-            $actionUrlName = $url[1];
+            $controllerUrlName = $urlParts[0];
+            $actionUrlName = $urlParts[1];
+            $url = $controllerUrlName.DS.$actionUrlName;
+            
+            if(count($urlParts) > 2)
+            {
+              unset($urlParts[0]);
+              unset($urlParts[1]);
+              $remainingUrlParts = implode($urlParts);
+              
+              $url .= DS.$remainingUrlParts;
+            }
           }
           else
           {
-            $controllerUrlName = '';
             $actionUrlName = '';
+            $url = '';
           }
           
           $this->set('breadcrumbPath', array());
           $this->set('homeTree', array());
-          $rte = (object)['name' => $actionUrlName, 'path' => $controllerUrlName.DS.$actionUrlName];
+          $rte = (object)['name' => $actionUrlName, 'path' => $url];
           $this->set('richTextElement', $rte);
           
           $sideMenuTree = array();

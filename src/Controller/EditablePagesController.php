@@ -33,6 +33,9 @@ class EditablePagesController extends AppController
 		
 		$this->categories = TableRegistry::get('Categories');
 		$this->richTextElements = TableRegistry::get('RichTextElements');
+    
+    $homeTree = $this->Menu->GetTree(null, 5, AppController::$selectedLanguage);
+    $this->set(compact('homeTree'));
 	}
 
   public function beforeFilter(Event $event)
@@ -154,10 +157,8 @@ class EditablePagesController extends AppController
     $sideMenuTree = $this->Menu->GetTree($parentCategoryId, $level, $language);
     //	$sideMenuTree = $this->Menu->GetTree(null, 20);
     // debug($sideMenuTree);
-    
-    $homeTree = $this->Menu->GetTree(null, 5, $language); 			
-    
-    $this->set(compact('categoryNames', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'sideMenuTree', 'homeTree'));
+        
+    $this->set(compact('categoryNames', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'sideMenuTree'));
 
     // Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
     // Using DS as we will check for a file's existence on the server.

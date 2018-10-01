@@ -97,7 +97,7 @@ class RichTextElementsTable extends Table
 		
 		// TODO: subtrahera från allLanguages, använd i edit().
 		$res = array_diff($allLanguages, $presentLanguages);
-		debug($res);
+		// debug($res);
 		
 		return $res;
 	}
