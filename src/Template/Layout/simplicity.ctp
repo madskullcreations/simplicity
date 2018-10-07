@@ -9,7 +9,7 @@
  * 
  */
 $this->start('simplicity_top_menu');
-	echo $this->Menu->GetMenu($homeTree, 'dropdown menu header-subnav', 'simplicity menu');
+	echo $this->Menu->GetMenu($homeTree, 'simplicity_top_menu', 'dropdown menu header-subnav', 'simplicity menu');
 $this->end();
 $this->start('simplicity_side_menu');
 	echo '<h4>Menu</h4>';
@@ -68,38 +68,44 @@ $this->end();
 <body>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
-      <nav id="simplicity-top-bar" class="top-bar">
+      <nav id="simplicity-top-bar" class="">
+        <?php
+          if($userIsLoggedIn)
+          {
+            echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
+          }
+          else
+          {
+            echo '<a class="button login" title="'.__("Login").'" href="/users/login">'.__("Login").'</a>';
+          }
+        ?>
         <div class="grid-container">
-          <div class="grid-x grid-margin-x site-title-description">
-            <div class="cell small-4">
+          <div class="grid-x site-title-description">
+            <div class="cell small-4 medium-3 large-2">
               <?php 
                 $img = $this->Html->image('simplicity.png', ['class' => 'site-logo']);
                 echo $this->Html->link($img, '/', ['escape' => false]); 
               ?>
             </div>
-            <div class="cell auto">
+            <div class="cell shrink">
               <h2 class="site-title"><?= $this->fetch('simplicity_site_title'); ?></h2>
               <h5 class="site-description" ><?= $this->fetch('simplicity_site_description'); ?></h5>          
-            </div>            
+            </div>
+            <div class="cell auto">
+              &nbsp;
+            </div>
           </div>
-          <div class="grid-x grid-margin-x top-menu-bar">
-            <div class="cell">
+        </div>
+        <div class="grid-container top-menu-bar">
+          <div class="grid-x">
+            <div class="cell small-12 ">
               <?= $this->fetch('simplicity_top_menu') ?>
             </div>
           </div>
         </div>
       </nav>
       <?php 
-        // Detta är ju en alternativ position för toppmenyn. Med rätt färgval så blir det fint. Men den skalar inte snyggt!
-        // ...det verkar som du får kolla in zurbs css för att ha toppmenyer som skalar fint. 
-        //
-        // NÄ! Sno css o alltsammans från denna: http://zurb.com/building-blocks/header-subnav
-        // 
         // Såg också att man måste kunna sätta en titel på en sida, som blir url-friendly. 
-        // ..själva ursprungsidén med att skriva in adressen uppe i urlen o så skapas den är inte så kul i praktiken, man 
-        //  undrar fort hur urlen ska se ut, och måste kunna de reglerna! ..bara för att sen sätta korrekt titel på en gång. 
-        // 
-        // Nå-flaggorna först! De ska hamna uppe till höger, en bit från toppen. Snyggigt. 
       ?>
       
       <div id="simplicity-content">

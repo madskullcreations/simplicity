@@ -72,11 +72,18 @@ class MenuHelper extends Helper
 	/* Render the html for the given menu tree. 
 	 * 
 	 */
-	public function GetMenu($menuTree, $ulClass = 'simplicity', $subUlClass = 'menu', $liClass = 'simplicity')
+	public function GetMenu($menuTree, $menuId, $ulClass = 'simplicity', $subUlClass = 'menu', $liClass = 'simplicity')
 	{
 		$html = '';
 				
-		$html .= '<ul class="'.$ulClass.' root level_1" aria-autoclose="false" data-dropdown-menu>';
+    $html .= '
+      <div class="title-bar" data-responsive-toggle="'.$menuId.'" data-hide-for="medium" style="display: none;">
+        <button class="menu-icon" type="button" data-toggle="'.$menuId.'"></button>
+        <div class="title-bar-title">Menu</div>
+      </div>    
+    ';
+        
+		$html .= '<ul id="'.$menuId.'" class="'.$ulClass.' root level_1" aria-autoclose="false" data-dropdown-menu>';
 		$first = 'first';
 		foreach($menuTree as &$element)
 		{

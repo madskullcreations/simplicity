@@ -57,9 +57,8 @@ class AppController extends Controller
         $this->loadComponent('Menu');
         $this->loadComponent('Auth', [
             'loginRedirect' => [
-                'controller' => 'EditablePages',
-                'action' => 'display', 
-                'admin' // Test only, redirect to for example settings page or similar.
+                'controller' => 'SimplicitySettings',
+                'action' => 'index'
             ],
             'logoutRedirect' => [
               'controller' => 'EditablePages', 
@@ -105,9 +104,9 @@ class AppController extends Controller
         // Fetch some site-global settings from the kitchen sink.
         AppController::$simplicity_site_title = $kitchenSink->Retrieve('SimplicitySiteTitle', 'Simplicity CMS');
         AppController::$simplicity_site_description = $kitchenSink->Retrieve(
-            'SimplicitySiteDescription', 'So simple yet so powerful');
+            'SimplicitySiteDescription', 'Simple yet powerful');
         AppController::$simplicity_footer_text = $kitchenSink->Retrieve(
-            'SimplicityFooterText', '<div class="cell auto">Simplicity CMS - So simple yet so powerful</div><div class="cell auto">Powered by CakePHP and Zurb Foundation</div><div class="cell auto">A Madskull Creations product</div>');
+            'SimplicityFooterText', '<div class="cell auto"><a href="https://github.com/madskullcreations/simplicity" target="_blank">Simplicity CMS</a>&nbsp;- Simple yet powerful</div><div class="cell auto">Powered by&nbsp;<a href="https://cakephp.org/" target="_blank">CakePHP</a>&nbsp;and&nbsp;<a href="https://foundation.zurb.com/" target="_blank">Zurb Foundation</a></div><div class="cell auto">A&nbsp;<a href="https://madskullcreations.com" target="_blank">Madskull Creations</a>&nbsp;product</div>');
         
         // To make it available from views as well. 
         $this->set('userIsLoggedIn', AppController::UserIsLoggedIn());
