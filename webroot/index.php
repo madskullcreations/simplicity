@@ -15,6 +15,18 @@
  * @license       MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
+// This is mainly used during installation, where some common errors might occur. Cake replaces this one later in bootstrap.php.
+function SimplicityErrorHandler($errno, $errstr, $errfile, $errline)
+{
+    echo "<b>ERROR</b> [$errno] $errstr<br />\n";
+    echo "  Fatal error on line $errline in file $errfile";
+    echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+    echo "Aborting...<br />\n";
+    exit(1);
+}
+
+set_error_handler("SimplicityErrorHandler");
+
 // Check platform requirements
 require dirname(__DIR__) . '/config/requirements.php';
 
