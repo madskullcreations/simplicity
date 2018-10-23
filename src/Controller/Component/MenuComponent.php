@@ -40,8 +40,10 @@ class MenuComponent extends Component
    */
   public function CreateMenuElement($name, $level, $path, $class_name = 'RichTextElements', $children = array())
   {
+    $cl = [(object)['title' => $name]];
     return (object)[
-      'name' => $name, 
+      'cat_lang' => $cl,
+      'name' => $name,
       'class_name' => $class_name, 
       'level' => $level, 
       'path' => $path, 
@@ -53,7 +55,7 @@ class MenuComponent extends Component
 	 */
 	public function SetPathFor(&$richTextElement)
 	{
-		$richTextElement->path = $this->categories->PathFor($richTextElement->category_id).$richTextElement->name;
+	    $richTextElement->path = $this->categories->PathFor($richTextElement->category_id, $richTextElement->i18n).$richTextElement->name;
 	}
 	
 	/* Returns the given path as an array of category elements, or empty array if not the entire path exists.
@@ -68,9 +70,11 @@ class MenuComponent extends Component
 		
 		foreach($elements as &$element)
 		{
-			$element->path = $this->_GetPath($element->id);
+      // debug($element);
+      $element->path = $this->_GetPath($element->id, $element->cat_lang[0]->i18n);
 		}
-		
+		// debug($elements);
+    
 		return $elements;
 	}
 	
@@ -121,7 +125,8 @@ class MenuComponent extends Component
 		// Get the RichTextElements whose parents level is one less than the given $level.
 		foreach($tree as &$category)
 		{
-			$names[] = $category->name;
+			$names[] = $category->cat_lang[0]->url_title;
+      $category->name = $category->cat_lang[0]->url_title;
 			$this->_MergeContent($category, $level - 1);
       
       $category->class_name = $category->source();
@@ -145,7 +150,7 @@ class MenuComponent extends Component
 		
 		foreach($rtes as &$rte)
 		{
-			$rte->path = $this->_GetPath($rte->category_id).$rte->name;
+		    $rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->name;
       
       $rte->class_name = $rte->source();
 		}
@@ -188,7 +193,9 @@ class MenuComponent extends Component
 	 */
 	protected function _MergeContent(&$category, $level)
 	{
-		$category->path = $this->_GetPath($category->parent_id).$category->name;
+    // debug($category);
+    
+    $category->path = $this->_GetPath($category->parent_id, $category->cat_lang[0]->i18n).$category->name;
 		
 		$names = array();
 		foreach($category->children as &$child)
@@ -204,6 +211,7 @@ class MenuComponent extends Component
 		{
 			$rtes = $this->richTextElements->ElementsForCategory($category->id, AppController::$selectedLanguage, true);
 			$rtes = $rtes->toArray();
+      // debug($rtes);
 				
 			// Remove RTEs with same name as an existing category.
 			foreach($rtes as $id => &$rte)
@@ -217,7 +225,8 @@ class MenuComponent extends Component
 				
 			foreach($rtes as &$rte)
 			{
-				$rte->path = $this->_GetPath($rte->category_id).$rte->name;
+        // debug($rte);
+				$rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->name;
         $rte->class_name = $rte->source();
 			}
 			unset($rte);
@@ -229,8 +238,11 @@ class MenuComponent extends Component
 	/* Get the url path for the given category_id.
 	 *
 	 */
-	protected function _GetPath($category_id)
+	protected function _GetPath($category_id, $language)
 	{
-		return $this->categories->PathFor($category_id);
+    if($category_id === null)
+      return '/';
+    
+		return $this->categories->PathFor($category_id, $language);
 	}	
 }

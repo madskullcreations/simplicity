@@ -515,7 +515,7 @@ class InstallerController extends Controller
 
     $this->appendRes($res, __('Created `config/app.php` file'));
   }
-  
+    
   protected function appendRes(&$res, $message, $result = true)
   {
     $row = array();

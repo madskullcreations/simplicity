@@ -27,8 +27,7 @@ use App\Controller\EditablePagesController;
 				__('Edit page'), 
 				[
 						'action' => 'edit', 
-						$richTextElement->id,
-						'?' => ['korvar' => '42']
+						$richTextElement->id
 				],
 				[
 						'class' => 'button',

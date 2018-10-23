@@ -95,7 +95,6 @@ class RichTextElementsTable extends Table
 		$presentLanguages = $this->GetLanguagesFor($name, $categoryId);
 		$allLanguages = $this->GetLanguageCodes();
 		
-		// TODO: subtrahera från allLanguages, använd i edit().
 		$res = array_diff($allLanguages, $presentLanguages);
 		// debug($res);
 		
@@ -129,7 +128,7 @@ class RichTextElementsTable extends Table
 	{
 		if($compact)
 		{
-			$fields = ['name','id','category_id'];
+			$fields = ['name','id','category_id','i18n'];
 		}
 		else 
 		{

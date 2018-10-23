@@ -38,6 +38,9 @@ class CategoriesTable extends Table
 {
 	public function initialize(array $config)
 	{
+    // A category can have many catlangs.
+    $this->hasMany('CatLang');
+    
 		$this->addBehavior('Timestamp');
 		
 		// We want the level, or deep, saved along with the category. 
@@ -94,26 +97,26 @@ class CategoriesTable extends Table
 			// debug($this->moveUp($rootElement, 3));
 			
 			// This is a bit experimental, but the idea is to limit the selection of children to those whose level is in bounds.
-			$tree = $this->find('children', ['for' => $categoryId])->
-				where([
-						'level <=' => $level + $deep,
-						'i18n' => $language
-				])->
+			$tree = $this->find('children', ['for' => $categoryId])
+        ->contain(['CatLang'])
+				->where([
+						'level <=' => $level + $deep
+				])
 				// Get only the fields we want incorporates id and parent_id for 'threaded' to work. 
-		    find('threaded', ['fields' => ['name','parent_id','id','level']])->
-				toArray();
+		    ->find('threaded', ['fields' => ['parent_id','id','level']])
+				->toArray();
 		}
 		else 
 		{
 			// The Tree behaviour don't seem to support getting 'children' where parent_id is null.  
-			$rootElements = $this->find()->
-				where([
+			$rootElements = $this->find()
+				->contain(['CatLang'])
+        ->where([
 						'parent_id is' => null,
-						'level <=' => $deep,
-						'i18n' => $language
-				])->
-				find('all', ['fields' => ['name','parent_id','id','level']])->
-				toArray();
+						'level <=' => $deep
+				])
+				->find('all', ['fields' => ['parent_id','id','level']])
+				->toArray();
 				
 			$tree = array();
 			foreach($rootElements as &$rootElement)
@@ -151,24 +154,43 @@ class CategoriesTable extends Table
 		if(count($path) == 0)
 			return null;
 
+    // debug($path);
+    // debug($language);
+    
 		$categoryPath = array();
 			
 		// Find (or create) the elements in the path.
 		$lastCategory = null;
-		while($name = array_shift($path))
+		while($url_title = array_shift($path))
 		{
-			// Look for child of $lastCategory with the given name. 
+			// Look for child of $lastCategory with the given url_title. 
 			if($lastCategory == null)
 			{
 				// Looking for a root category, no parent. 
-				$category = $this->find('all')->where(['name' => $name, 'parent_id is' => null, 'i18n' => $language])->first();
+				$category = $this->find()
+          ->contain('CatLang')
+          ->innerJoinWith('CatLang')
+          ->where([
+            'parent_id is' => null,
+            'CatLang.url_title' => $url_title,
+            'CatLang.i18n' => $language,
+          ])
+          ->first();
 			}
 			else 
 			{
 				// Looking for a child category.
-				$category = $this->find('all')->where(['name' => $name, 'parent_id' => $lastCategory->id, 'i18n' => $language])->first();
+				$category = $this->find()
+          ->contain('CatLang')
+          ->innerJoinWith('CatLang')
+          ->where([
+            'parent_id' => $lastCategory->id,
+            'CatLang.url_title' => $url_title,
+            'CatLang.i18n' => $language,
+          ])
+          ->first();
 			}
-			// debug($category);		
+			// debug($category);
 			
 			if($category == null)
 			{
@@ -177,11 +199,11 @@ class CategoriesTable extends Table
 					// Create the element.
 					if($lastCategory == null)
 					{
-						$category = $this->_CreateCategory(null, $name, $language);
+						$category = $this->_CreateCategory(null, $url_title, $language);
 					}
 					else
 					{
-						$category = $this->_CreateCategory($lastCategory->id, $name, $language);
+						$category = $this->_CreateCategory($lastCategory->id, $url_title, $language);
 					}
 					// debug($category);
 				}
@@ -200,6 +222,7 @@ class CategoriesTable extends Table
 				$categoryPath[] = $category;
 			}
 		}
+    // debug($categoryPath);
 		
 		if($lastChildOnly)
 		{
@@ -214,19 +237,38 @@ class CategoriesTable extends Table
 	/* Returns the path down to root from the given category in the form of "fancy/path/to/", where "to" is the $category_id.
 	 * 
 	 */
-	public function PathFor($category_id)
+	public function PathFor($category_id, $language)
 	{
-		if($category_id == null)
+    // debug($category_id);
+    // debug($language);
+    
+		if($category_id === null)
 			return "/";
 		
 		// This is a nice shortcut for getting all parents down to the root. 
 		$crumbs = $this->find('path', ['for' => $category_id]);
+      // ->contain(['CatLang'])
+      // ->innerJoinWith('CatLang')
+      // ->where(['CatLang.i18n' => $language]);
+    // debug($crumbs);
 
 		$path = "/";
 		foreach($crumbs as $crumb)
 		{
-			$path .= $crumb->name."/"; 
+      // debug($crumb->id);
+      
+      $catLang = $this->CatLang->find()
+        ->where([
+          'CatLang.category_id' => $crumb->id, 
+          'CatLang.i18n' => $language
+        ])
+        ->select(['url_title'])
+        ->first();
+      // debug($catLang);
+      
+			$path .= $catLang->url_title."/"; 
 		}
+    // debug($path);
 				
 		return $path;
 	}
@@ -251,16 +293,13 @@ class CategoriesTable extends Table
       `lft` INT(10) NOT NULL,
       `rght` INT(10) NOT NULL,
       `level` INT(10) NOT NULL,
-      `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
-      `name` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
       `created` DATETIME NULL,
       `modified` DATETIME NULL,
-      PRIMARY KEY (`id`),
-      UNIQUE KEY `uk_parent_id_name` (`parent_id`, `name`) 
+      PRIMARY KEY (`id`)
       )
       COLLATE='utf8_unicode_ci'
       ENGINE=InnoDB
-      ROW_FORMAT=COMPACT;          
+      ROW_FORMAT=COMPACT;
     ");
 
     // TODO: UpdateTable() ? With some version parameter, so it can perform changes between versions.
@@ -270,26 +309,38 @@ class CategoriesTable extends Table
     // ");
   }
 
-	/* Tries to find the given category by its name and category.
+	/* Tries to find the given category by its url_title and category.
 	 * Returns null if not found.
 	 * 
 	 */
-	protected function _FindCategory($parent_id, $name, $language)
+	protected function _FindCategory($parent_id, $url_title, $language)
 	{
 		if($parent_id == null)
 		{
 			// null is so damn special in sql... (almost like infinity and infinity + 1, they are not equal, but both are infinite. Well infinity never equals.)
 			$element = $this->find()
-			->where(['parent_id is ' => null, 'name' => $name, 'i18n' => $language])
-			->first();
+      ->contain(['CatLang'])
+      ->innerJoinWith('CatLang')
+			->where([
+        'parent_id is ' => null,
+        'CatLang.url_title' => $url_title, 
+        'CatLang.i18n' => $language
+      ])
+      ->first();
 		}
 		else
 		{
 			$element = $this->find()
-			->where(['parent_id' => $parent_id, 'name' => $name, 'i18n' => $language])
+      ->contain(['CatLang'])
+      ->innerJoinWith('CatLang')
+			->where([
+        'parent_id' => $parent_id,
+        'CatLang.url_title' => $url_title, 
+        'CatLang.i18n' => $language
+      ])
 			->first();
 		}
-		
+		    
 		return $element;
 	}
 	
@@ -297,26 +348,37 @@ class CategoriesTable extends Table
 	 * Create a category with the given parent. It must not exist when calling this function.
 	 * 
 	 */
-	protected function _CreateCategory($parent_id, $name, $language)
+	protected function _CreateCategory($parent_id, $url_title, $language)
 	{
 		$element = $this->newEntity();
 		$element->parent_id = $parent_id;
-		$element->name = $name;
-		$element->i18n = $language;
-		
-		if($this->save($element))
+		    		
+    $result = $this->save($element);
+		if($result)
 		{
 			// debug("Saved");
+     
+      // Create corresponding CatLang-row for the given language.
+      $catLang = $this->CatLang->newEntity();
+      $catLang->category_id = $result->id;
+      $catLang->i18n = $language;
+      $catLang->url_title = $url_title;
+      $catLang->title = $url_title;
+      
+      $this->CatLang->link($element, [$catLang]);
+
+      // Once created, lets read it back in.
+      $element = $this->_FindCategory($parent_id, $url_title, $language);
+      // debug($element);
+      
+      return $element;
 		}
 		else
 		{
 			// debug("Not saved");
+      
+      return null;
 		}
-		 
-		// Once created, lets read it back in.
-		$element = $this->_FindCategory($parent_id, $name, $language);
-		
-		return $element;
 	}
 	  
 	// DONE: Använder Tree, som är en icke-rekursiv funktion för att skapa en trädstruktur i databasen. 

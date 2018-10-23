@@ -188,13 +188,6 @@ class EditablePagesController extends AppController
 
 	public function edit($id = null)
 	{
-    // Handled by isAuthorized().
-    /*if($this->UserIsAuthor() == false)
-		{
-			$this->Flash->error(__('You are not allowed to edit content of this page.'));
-			return $this->redirect('/');
-		}*/
-				
 		if($this->richTextElements->exists(['id' => $id]) == false)
 		{
 			$this->Flash->error(__('The page could not be found.'));
@@ -208,6 +201,8 @@ class EditablePagesController extends AppController
 		$implementedLanguageCodes = $this->Language->GetLanguagesFor($element->name, $element->category_id);
 		$missingLanguages = $this->Language->GetMissingLanguages($element->name, $element->category_id);
 		// debug($availableLanguageCodes);
+    // debug($implementedLanguageCodes);
+    // debug($missingLanguages);
 					
 		if ($this->request->is(['post', 'put'])) 
 		{
@@ -231,7 +226,7 @@ class EditablePagesController extends AppController
 					$this->Flash->success(__('Your page has been created in the new language.'));
 					
 					// Get path for the page.
-					$path = $this->categories->PathFor($element->category_id);
+					$path = $this->categories->PathFor($element->category_id, $element->i18n);
 					$path .= $element->name;
 					// debug($path);
 						
@@ -261,7 +256,7 @@ class EditablePagesController extends AppController
 					$this->Flash->success(__('Your page has been updated.'));
 					
 					// Get path for the page.
-					$path = $this->categories->PathFor($element->category_id);
+					$path = $this->categories->PathFor($element->category_id, $element->i18n);
 					$path .= $element->name;
 					// debug($path);
 					

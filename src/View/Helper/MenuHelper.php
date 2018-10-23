@@ -27,7 +27,7 @@ class MenuHelper extends Helper
 			$element = &$path[$i];
 			
 			$html .= '<li class="">';
-			$html .= $this->Html->link($element->name, $element->path);
+			$html .= $this->Html->link($element->cat_lang[0]->title, $element->path);
 			$html .= '</li>';
 		}
 		
@@ -51,7 +51,7 @@ class MenuHelper extends Helper
 		foreach($menuTree as &$element)
 		{
       if($element->class_name == 'Categories')
-        $element->name = '∘ '.$element->name;
+        $element->name = '∘ '.$element->cat_lang[0]->title;
     
 			$html .= $this->_GetMenu($element, $subUlClass, $liClass, $first, 1);
 			$first = '';
@@ -110,7 +110,7 @@ class MenuHelper extends Helper
 		
 		if($element->class_name == 'Categories')
 		{
-			$html .= $this->Html->link($element->name, $element->path);
+			$html .= $this->Html->link($element->cat_lang[0]->title, $element->path);
 			
 			if(count($element->children) > 0)
 			{
