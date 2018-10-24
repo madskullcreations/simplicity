@@ -196,16 +196,53 @@ class CategoriesTable extends Table
 			{
 				if($createIfNotExist)
 				{
-					// Create the element.
-					if($lastCategory == null)
-					{
-						$category = $this->_CreateCategory(null, $url_title, $language);
-					}
-					else
-					{
-						$category = $this->_CreateCategory($lastCategory->id, $url_title, $language);
-					}
-					// debug($category);
+          // Now lets see if the category exist, but the requested language are missing!
+          // This might be the case when creating a path for a new language.
+          // We want the category, and add a new CatLang for the new language.
+          if($lastCategory == null)
+          {
+            // Looking for a root category, no parent. 
+            $category = $this->find()
+              ->contain('CatLang')
+              ->innerJoinWith('CatLang')
+              ->where([
+                'parent_id is' => null,
+                'CatLang.url_title' => $url_title
+              ])
+              ->first();
+          }
+          else 
+          {
+            // Looking for a child category.
+            $category = $this->find()
+              ->contain('CatLang')
+              ->innerJoinWith('CatLang')
+              ->where([
+                'parent_id' => $lastCategory->id,
+                'CatLang.url_title' => $url_title
+              ])
+              ->first();
+          }
+          // debug($category);
+          
+          if($category != null)
+          {
+            // Score! Let's add the new CatLang for the new language.
+            $this->_CreateCatLang($category, $category->id, $url_title, $language);
+          }
+          else
+          {
+            // Nope, it must be a new path. Create the element.
+            if($lastCategory == null)
+            {
+              $category = $this->_CreateCategory(null, $url_title, $language);
+            }
+            else
+            {
+              $category = $this->_CreateCategory($lastCategory->id, $url_title, $language);
+            }
+            // debug($category);
+          }
 				}
 				else
 				{
@@ -359,13 +396,13 @@ class CategoriesTable extends Table
 			// debug("Saved");
      
       // Create corresponding CatLang-row for the given language.
-      $catLang = $this->CatLang->newEntity();
-      $catLang->category_id = $result->id;
-      $catLang->i18n = $language;
-      $catLang->url_title = $url_title;
-      $catLang->title = $url_title;
-      
-      $this->CatLang->link($element, [$catLang]);
+      $this->_CreateCatLang($element, $result->id, $url_title, $language);
+      // $catLang = $this->CatLang->newEntity();
+      // $catLang->category_id = $result->id;
+      // $catLang->i18n = $language;
+      // $catLang->url_title = $url_title;
+      // $catLang->title = $url_title;      
+      // $this->CatLang->link($element, [$catLang]);
 
       // Once created, lets read it back in.
       $element = $this->_FindCategory($parent_id, $url_title, $language);
@@ -380,7 +417,22 @@ class CategoriesTable extends Table
       return null;
 		}
 	}
-	  
+
+  /**
+   * Add a new language to the given category. 
+   */
+  protected function _CreateCatLang($category, $categoryId, $url_title, $language)
+  {
+    // Create corresponding CatLang-row for the given language.
+    $catLang = $this->CatLang->newEntity();
+    $catLang->category_id = $categoryId;
+    $catLang->i18n = $language;
+    $catLang->url_title = $url_title;
+    $catLang->title = $url_title;
+    
+    $this->CatLang->link($category, [$catLang]);
+  }
+  
 	// DONE: Använder Tree, som är en icke-rekursiv funktion för att skapa en trädstruktur i databasen. 
 	// 		Den kan med en enda query ta fram alla children för vilken del av trädet som helst. 
 	//    Med en annan query kan man lika enkelt ta fram 'path to a node', tex. red-roses ger plants/roses/red-roses.

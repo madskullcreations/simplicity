@@ -211,6 +211,8 @@ class EditablePagesController extends AppController
 			
 			if(isset($this->request->data['i18n']) && $this->request->data['i18n'] != $element->i18n && $this->request->data['i18n'] != '')
 			{
+        $oldLanguageCode = $element->i18n;
+        
 				// Save as new page in the new language. 
 				$element = $this->richTextElements->GetElement(
 						$element->name, 
@@ -224,9 +226,24 @@ class EditablePagesController extends AppController
 				if ($this->richTextElements->save($element))
 				{
 					$this->Flash->success(__('Your page has been created in the new language.'));
-					
-					// Get path for the page.
-					$path = $this->categories->PathFor($element->category_id, $element->i18n);
+
+					// Get path as string for the page in the old language.
+					$path = $this->categories->PathFor($element->category_id, $oldLanguageCode);
+          $categoryNames = explode('/', $path);
+          foreach($categoryNames as $id => $name)
+          {
+            if($name == '')
+              unset($categoryNames[$id]);
+          }
+          // debug($categoryNames);
+          
+          // Make sure the path exists in the new language.
+          $createIfNotExist = true;
+          $lastCategory = $this->categories->GetPath($categoryNames, $this->request->data['i18n'], true, $createIfNotExist);
+          // debug($lastCategory);
+
+					// Get path as string for the page.
+					$path = $this->categories->PathFor($element->category_id, $this->request->data['i18n']);
 					$path .= $element->name;
 					// debug($path);
 						
