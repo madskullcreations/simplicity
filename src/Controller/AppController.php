@@ -142,13 +142,7 @@ class AppController extends Controller
             $url = '';
           }
           
-          $this->set('breadcrumbPath', array());
-          $this->set('homeTree', array());
-          $rte = (object)['name' => $actionUrlName, 'path' => $url];
-          $this->set('richTextElement', $rte);
-          
-          $sideMenuTree = array();
-          $this->set('sideMenuTree', $sideMenuTree);
+          $this->SetFakeSimplicityVariables($actionUrlName, $url);
         }
         
         if(AppController::UserIsLoggedIn())
@@ -189,6 +183,20 @@ class AppController extends Controller
           // $children = $categories->GetChildren(4);
         }
         // TESTING END
+    }
+    
+    /**
+     * Some variables need to be set, since simplicity.ctp expect them to exist. When not in EditablePagesController and in some other cases
+     * this function comes in handy, since it defines the variables needed.
+     */
+    protected function SetFakeSimplicityVariables($actionUrlName = '', $url = '')
+    {
+      $this->set('breadcrumbPath', array());
+      $this->set('homeTree', array());
+      $this->set('sideMenuTree', array());
+
+      $rte = (object)['name' => $actionUrlName, 'path' => $url];
+      $this->set('richTextElement', $rte);
     }
 
     /**
@@ -237,6 +245,7 @@ class AppController extends Controller
         }
     }
     
+// TODO: How does it handle several url params?!
     /* Adds the current language url parameter on any redirect.
      * 
      */

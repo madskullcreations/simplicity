@@ -82,7 +82,7 @@ class EditablePagesController extends AppController
   {
     $path = func_get_args();
     // debug($path);
-    
+       
     $count = count($path);
     if(!$count) 
     {
@@ -91,33 +91,57 @@ class EditablePagesController extends AppController
     }
           
     // The last element in path is always the page, all others are categories.
-    $categoryNames = $path;
-    $pageName = array_pop($categoryNames);			
+    $categoryUrlTitles = $path;
+    $pageName = array_pop($categoryUrlTitles);
     
-    //debug($categoryNames);
+    //debug($categoryUrlTitles);
     //debug($pageName);
     //debug(AppController::$selectedLanguage);
 
     $language = AppController::$selectedLanguage;
           
     $createIfNotExist = false;
+    $askToCreate = false;
     if($this->UserIsAdmin())
     {
-      $createIfNotExist = true;
+      $askToCreate = true;
+      
+      if ($this->request->is(['post', 'put'])) 
+      {
+        // debug($this->request->data);
+        
+        if(isset($this->request->data['doCreate']) && $this->request->data['doCreate'] == 'yes')
+        {
+          // Admin says: create the page and be quiet!
+          $createIfNotExist = true;
+        }
+      }
     }
-
+    
     // If there are more parts of the url, lets make a category-tree out of it. 
-    if(count($categoryNames) > 0)
+    if(count($categoryUrlTitles) > 0)
     {
       // Get the path, or null if it does not exist and is not allowed to create it. 
-      $lastCategory = $this->categories->GetPath($categoryNames, $language, true, $createIfNotExist);
+      $lastCategory = $this->categories->GetPath($categoryUrlTitles, $language, true, $createIfNotExist);
       // debug($lastCategory);
       
       if($lastCategory == null)
       {
-        // The path does not exist, redirect home.
-        $this->Flash->error(__('Path does not exist.'));
-        return $this->redirect('/');
+        // The path does not exist.
+        
+        if($askToCreate)
+        {
+          // Ask admin if the path and page should be created.
+          $this->SetFakeSimplicityVariables($pageName, $path);
+          $this->set(compact('path', 'language'));
+          return $this->render('ask_to_create');
+        }
+        else
+        {
+          // Redirect visitors home.
+          $this->Flash->error(__('Path does not exist.'));
+          return $this->redirect('/');
+        }
       }
       
       $categoryId = $lastCategory->id;
@@ -141,16 +165,26 @@ class EditablePagesController extends AppController
     
     if($richTextElement == null)
     {
-      // Element did not exist and visitor was not allowed to create a page.
-      $this->Flash->error(__('Page does not exist.'));
-      return $this->redirect('/');
+      if($askToCreate)
+      {
+        // Ask admin if the path and page should be created.
+        $this->SetFakeSimplicityVariables($pageName, $path);
+        $this->set(compact('path', 'language'));
+        return $this->render('ask_to_create');
+      }
+      else
+      {
+        // Element did not exist and visitor was not allowed to create a page.
+        $this->Flash->error(__('Page does not exist.'));
+        return $this->redirect('/');
+      }
     }
     
     // Set the path so the Menu helper can use it to create the breadcrumb path correctly.
     $this->Menu->SetPathFor($richTextElement);
     // debug($richTextElement->path);
     
-    $breadcrumbPath = $this->Menu->GetPath($categoryNames, $language);
+    $breadcrumbPath = $this->Menu->GetPath($categoryUrlTitles, $language);
     // debug($breadcrumbPath);
     
     // Get the menu tree with the root elements and their immediate children.
@@ -158,7 +192,7 @@ class EditablePagesController extends AppController
     //	$sideMenuTree = $this->Menu->GetTree(null, 20);
     // debug($sideMenuTree);
         
-    $this->set(compact('categoryNames', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'sideMenuTree'));
+    $this->set(compact('categoryUrlTitles', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'sideMenuTree'));
 
     // Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
     // Using DS as we will check for a file's existence on the server.
@@ -229,17 +263,17 @@ class EditablePagesController extends AppController
 
 					// Get path as string for the page in the old language.
 					$path = $this->categories->PathFor($element->category_id, $oldLanguageCode);
-          $categoryNames = explode('/', $path);
-          foreach($categoryNames as $id => $name)
+          $categoryUrlTitles = explode('/', $path);
+          foreach($categoryUrlTitles as $id => $name)
           {
             if($name == '')
-              unset($categoryNames[$id]);
+              unset($categoryUrlTitles[$id]);
           }
-          // debug($categoryNames);
+          // debug($categoryUrlTitles);
           
           // Make sure the path exists in the new language.
           $createIfNotExist = true;
-          $lastCategory = $this->categories->GetPath($categoryNames, $this->request->data['i18n'], true, $createIfNotExist);
+          $lastCategory = $this->categories->GetPath($categoryUrlTitles, $this->request->data['i18n'], true, $createIfNotExist);
           // debug($lastCategory);
 
 					// Get path as string for the page.
