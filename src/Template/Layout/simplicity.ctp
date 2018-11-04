@@ -40,7 +40,7 @@ $this->start('simplicity_breadcrumbs');
 $this->end();
 $this->start('simplicity_page_name');
 	// A bit odd, but to use a utility, we must give full path. 
-	echo Cake\Utility\Inflector::camelize($richTextElement->name);
+	echo Cake\Utility\Inflector::camelize($richTextElement->title);
 $this->end();
 
 //debug($richTextElement->identifier);

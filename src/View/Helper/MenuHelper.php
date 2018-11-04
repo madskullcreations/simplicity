@@ -32,7 +32,7 @@ class MenuHelper extends Helper
 		}
 		
 		$html .= '<li class="'.$liClass.' current">';
-		$html .= $this->Html->link($richTextElement->name, $richTextElement->path);
+		$html .= $this->Html->link($richTextElement->title, $richTextElement->path);
 		$html .= '</li>';
 		$html .= '</ul>';
 		
@@ -51,7 +51,7 @@ class MenuHelper extends Helper
 		foreach($menuTree as &$element)
 		{
       if($element->class_name == 'Categories')
-        $element->name = '∘ '.$element->cat_lang[0]->title;
+        $element->title = '∘ '.$element->cat_lang[0]->title;
     
 			$html .= $this->_GetMenu($element, $subUlClass, $liClass, $first, 1);
 			$first = '';
@@ -126,7 +126,7 @@ class MenuHelper extends Helper
 		}
 		else // RichTextElements 
 		{
-			$html .= $this->Html->link($element->name, $element->path, ['class' => 'fancy-link']);
+			$html .= $this->Html->link($element->title, $element->path, ['class' => 'fancy-link']);
 		}
 		
 		$html .= '</li>';

@@ -12,6 +12,7 @@
 namespace App\Model\Table;
 
 use Cake\ORM\Table;
+use Cake\Datasource\ConnectionManager;
 
 class RichTextElementsTable extends Table
 {
@@ -67,15 +68,15 @@ class RichTextElementsTable extends Table
 	 * from GetLanguageCodes() and GetLanguagesFor(). 
 	 *  
 	 */
-	public function GetLanguagesFor($name, $categoryId = null)
+	public function GetLanguagesFor($urlTitle, $categoryId = null)
 	{
 		if($categoryId == null)
 		{
-			$where = ['name' => $name, 'category_id is' => null];
+			$where = ['url_title' => $urlTitle, 'category_id is' => null];
 		}
 		else 
 		{
-			$where = ['name' => $name, 'category_id' => $categoryId];
+			$where = ['url_title' => $urlTitle, 'category_id' => $categoryId];
 		}
 		
 		$languages = $this->
@@ -90,9 +91,9 @@ class RichTextElementsTable extends Table
 		return $languages;
 	}
 	
-	public function GetMissingLanguages($name, $categoryId = null)
+	public function GetMissingLanguages($urlTitle, $categoryId = null)
 	{
-		$presentLanguages = $this->GetLanguagesFor($name, $categoryId);
+		$presentLanguages = $this->GetLanguagesFor($urlTitle, $categoryId);
 		$allLanguages = $this->GetLanguageCodes();
 		
 		$res = array_diff($allLanguages, $presentLanguages);
@@ -111,8 +112,8 @@ class RichTextElementsTable extends Table
 		
 		// TODO: Query not updated, fix sometimes. :)
 		$query = $this->
-						find('list', ['valueField' => 'name', 'groupField' => 'i18n', 'conditions' => $conditions])->
-						order(['i18n','name']);
+						find('list', ['valueField' => 'url_title', 'groupField' => 'i18n', 'conditions' => $conditions])->
+						order(['i18n','url_title']);
 								
 		$all = $query->toArray();
 
@@ -128,7 +129,7 @@ class RichTextElementsTable extends Table
 	{
 		if($compact)
 		{
-			$fields = ['name','id','category_id','i18n'];
+			$fields = ['url_title','title'/*,'page_id'*/,'id','category_id','i18n'];
 		}
 		else 
 		{
@@ -160,34 +161,47 @@ class RichTextElementsTable extends Table
 	/* The default way of identifying a rich text element is by it's url. 
 	 * Routing is setup to reroute "a/path/to/thisuniquepage?lang=sv-SE" 
 	 * into "editable_pages/display/a/path/to/thisuniquepage?lang=sv-SE". 
-	 * So the name of this page would be "thisuniquepage".
+	 * So the url_title of this page would be "thisuniquepage".
 	 * 
 	 * $categoryId in the same example would point to the "to" category.  
 	 * 
 	 * If $i18n is set, it should follow the i18n standards, like 'en_GB' for British english.
 	 * In the same example the url parameter 'lang' is extracted, which is 'sv_SE'
 	 * 
-	 * The three parts, categoryId + name + i18n forms a unique id.
+	 * The three parts, categoryId + url_title + i18n forms a unique id.
 	 * In the same example it would be "to" + "thisuniquepage" + "sv_SE".
 	 * It means that "thisuniquepage" can exist in several languages.
-	 * It also means that the name "thisuniquepage" can exist on different paths, 
+	 * It also means that the url_title "thisuniquepage" can exist on different paths, 
 	 * like "some/other/path/to/thisuniquepage", or "/thisuniquepage".  
 	 * 
 	 * If $createIfNotExist is true, an empty element will be created if it does not already exists.
-	 *  
+	 *   If $pageId is set, the new element will have this page_id.
+   * 
 	 */
-	public function GetElement($name, $categoryId = null, $i18n = '', $createIfNotExist = true)
+	public function GetElement($urlTitle, $categoryId = null, $i18n = '', $pageId = null, $createIfNotExist = true)
   {
-		$element = $this->_Get($name, $categoryId, $i18n);
+		$element = $this->_Get($urlTitle, $categoryId, $i18n);
 		    
     if($element == null && $createIfNotExist)
     {
       // First time visit indeed, let's create an empty text element and return it.
       $element = $this->newEntity();
       $element->category_id = $categoryId;
-      $element->name = $name;
+      $element->url_title = $urlTitle;
+      $element->title = $urlTitle;
       $element->i18n = $i18n;
       $element->content = '';
+      
+      if($pageId != null)
+      {
+        $element->page_id = $pageId;
+      }
+      else
+      {
+        // Create a new unique page id.
+        $element->page_id = $this->FetchNextUnusedPageId();
+      }
+      // debug( $element->page_id);
       
       if($this->save($element))
       {
@@ -199,7 +213,7 @@ class RichTextElementsTable extends Table
       }
           	      
       // Once created, lets read it back in.
-      $element = $this->_Get($name, $categoryId, $i18n);
+      $element = $this->_Get($urlTitle, $categoryId, $i18n);
     }
     
     // debug($element);
@@ -220,17 +234,36 @@ class RichTextElementsTable extends Table
    */
 	public function CreateTable($connection)
   {
+    // Some explanations:
+    //  The page wheels in hamsters/runs/in/wheels are available in english and swedish.
+    //  The url_title in english are "wheels" and "hjul" in swedish.
+    //  So, to identify the page's available translations, the page_id comes in handy. page_id is the same for the 
+    //  two pages.
+    // 
+    // uk_category_id_url_title_i18n - Makes sure that no two pages has the same url_title and the same ancestor 
+    //   in the same language. Both the swedish and english pages might have the same url_title "wheels", since they
+    //   have different languages. But it is impossible to create two "wheels" pages with the ancestor hamsters/runs/in/ 
+    //   in the same language.
+    //   (you can still create hamsters/runs/on/wheels, it has another ancestor)
+    // 
+    // uk_category_id_page_id_i18n - Makes sure that no two pages has the same page_id and the same ancestor 
+    //   in the same language. 
+    // 
+    
     $connection->execute("
 CREATE TABLE `rich_text_elements` (
 	`id` INT(10) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
+  `page_id` INT(10) NOT NULL,
+  `url_title` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
+  `title` VARCHAR(128) NOT NULL COLLATE 'utf8_unicode_ci',
   `category_id` INT(10) NULL,
   `i18n` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci',
   `content` MEDIUMTEXT NOT NULL COLLATE 'utf8_unicode_ci',
 	`created` DATETIME NULL,
 	`modified` DATETIME NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE KEY `uk_category_id_name_i18n` (`category_id`, `name`,`i18n`)
+	UNIQUE KEY `uk_category_id_url_title_i18n` (`category_id`, `url_title`,`i18n`),
+  UNIQUE KEY `uk_category_id_page_id_i18n` (`category_id`, `page_id`,`i18n`)
 )
 COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
@@ -238,10 +271,27 @@ ROW_FORMAT=COMPACT;
     ");
   }
   
+  
+  protected function FetchNextUnusedPageId()
+  {
+    $connection = ConnectionManager::get('default');
+    
+    $nextFreePageId = $connection
+      ->execute("SELECT MAX(page_id) + 1 AS next_free FROM rich_text_elements;")
+      ->fetchAll('assoc');
+    
+    $nextFreePageId = $nextFreePageId[0]['next_free'];
+    
+    if($nextFreePageId == null)
+      $nextFreePageId = 1;
+    
+    return $nextFreePageId;
+  }
+  
   /* Load and returns the element if it exists, otherwise returns null.
    * 
    */
-  protected function _Get($name, $categoryId, $i18n)
+  protected function _Get($urlTitle, $categoryId, $i18n)
   {
   	// Learning as we go:
   	//  The find() returns a $query object, which can go through any number of permutations by calling
@@ -251,14 +301,14 @@ ROW_FORMAT=COMPACT;
   	if($categoryId != null)
   	{
   		$element = $this->find()
-  		->where(['category_id' => $categoryId, 'name' => $name, 'i18n' => $i18n])
+  		->where(['category_id' => $categoryId, 'url_title' => $urlTitle, 'i18n' => $i18n])
   		->first();
   	}
   	else
   	{
   		// null is null, but null != null.
   		$element = $this->find()
-  		->where(['category_id is' => null, 'name' => $name, 'i18n' => $i18n])
+  		->where(['category_id is' => null, 'url_title' => $urlTitle, 'i18n' => $i18n])
   		->first();
   	}
   	

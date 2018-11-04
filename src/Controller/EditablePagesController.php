@@ -159,8 +159,9 @@ class EditablePagesController extends AppController
     // Load the content of the current page.
     $this->richTextElements = TableRegistry::get('RichTextElements');
       
+    // We are not translating the page, so pass null as page_id. If page gets created, it comes with a new page_id.
     $richTextElement = $this->richTextElements->GetElement(
-        $pageName, $categoryId, $language, $createIfNotExist);
+        $pageName, $categoryId, $language, null, $createIfNotExist);
     // debug($richTextElement);
     
     if($richTextElement == null)
@@ -176,6 +177,17 @@ class EditablePagesController extends AppController
       {
         // Element did not exist and visitor was not allowed to create a page.
         $this->Flash->error(__('Page does not exist.'));
+        
+        if($pageName == 'home' && count($categoryUrlTitles) == 0)
+        {
+          // The home page are deleted or never created! Fake it. User must login to create it.
+          $this->SetFakeSimplicityVariables($pageName, $path);
+          $this->set(compact('path', 'language'));
+          $this->render('default');
+          
+          return;
+        }
+        
         return $this->redirect('/');
       }
     }
@@ -232,8 +244,8 @@ class EditablePagesController extends AppController
 		// debug($element);
 		
 		$availableLanguageCodes = $this->Language->GetLanguageCodes();
-		$implementedLanguageCodes = $this->Language->GetLanguagesFor($element->name, $element->category_id);
-		$missingLanguages = $this->Language->GetMissingLanguages($element->name, $element->category_id);
+		$implementedLanguageCodes = $this->Language->GetLanguagesFor($element->url_title, $element->category_id);
+		$missingLanguages = $this->Language->GetMissingLanguages($element->url_title, $element->category_id);
 		// debug($availableLanguageCodes);
     // debug($implementedLanguageCodes);
     // debug($missingLanguages);
@@ -245,15 +257,21 @@ class EditablePagesController extends AppController
 			
 			if(isset($this->request->data['i18n']) && $this->request->data['i18n'] != $element->i18n && $this->request->data['i18n'] != '')
 			{
+        // User is translating the page into a new language.
         $oldLanguageCode = $element->i18n;
+        $pageId = $element->page_id;
         
 				// Save as new page in the new language. 
 				$element = $this->richTextElements->GetElement(
-						$element->name, 
+            $element->url_title, 
 						$element->category_id, 
-						$this->request->data['i18n'], 
+						$this->request->data['i18n'],
+				    $pageId,
 						true);
 
+        // To keep the connection between them we use the same page_id.
+        $this->request->data['page_id'] = $element->page_id;
+                   
 				// Set the new content. 
 				$this->richTextElements->patchEntity($element, $this->request->data);
 				
@@ -278,7 +296,7 @@ class EditablePagesController extends AppController
 
 					// Get path as string for the page.
 					$path = $this->categories->PathFor($element->category_id, $this->request->data['i18n']);
-					$path .= $element->name;
+					$path .= $element->url_title;
 					// debug($path);
 						
 					return $this->redirect($path.'?lang='.$element->i18n);
@@ -308,7 +326,7 @@ class EditablePagesController extends AppController
 					
 					// Get path for the page.
 					$path = $this->categories->PathFor($element->category_id, $element->i18n);
-					$path .= $element->name;
+					$path .= $element->url_title;
 					// debug($path);
 					
 					return $this->redirect($path);

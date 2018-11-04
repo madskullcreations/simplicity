@@ -165,6 +165,7 @@ class AppController extends Controller
         $this->viewBuilder()->layout('simplicity');
               
         // TESTING
+        if(false)
         {
           $languages = TableRegistry::get('Languages');
           // $variants = $languages->GetVariants('en');
@@ -195,7 +196,13 @@ class AppController extends Controller
       $this->set('homeTree', array());
       $this->set('sideMenuTree', array());
 
-      $rte = (object)['name' => $actionUrlName, 'path' => $url];
+      $rte = (object)[
+        'url_title' => $actionUrlName, 
+        'title' => $actionUrlName, 
+        'path' => $url,
+        'content' => '',
+        'created' => null,
+        'modified' => null];
       $this->set('richTextElement', $rte);
     }
 

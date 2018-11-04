@@ -38,12 +38,12 @@ class MenuComponent extends Component
    *  $elm = CreateMenuElement('My Top Menu Element', 0, 'my_controller/index', 'Categories', $children);
    * 
    */
-  public function CreateMenuElement($name, $level, $path, $class_name = 'RichTextElements', $children = array())
+  public function CreateMenuElement($title, $level, $path, $class_name = 'RichTextElements', $children = array())
   {
-    $cl = [(object)['title' => $name]];
+    $cl = [(object)['title' => $title]];
     return (object)[
       'cat_lang' => $cl,
-      'name' => $name,
+      'title' => $title,
       'class_name' => $class_name, 
       'level' => $level, 
       'path' => $path, 
@@ -55,7 +55,7 @@ class MenuComponent extends Component
 	 */
 	public function SetPathFor(&$richTextElement)
 	{
-	    $richTextElement->path = $this->categories->PathFor($richTextElement->category_id, $richTextElement->i18n).$richTextElement->name;
+	    $richTextElement->path = $this->categories->PathFor($richTextElement->category_id, $richTextElement->i18n).$richTextElement->url_title;
 	}
 	
 	/* Returns the given path as an array of category elements, or empty array if not the entire path exists.
@@ -126,22 +126,22 @@ class MenuComponent extends Component
 		foreach($tree as &$category)
 		{
 			$names[] = $category->cat_lang[0]->url_title;
-      $category->name = $category->cat_lang[0]->url_title;
+			$category->url_title = $category->cat_lang[0]->url_title;
 			$this->_MergeContent($category, $level - 1);
       
-      $category->class_name = $category->source();
+            $category->class_name = $category->source();
 		}
-    unset($category);
+        unset($category);
 		// debug($names);
 		
 		// Get the RTEs for the root node.
 		$rtes = $this->richTextElements->ElementsForCategory($parentCategoryId, AppController::$selectedLanguage, true);
 		$rtes = $rtes->toArray();
 		
-		// Remove RTEs with same name as an existing category.
+		// Remove RTEs with same url_title as an existing category.
 		foreach($rtes as $id => &$rte)
 		{
-			if(in_array($rte->name, $names))
+		    if(in_array($rte->url_title, $names))
 			{
 				unset($rtes[$id]);
 			}
@@ -150,9 +150,9 @@ class MenuComponent extends Component
 		
 		foreach($rtes as &$rte)
 		{
-		    $rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->name;
+		    $rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->url_title;
       
-      $rte->class_name = $rte->source();
+            $rte->class_name = $rte->source();
 		}
 		unset($rte);
 		
@@ -195,12 +195,13 @@ class MenuComponent extends Component
 	{
     // debug($category);
     
-    $category->path = $this->_GetPath($category->parent_id, $category->cat_lang[0]->i18n).$category->name;
-		
+    $category->path = $this->_GetPath($category->parent_id, $category->cat_lang[0]->i18n);
+		$category->path .= $category->url_title;
+    
 		$names = array();
 		foreach($category->children as &$child)
 		{
-			$names[] = $child->name;
+      $names[] = $child->url_title;
 			$this->_MergeContent($child, $level);
       
       $child->class_name = $child->source();
@@ -211,12 +212,12 @@ class MenuComponent extends Component
 		{
 			$rtes = $this->richTextElements->ElementsForCategory($category->id, AppController::$selectedLanguage, true);
 			$rtes = $rtes->toArray();
-      // debug($rtes);
+            // debug($rtes);
 				
 			// Remove RTEs with same name as an existing category.
 			foreach($rtes as $id => &$rte)
 			{
-				if(in_array($rte->name, $names))
+        if(in_array($rte->url_title, $names))
 				{
 					unset($rtes[$id]);
 				}
@@ -226,7 +227,7 @@ class MenuComponent extends Component
 			foreach($rtes as &$rte)
 			{
         // debug($rte);
-				$rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->name;
+        $rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->url_title;
         $rte->class_name = $rte->source();
 			}
 			unset($rte);
@@ -240,8 +241,8 @@ class MenuComponent extends Component
 	 */
 	protected function _GetPath($category_id, $language)
 	{
-    if($category_id === null)
-      return '/';
+      if($category_id === null)
+        return '/';
     
 		return $this->categories->PathFor($category_id, $language);
 	}	

@@ -54,15 +54,6 @@ echo $this->TinyMCE->GetScript();
 	    				'label' => false,
 	    				'empty' => __('Select to create a new page in the choosen language...'),
 	    		];
-
-      // TODO: Instead, have links to create in the new language. 
-      // No, this assume user want to create the page in the new language.
-      // if(count($missingLanguages) == 1)
-      // {
-        // // Preselect if there are only one missing language.
-        // $keys = array_keys($missingLanguages);
-        // $options['value'] = $keys[0];
-      // }
           
 	    echo $this->Form->input(
 	    		'i18n', 
@@ -72,6 +63,17 @@ echo $this->TinyMCE->GetScript();
     {
     	echo '<p>'.__('This page is available in every language for this site. To add a new language to the site, please click "Add new language" above.').'</p>';
     }
+    
+    $arr = ['title' => __('The url title is visible in the browsers address bar.')];
+    if($element->url_title == 'home' && $element->category_id === null)
+    {
+      echo '<p class="callout">'.__('You cannot change the Url Title of the starting page. It must always have the name "home". You can always change the Title, which is the part visible in menus.').'</p>';
+      
+      $arr['disabled'] = 'disabled';
+    }
+
+    echo $this->Form->input('url_title', $arr);    
+    echo $this->Form->input('title', ['title' => __('The title is visible in the menus.')]);
     
     echo $this->Form->input('content');
     echo $this->Form->button(__('Save Page'), ['class' => 'button top-margin']);
