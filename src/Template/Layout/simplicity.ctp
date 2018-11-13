@@ -66,19 +66,36 @@ $this->end();
   <?= $this->Html->script('jquery.min.js') ?>
 </head>
 <body>
+  <style>
+  </style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
       <nav id="simplicity-top-bar" class="">
-        <?php
-          if($userIsLoggedIn)
-          {
-            echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
-          }
-          else
-          {
-            echo '<a class="button login" title="'.__("Login").'" href="/users/login">'.__("Login").'</a>';
-          }
-        ?>
+        <div class="control-box">
+          <?php
+            echo '<select class="language-selector" id="LanguageSelector" onchange="LanguageSelected();" title="'.__("Select your language").'">';
+            foreach($availableLanguages as $key => $name)
+            {
+              $selected = '';
+              if($key == $selectedLanguage)
+              {
+                $selected = 'selected';
+              }
+              
+              echo '<option value="'.$key.'" '.$selected.'>'.$name.'</option>';
+            }
+            echo '</select>';
+            
+            if($userIsLoggedIn)
+            {
+              echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
+            }
+            else
+            {
+              echo '<a class="button login" title="'.__("Login").'" href="/users/login">'.__("Login").'</a>';
+            }            
+          ?>
+        </div>
         <div class="grid-container">
           <div class="grid-x site-title-description">
             <div class="cell small-4 medium-3 large-2">
@@ -104,9 +121,6 @@ $this->end();
           </div>
         </div>
       </nav>
-      <?php 
-        // Såg också att man måste kunna sätta en titel på en sida, som blir url-friendly. 
-      ?>
       
       <div id="simplicity-content">
         <?= $this->fetch('simplicity_breadcrumbs') ?>
@@ -147,6 +161,19 @@ $this->end();
     $(document).foundation();
     
     $('.site-logo').attr('draggable', false);
+    
+    function LanguageSelected()
+    {
+      var selLang = $("#LanguageSelector option:selected").val();
+      // console.log(selLang);
+     
+      var path = window.location.pathname + "?lang=" + selLang;
+     
+      window.location.replace(path);
+      
+      // alert(window.location.href);
+      // alert(window.location.pathname);
+    }
   </script>
   
   <?= $this->Html->script('prism') ?>

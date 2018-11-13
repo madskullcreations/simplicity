@@ -112,6 +112,7 @@ class AppController extends Controller
         $this->set('userIsLoggedIn', AppController::UserIsLoggedIn());
         $this->set('userIsAdmin', AppController::UserIsAdmin());
         $this->set('userIsAuthor', AppController::UserIsAuthor());
+        $this->set('selectedLanguage', AppController::$selectedLanguage);
 
         if($this->request->getParam('controller') != 'EditablePages' || $this->request->getParam('action') != 'display')
         {
@@ -160,6 +161,13 @@ class AppController extends Controller
         // debug($this->request->getParam('controller'));
         // debug($this->request->url);
 
+        // Language selector dropdown will need available languages.
+        $richTextElements = TableRegistry::get('RichTextElements');
+        $availableLanguages = $richTextElements->GetLanguageCodes();
+        // debug($availableLanguages);
+        
+        $this->set('availableLanguages', $availableLanguages);
+        
         // Default layout is simplicity. To define your own, copy and rename src/Template/Layout/simplicity.ctp 
         // and change here. Each controller can have their own layout, and you can even define a layout per view. 
         $this->viewBuilder()->layout('simplicity');
@@ -167,13 +175,9 @@ class AppController extends Controller
         // TESTING
         if(false)
         {
-          $languages = TableRegistry::get('Languages');
-          // $variants = $languages->GetVariants('en');
+          // $tLanguages = TableRegistry::get('Languages');
+          // $variants = $tLanguages->GetVariants('en');
           // debug($variants);
-          
-          $richTextElements = TableRegistry::get('RichTextElements');
-          
-          $languages = $richTextElements->GetLanguageCodes();
           
           $home = $richTextElements->GetElement('home',null,'sv_SE');
           $languagesForHome = $richTextElements->GetLanguagesFor($home->name, $home->category_id);
