@@ -94,7 +94,9 @@ class EditablePagesController extends AppController
     $categoryUrlTitles = $path;
     $pageName = array_pop($categoryUrlTitles);
     
-    //debug($categoryUrlTitles);
+    $this->set(compact('categoryUrlTitles'));
+    
+    // debug($categoryUrlTitles);
     //debug($pageName);
     //debug(AppController::$selectedLanguage);
 
@@ -105,6 +107,12 @@ class EditablePagesController extends AppController
     if($this->UserIsAdmin())
     {
       $askToCreate = true;
+      
+      if($this->request->query('doCreate') == true)
+      {
+        // Coming from SimplicitySettings::language(), we want to create the page in the current language.
+        $createIfNotExist = true;
+      }
       
       if ($this->request->is(['post', 'put'])) 
       {
@@ -192,6 +200,11 @@ class EditablePagesController extends AppController
       }
     }
     
+    // Fetch the various url-titles for the current page's every language.
+    // debug($richTextElement->page_id);
+    $urlTitles = $this->richTextElements->GetUrlTitlesFor($richTextElement);
+    // debug($urlTitles);
+    
     // Set the path so the Menu helper can use it to create the breadcrumb path correctly.
     $this->Menu->SetPathFor($richTextElement);
     // debug($richTextElement->path);
@@ -204,7 +217,7 @@ class EditablePagesController extends AppController
     //	$sideMenuTree = $this->Menu->GetTree(null, 20);
     // debug($sideMenuTree);
         
-    $this->set(compact('categoryUrlTitles', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'sideMenuTree'));
+    $this->set(compact('urlTitles', 'pageName', 'language', 'richTextElement', 'breadcrumbPath', 'sideMenuTree'));
 
     // Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
     // Using DS as we will check for a file's existence on the server.
@@ -232,7 +245,11 @@ class EditablePagesController extends AppController
     }
   }
 
-	public function edit($id = null)
+  /**
+   * Edit the page with the given id. 
+   * If preselectedLanguage is set, the language selector is populated with the value.
+   */
+	public function edit($id = null, $preselectedLanguage = null)
 	{
 		if($this->richTextElements->exists(['id' => $id]) == false)
 		{
@@ -244,12 +261,37 @@ class EditablePagesController extends AppController
 		// debug($element);
 		
 		$availableLanguageCodes = $this->Language->GetLanguageCodes();
-		$implementedLanguageCodes = $this->Language->GetLanguagesFor($element->url_title, $element->category_id);
-		$missingLanguages = $this->Language->GetMissingLanguages($element->url_title, $element->category_id);
+		$implementedLanguageCodes = $this->Language->GetLanguagesFor($element->page_id);
+		$missingLanguages = $this->Language->GetMissingLanguages($element->page_id);
 		// debug($availableLanguageCodes);
     // debug($implementedLanguageCodes);
     // debug($missingLanguages);
-					
+
+    // Coming from SimplicitySettings, wanting to add a new language currently not present.
+    $kitchenSink = TableRegistry::get('KitchenSink');
+    $languageToAdd = $kitchenSink->Retrieve('LanguageToAdd');
+    // debug($languageToAdd);
+    
+    if($languageToAdd != null)
+    {
+      $kitchenSink->Forget('LanguageToAdd');
+      
+      $languages = TableRegistry::get('Languages');
+      $lang = $languages->
+        find()->
+        select(['Languages.i18n','Languages.long_name'])->
+        where(['i18n' => $languageToAdd])->
+        first();
+      // debug($lang);
+
+      // It might return more than one, but we want the exact
+      // $lang = reset($langs);
+      
+      $availableLanguageCodes[$lang->i18n] = $lang->long_name;
+      $missingLanguages[$lang->i18n] = $lang->long_name;
+      // debug($missingLanguages);
+    }
+    
 		if ($this->request->is(['post', 'put'])) 
 		{
 			// debug($this->request->data);
@@ -339,7 +381,7 @@ class EditablePagesController extends AppController
 		}
 		
 		$this->viewBuilder()->layout('simplicity');
-		$this->set(compact('element','availableLanguageCodes','implementedLanguageCodes','missingLanguages'));
+		$this->set(compact('element','availableLanguageCodes','implementedLanguageCodes','missingLanguages','preselectedLanguage'));
 	}
 
 	public function delete($id = null)

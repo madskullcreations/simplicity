@@ -33,7 +33,28 @@ class SimplicitySettingsController extends AppController
 			
 			$i18n = $this->request->data['i18n'];
 			
-			return $this->redirect('/?lang='.$i18n);
+      // A minor trick for the edit page of EditablePages: Make it show the new language.
+      $kitchenSink = TableRegistry::get('KitchenSink');
+      $kitchenSink->Store('LanguageToAdd', $i18n);
+
+      // Try fetch home page, in the first language created.
+      $this->richTextElements = TableRegistry::get('RichTextElements');
+      $homePage = $this->richTextElements->
+                find()->
+                where(['url_title' => 'home'])->
+                first();
+      // debug($homePage);
+      
+      if($homePage == null)
+      {
+        // User has either deleted home page, or has just installed Simplicity. Create an empty page.
+        return $this->redirect('/?lang='.$i18n.'&doCreate=true');
+      }
+      else
+      {
+        // Edit page, asking user to translate to the newly selected language.
+        return $this->redirect(['controller' => 'EditablePages', 'action' => 'edit', $homePage->id, $i18n]);
+      }
 		}
 		
 		// Get every single language available.

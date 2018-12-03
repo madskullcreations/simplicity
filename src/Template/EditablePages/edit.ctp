@@ -20,11 +20,35 @@ echo $this->TinyMCE->GetScript();
 
 <h1><?= __("Edit Page") ?></h1>
 
-<p>
-	<?php 
-		echo __('The page\'s current language is').': "'.$availableLanguageCodes[$element->i18n].'"'; 
-	?>
-	<br>
+<h4>
+<?php
+  if($preselectedLanguage != null)
+  {
+    echo __('Please translate this page from').' "'.$availableLanguageCodes[$element->i18n].'" to "'.$availableLanguageCodes[$preselectedLanguage].'"';
+  }
+  else
+  {
+    echo __('The page\'s current language is').': "'.$availableLanguageCodes[$element->i18n].'"'; 
+  }
+?>  
+</h4>
+
+<?php
+  if($preselectedLanguage != null)
+  {
+?>
+<div class="callout primary" data-closable>
+  <?php
+      echo __('This page does not yet exist in').' "'.$availableLanguageCodes[$preselectedLanguage].'", you must translate this text and save it. It will be saved as a new page.';
+  ?>
+</div>
+<?php
+  }
+  else
+  {
+?>
+<div class="callout primary" data-closable>
+  <p>
   <?php
     if(in_array($element->i18n, $implementedLanguageCodes))
     {
@@ -36,24 +60,39 @@ echo $this->TinyMCE->GetScript();
       echo __('This page is available in the following languages').': ['.implode(',', $implementedLanguageCodes).']';
     }
   ?>
-</p>
+  </p>
+  <?php    
+    if(count($missingLanguages) > 0)
+    {
+  ?>
+  <p><?= __('This page is missing in the following languages:').' ['.implode(',', $missingLanguages).']'; ?></p>
+  <p><?= __('To create the page for a new language; Select a language below, edit and save. This will be saved as a new page.'); ?></p>
+  <?php
+    }
+  ?>
+  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+    <span aria-hidden="true">&times;</span>
+  </button>  
+</div>
+<?php
+  }
+?>
+
 <?php
     echo $this->Form->create($element);
 
     if(count($missingLanguages) > 0)
     {
-	    echo $this->Form->label(
-	    		'i18n', 
-	    		__('This page is missing in the following languages').' ['.implode(',', $missingLanguages).']', 
-	    		[
-	    				'title' => __('To create the page for a new language; Select a language below, edit and save. This will be saved as a new page.')
-	    		]);
-          
       $options = [
 	    				'options' => $missingLanguages, 
 	    				'label' => false,
 	    				'empty' => __('Select to create a new page in the choosen language...'),
 	    		];
+          
+      if($preselectedLanguage != null)
+      {
+        $options['value'] = $preselectedLanguage;
+      }
           
 	    echo $this->Form->input(
 	    		'i18n', 

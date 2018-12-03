@@ -45,6 +45,34 @@ $this->end();
 
 //debug($richTextElement->identifier);
 ?>
+
+<?php
+  // Argh, this is creating an js-object, do something about it!
+  $catUrlTitles = 'var catUrlTitles = {';
+  
+  if(isset($urlTitles) && count($urlTitles) > 0)
+  {
+    $count = count($urlTitles);
+    $i = 0;
+    foreach($urlTitles as $lang => $title)
+    {
+      $catUrlTitles .= $lang.':"'.$title.'"';
+      
+      if($i < $count - 1)
+        $catUrlTitles .= ',';
+      
+      $i++;
+    }
+  }
+  $catUrlTitles .= '};';
+  
+  $urlPath = "";
+  if(count($categoryUrlTitles) > 0)
+  {
+    $urlPath = "/".implode('/', $categoryUrlTitles)."/";
+  }
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -157,17 +185,62 @@ $this->end();
     
 <?php // Zurb Foundation js really have to be at the bottom of the html file, otherwise it wont initialize correctly. ?>
   <?= $this->Html->script('zurb/foundation.min.js') ?>
+  
   <script>
+    var urlPath = "<?= $urlPath ?>";
+    // console.log(urlPath);
+    
+    <?= $catUrlTitles ?>
+    // console.log(catUrlTitles);
+      
     $(document).foundation();
     
     $('.site-logo').attr('draggable', false);
     
+<?php
+if($userIsAuthor)
+{
+  // An author is redirected to create page if it does not yet exist in the selected language.
+  // (this will make sure it keep the page_id.)
+?>
     function LanguageSelected()
     {
       var selLang = $("#LanguageSelector option:selected").val();
-      // console.log(selLang);
      
-      var path = window.location.pathname + "?lang=" + selLang;
+      if(catUrlTitles.hasOwnProperty(selLang))
+      {
+        // Page exists in the selected language.
+        GotoTranslatedPage(selLang);
+      }
+      else
+      {
+        // Page does not exist in the selected language, goto edit-page.
+        var path = '/pages/edit/<?= $richTextElement->id ?>/' + selLang; 
+        window.location.replace(path);
+      }
+    }
+<?php
+}
+else
+{
+  // Not logged in users are redirected to the given language as normal.
+  // TODO: More correct would be to redirect to standard language if page does not exist. 
+  //    (Now it shows an empty page, or redirect to home.)
+  // TODO: Language dropdown should be visible only in view-mode, not edit or in admin pages.
+?>
+    function LanguageSelected()
+    {
+      var selLang = $("#LanguageSelector option:selected").val();
+      GotoTranslatedPage(selLang);
+    }
+<?php
+}
+?>
+    function GotoTranslatedPage(selLang)
+    {
+      var path = urlPath + catUrlTitles[selLang] + "?lang=" + selLang; 
+      // var path = window.location.pathname + "?lang=" + selLang;
+      // alert(path);      
      
       window.location.replace(path);
       

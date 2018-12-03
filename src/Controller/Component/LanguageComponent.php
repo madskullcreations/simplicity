@@ -31,19 +31,19 @@ class LanguageComponent extends Component
 		return $this->richTextElements->GetLanguageCodes();
 	}
 	
-	/* Returns all languages for the given page name.
+	/* Returns all languages for the given page id.
 	 * 
 	 */
-	public function GetLanguagesFor($rteName, $categoryId)
+	public function GetLanguagesFor($pageId)
 	{
-		return $this->richTextElements->GetLanguagesFor($rteName, $categoryId);
+		return $this->richTextElements->GetLanguagesFor($pageId);
 	}
 	
-	/* Returns languages the give page name does not exist in.
+	/* Returns languages the given page id does not exist in.
 	 * 
 	 */
-	public function GetMissingLanguages($rteName, $categoryId)
+	public function GetMissingLanguages($pageId)
 	{
-		return $this->richTextElements->GetMissingLanguages($rteName, $categoryId);
+		return $this->richTextElements->GetMissingLanguages($pageId);
 	}
 }

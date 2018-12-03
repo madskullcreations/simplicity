@@ -441,17 +441,4 @@ class CategoriesTable extends Table
 	// http://www.sitepoint.com/hierarchical-data-database-2/
 	// TreeBehaviour docs: 
 	// http://book.cakephp.org/3.0/en/orm/behaviors/tree.html
-	
-	//     Språktaggen i18n i RichTextElement medger att jag kan ha samtliga språkversioner av 
-	//     RödaRosor, RedRoses, RosasRojos, osv. med samma parent_id. 
-	//     Då blir det bajseligt lätt att se på vilka språk en sida finns: GetLanguagesFor($name, $parentId)
-	//		  OBS: Hela detta tänket förutsätter att det är ok att en url är flowers/roses/the_red_french_rose,
-	//      på alla språk. 
-	//       Det finns alltså tre språkversioner av RichTextElement med identifier "the_red_french_rose", och 
-	//       parent_id pekar på Category "roses". En kategory är således språklös. 
-	//    ..en användare är fortfarande fri att skapa kategorier på olika språk, och ange identifier på varje språk,
-	//    men dels förlorar han möjligheten att se om sidan finns på alla språk, dels tror jag att det är svårt att
-	//    ens försöka få in franska i en url, och både Category och RichTextElement.identifier är en del av urlen. 
-	//    ..så min rekommendation för alla som vill använda mitt system är att ha samma url till samma sida, på
-	//    samtliga språk. 
 }

@@ -98,7 +98,7 @@ class AppController extends Controller
           // No language found from url. Fetch default language.
           // Set default language to your like, but make sure it is present in table languages, i18n.
           // 
-          AppController::$selectedLanguage = $kitchenSink->Retrieve('SimplicityDefaultLanguage', 'sv_SE');
+          AppController::$selectedLanguage = $kitchenSink->Retrieve('SimplicityDefaultLanguage', 'sv');
         }
         
         // Fetch some site-global settings from the kitchen sink.
@@ -201,6 +201,7 @@ class AppController extends Controller
       $this->set('sideMenuTree', array());
 
       $rte = (object)[
+        'id' => -1,
         'url_title' => $actionUrlName, 
         'title' => $actionUrlName, 
         'path' => $url,
@@ -278,6 +279,10 @@ class AppController extends Controller
     	return parent::redirect($url, $status);
     }
     
+    /**
+     * A logged in user can see user listing and settings side menu.
+     * (It is not a role, just simpler to use than checking the role of the user)
+     */
     public function UserIsLoggedIn()
     {
       $user = $this->Auth->user();
@@ -290,6 +295,9 @@ class AppController extends Controller
       return false;
     }
     
+    /**
+     * An 'admin' has system-wide full access.
+     */
     public function UserIsAdmin()
     {
     	$user = $this->Auth->user();
@@ -306,6 +314,9 @@ class AppController extends Controller
     	return false;
     }
     
+    /**
+     * An 'author' can edit pages, but not create new.
+     */
     public function UserIsAuthor()
     {
     	$user = $this->Auth->user();

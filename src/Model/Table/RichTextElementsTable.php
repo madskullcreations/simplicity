@@ -59,7 +59,7 @@ class RichTextElementsTable extends Table
 		return $all;
 	}	
 	
-	/* Return array of language codes the given page name exists in.
+	/* Return array of language codes the given url title exists in.
 	 *  
 	 * This is useful for the administrator of a multi-language site, so he can see in 
 	 * which languages the current page exists.
@@ -68,22 +68,14 @@ class RichTextElementsTable extends Table
 	 * from GetLanguageCodes() and GetLanguagesFor(). 
 	 *  
 	 */
-	public function GetLanguagesFor($urlTitle, $categoryId = null)
+	public function GetLanguagesFor($pageId)
 	{
-		if($categoryId == null)
-		{
-			$where = ['url_title' => $urlTitle, 'category_id is' => null];
-		}
-		else 
-		{
-			$where = ['url_title' => $urlTitle, 'category_id' => $categoryId];
-		}
-		
+    // NOTE: In the keyField and valueField, do not put 'RichTextElements.i18n', put only 'i18n', otherwise null values are created..
 		$languages = $this->
-				find('list', ['keyField' => 'i18n', 'valueField' => 'Language.long_name'])->
-				select(['i18n','Language.long_name'])->
+				find('list', ['keyField' => 'i18n', 'valueField' => 'long_name'])->
+				select(['RichTextElements.i18n','Language.long_name'])->
 				innerJoin(['Language' => 'languages'], ['Language.i18n = RichTextElements.i18n'])->
-				where($where)->
+				where(['RichTextElements.page_id' => $pageId])->
 				toArray();
 				
 		// debug($languages);
@@ -91,9 +83,27 @@ class RichTextElementsTable extends Table
 		return $languages;
 	}
 	
-	public function GetMissingLanguages($urlTitle, $categoryId = null)
+  /**
+   * Returns array of url_titles for the given rte, i.e. all translated versions of the given page's url title.
+   * If the page has missing translations, the current url_title are used.
+   */
+  public function GetUrlTitlesFor($rte)
+  {
+		$urlTitles = $this->
+				find('list', ['keyField' => 'i18n', 'valueField' => 'url_title'])->
+				select(['RichTextElements.i18n','RichTextElements.url_title'])->
+				where(['RichTextElements.page_id' => $rte->page_id])->
+				toArray();
+		// debug($urlTitles);
+
+		return $urlTitles;
+  }
+  
+  /* Returns array of language codes for which the given url title is missing. (not translated to)
+   */
+	public function GetMissingLanguages($pageId)
 	{
-		$presentLanguages = $this->GetLanguagesFor($urlTitle, $categoryId);
+		$presentLanguages = $this->GetLanguagesFor($pageId);
 		$allLanguages = $this->GetLanguageCodes();
 		
 		$res = array_diff($allLanguages, $presentLanguages);
@@ -101,7 +111,7 @@ class RichTextElementsTable extends Table
 		
 		return $res;
 	}
-	
+	  
 	/* Get all elements in the given language, regardless of parent.
 	 * 
 	 */
@@ -178,7 +188,7 @@ class RichTextElementsTable extends Table
 	 *   If $pageId is set, the new element will have this page_id.
    * 
 	 */
-	public function GetElement($urlTitle, $categoryId = null, $i18n = '', $pageId = null, $createIfNotExist = true)
+	public function GetElement($urlTitle, $categoryId = null, $i18n = '', $pageId = null, $createIfNotExist = false)
   {
 		$element = $this->_Get($urlTitle, $categoryId, $i18n);
 		    
