@@ -33,6 +33,7 @@ class AppController extends Controller
 		//   <-Vid installationen så sätts alla default-värden efter att databas+tabeller skapats. 
 		//     Sedan är de enkla att komma åt från admin, och de läses in i Cache, läses från cache, som vanligt. 
 		
+    public static $defaultLanguage = '';
 		public static $selectedLanguage = '';
 		public static $simplicity_site_title = '';
 		public static $simplicity_site_description = '';
@@ -70,6 +71,9 @@ class AppController extends Controller
         
         $kitchenSink = TableRegistry::get('KitchenSink');
         
+        // Set default language to your like, but make sure it is present in table languages, i18n.
+        AppController::$defaultLanguage = $kitchenSink->Retrieve('SimplicityDefaultLanguage', 'sv');
+        
         // Try get the chosen language as an url param, namely '?lang=SV-se'. 
         AppController::$selectedLanguage = $this->request->query('lang');
         
@@ -96,9 +100,7 @@ class AppController extends Controller
         if(AppController::$selectedLanguage == null)
         {
           // No language found from url. Fetch default language.
-          // Set default language to your like, but make sure it is present in table languages, i18n.
-          // 
-          AppController::$selectedLanguage = $kitchenSink->Retrieve('SimplicityDefaultLanguage', 'sv');
+          AppController::$selectedLanguage = AppController::$defaultLanguage;
         }
         
         // Fetch some site-global settings from the kitchen sink.
@@ -114,10 +116,10 @@ class AppController extends Controller
         $this->set('userIsAuthor', AppController::UserIsAuthor());
         $this->set('selectedLanguage', AppController::$selectedLanguage);
 
-        if($this->request->getParam('controller') != 'EditablePages' || $this->request->getParam('action') != 'display')
+        if($this->request->getParam('controller') != 'Categories' || $this->request->getParam('action') != 'display')
         {
-          // Not EditablePagesController::display(), so we should create content for the menus and breadcrumbs following the cake-pattern controller/action.
-          // NOTE: EditablePagesController set these on its own, following it's own patterns.
+          // Not CategoriesController::display(), so we should create content for the menus and breadcrumbs following the cake-pattern controller/action.
+          // NOTE: CategoriesController set these on its own, following it's own patterns.
           
           $urlParts = explode('/', $this->request->url);
           // debug($urlParts);
@@ -162,8 +164,8 @@ class AppController extends Controller
         // debug($this->request->url);
 
         // Language selector dropdown will need available languages.
-        $richTextElements = TableRegistry::get('RichTextElements');
-        $availableLanguages = $richTextElements->GetLanguageCodes();
+        $catLangs = TableRegistry::get('CatLang');
+        $availableLanguages = $catLangs->GetLanguageCodes();
         // debug($availableLanguages);
         
         $this->set('availableLanguages', $availableLanguages);
@@ -199,16 +201,20 @@ class AppController extends Controller
       $this->set('breadcrumbPath', array());
       $this->set('homeTree', array());
       $this->set('sideMenuTree', array());
+      $this->set('categoryUrlTitles', array());
 
-      $rte = (object)[
+      // CatLang should contain an array with one object.
+      $ce = (object)[
         'id' => -1,
-        'url_title' => $actionUrlName, 
-        'title' => $actionUrlName, 
-        'path' => $url,
-        'content' => '',
-        'created' => null,
-        'modified' => null];
-      $this->set('richTextElement', $rte);
+        'CatLang' => [(object)[
+          'url_title' => $actionUrlName, 
+          'title' => $actionUrlName, 
+          'path' => $url,
+          'content' => '',
+          'created' => null,
+          'modified' => null
+        ]]];
+      $this->set('categoryElement', $ce);
     }
 
     /**

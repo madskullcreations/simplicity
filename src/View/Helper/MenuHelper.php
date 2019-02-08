@@ -13,10 +13,9 @@ class MenuHelper extends Helper
 	/* Render the html for the bread crumb url path.
 	 *  
 	 */
-	public function GetBreadCrumb($path, $richTextElement, $ulClass = 'simplicity breadcrumbs', $liClass = 'crumb')
+	public function GetBreadCrumb($path, $ulClass = 'simplicity breadcrumbs', $liClass = 'crumb')
 	{
     // debug($path);
-    // debug($richTextElement);
     
 		$html = '';
 		
@@ -26,14 +25,19 @@ class MenuHelper extends Helper
 		{
 			$element = &$path[$i];
 			
-			$html .= '<li class="">';
+      $class = '';
+      if($i+1 == count($path))
+        $class = $liClass.' current';
+      
+			$html .= '<li class="'.$class.'">';
 			$html .= $this->Html->link($element->cat_lang[0]->title, $element->path);
 			$html .= '</li>';
 		}
 		
-		$html .= '<li class="'.$liClass.' current">';
-		$html .= $this->Html->link($richTextElement->title, $richTextElement->path);
-		$html .= '</li>';
+		// $html .= '<li class="'.$liClass.' current">';
+		// $html .= $this->Html->link($richTextElement->title, $richTextElement->path);
+		// $html .= '</li>';
+    
 		$html .= '</ul>';
 		
 		return $html;

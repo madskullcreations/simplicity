@@ -63,8 +63,8 @@ class SimplicitySettingsController extends AppController
 		// debug($allLanguages);
 		
 		// Get already present languages.
-		$richTextElements = TableRegistry::get('RichTextElements');
-		$presentLanguages = $richTextElements->GetLanguageCodes();
+		$catLangs = TableRegistry::get('CatLang');
+		$presentLanguages = $catLangs->GetLanguageCodes();
 		// debug($presentLanguages);
 		
 		// Remove present languages from the all list. 

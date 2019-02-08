@@ -19,12 +19,10 @@ use App\Controller\AppController;
 class MenuComponent extends Component
 {
 	public $categories; 
-	public $richTextElements;
 	
 	public function initialize(array $config)
 	{
 		$this->categories = TableRegistry::get('Categories');
-		$this->richTextElements = TableRegistry::get('RichTextElements');
 	}
 	
   /* If you create a menu tree without RichTextElements, you can use this helper.
@@ -53,17 +51,17 @@ class MenuComponent extends Component
 	/* Set the $richTextElement->path for the given rte as an url-path, like 'trolls/eat/snails' for the page named 'snails'.
 	 * 
 	 */
-	public function SetPathFor(&$richTextElement)
+	/*public function SetPathFor(&$richTextElement)
 	{
 	    $richTextElement->path = $this->categories->PathFor($richTextElement->category_id, $richTextElement->i18n).$richTextElement->url_title;
-	}
+	}*/
 	
 	/* Returns the given path as an array of category elements, or empty array if not the entire path exists.
 	 * 
 	 */
 	public function GetPath($categoryNames, $language)
 	{
-		$elements = $this->categories->GetPath($categoryNames, $language, false, false);
+		$elements = $this->categories->GetPath($categoryNames, $language, false);
     
 		if($elements == null || count($elements) == 0)
 			return array();
@@ -78,7 +76,7 @@ class MenuComponent extends Component
 		return $elements;
 	}
 	
-	/* Returns the children of the given category, including RichTextElements. If null is given, the root-nodes are returned. 
+	/* Returns the children of the given category. If null is given, the root-nodes are returned. 
 	 * If level is greater than 0, it is branched down 'level' childrens down. 
 	 * 
 	 * Example: A tree three levels deep:
@@ -90,7 +88,7 @@ class MenuComponent extends Component
 	 * 			hairy
 	 * 			stiff
 	 * 	animals
-	 * 		about_animals   <-This is a RichTextElement, i.e an actual page. 
+	 * 		about_animals 
 	 * 		cat
 	 * 			hungry
 	 * 			purring
@@ -110,9 +108,14 @@ class MenuComponent extends Component
 	 * 			dead
 	 * 	
 	 */
-	public function GetTree($parentCategoryId = null, $level = 0, $language = 'sv_SE')
+	public function GetTree($parentCategoryId, $level, $language)
 	{
+    // Just make it deep enough.
+    if($level == 0)
+      $level = 1000;
+    
 		$tree = $this->categories->GetTree($parentCategoryId, $level, $language);
+    // debug($tree);
 
 		// The main difference between all() and toArray() is that all() uses 'lazy loading' while toArray() uses 'eager loading'.
 		// We need the result from all() realized into an array right now, so use toArray().
@@ -125,23 +128,27 @@ class MenuComponent extends Component
 		// Get the RichTextElements whose parents level is one less than the given $level.
 		foreach($tree as &$category)
 		{
-			$names[] = $category->cat_lang[0]->url_title;
-			$category->url_title = $category->cat_lang[0]->url_title;
-			$this->_MergeContent($category, $level - 1);
-      
-            $category->class_name = $category->source();
+      // If the category is not translated to current language, we skip adding it.
+      if(count($category->cat_lang) > 0)
+      {
+        $names[] = $category->cat_lang[0]->url_title;
+        $category->url_title = $category->cat_lang[0]->url_title;
+        $this->_MergeContent($category, $level - 1);
+        
+        $category->class_name = $category->source();
+      }
 		}
-        unset($category);
+    unset($category);
 		// debug($names);
 		
 		// Get the RTEs for the root node.
-		$rtes = $this->richTextElements->ElementsForCategory($parentCategoryId, AppController::$selectedLanguage, true);
+		/*$rtes = $this->richTextElements->ElementsForCategory($parentCategoryId, AppController::$selectedLanguage, true);
 		$rtes = $rtes->toArray();
 		
 		// Remove RTEs with same url_title as an existing category.
 		foreach($rtes as $id => &$rte)
 		{
-		    if(in_array($rte->url_title, $names))
+      if(in_array($rte->url_title, $names))
 			{
 				unset($rtes[$id]);
 			}
@@ -152,11 +159,11 @@ class MenuComponent extends Component
 		{
 		    $rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->url_title;
       
-            $rte->class_name = $rte->source();
+        $rte->class_name = $rte->source();
 		}
 		unset($rte);
 		
-		$tree = array_merge($tree, $rtes);
+		$tree = array_merge($tree, $rtes);*/
 		
 		// debug($tree);
 
@@ -195,24 +202,33 @@ class MenuComponent extends Component
 	{
     // debug($category);
     
+    // If the category is not translated to current language, we skip adding it.
+    if(count($category->cat_lang) == 0)
+      return;
+    
     $category->path = $this->_GetPath($category->parent_id, $category->cat_lang[0]->i18n);
-		$category->path .= $category->url_title;
+		$category->path .= $category->cat_lang[0]->url_title;
     
 		$names = array();
 		foreach($category->children as &$child)
 		{
-      $names[] = $child->url_title;
-			$this->_MergeContent($child, $level);
+      // BUG: When translating an existing page, the corresponding category is never created!
+      if(count($child->cat_lang) > 0)
+      {
+        $names[] = $child->cat_lang[0]->url_title;
+      }
       
+      $this->_MergeContent($child, $level);
       $child->class_name = $child->source();
 		}
     unset($child);
+    // debug($names);
 	
-		if($category->level < $level)
+		/*if($category->level < $level)
 		{
 			$rtes = $this->richTextElements->ElementsForCategory($category->id, AppController::$selectedLanguage, true);
 			$rtes = $rtes->toArray();
-            // debug($rtes);
+      // debug($rtes);
 				
 			// Remove RTEs with same name as an existing category.
 			foreach($rtes as $id => &$rte)
@@ -233,7 +249,7 @@ class MenuComponent extends Component
 			unset($rte);
 			
 			$category->children = array_merge($category->children, $rtes);
-		}
+		}*/
 	}
 	
 	/* Get the url path for the given category_id.

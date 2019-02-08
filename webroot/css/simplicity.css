@@ -121,8 +121,8 @@ ul.simplicity.breadcrumbs{
 }
 
 .control-box{
-  position: absolute;
-  right: 0px;
+  position: relative;
+  float: right;  
   padding: 10px;
 }
 .button.login, .button.logout{

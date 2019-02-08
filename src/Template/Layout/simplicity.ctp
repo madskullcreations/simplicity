@@ -36,25 +36,25 @@ $this->start('simplicity_side_menu');
   }
 $this->end();
 $this->start('simplicity_breadcrumbs');
-	echo $this->Menu->GetBreadCrumb($breadcrumbPath, $richTextElement);
+	echo $this->Menu->GetBreadCrumb($breadcrumbPath);
 $this->end();
 $this->start('simplicity_page_name');
 	// A bit odd, but to use a utility, we must give full path. 
-	echo Cake\Utility\Inflector::camelize($richTextElement->title);
+	echo Cake\Utility\Inflector::camelize($categoryElement->cat_lang[0]->title);
 $this->end();
 
-//debug($richTextElement->identifier);
 ?>
 
 <?php
   // Argh, this is creating an js-object, do something about it!
   $catUrlTitles = 'var catUrlTitles = {';
   
-  if(isset($urlTitles) && count($urlTitles) > 0)
+  // debug($urlTitlesForCategory);
+  if(isset($urlTitlesForCategory) && count($urlTitlesForCategory) > 0)
   {
-    $count = count($urlTitles);
+    $count = count($urlTitlesForCategory);
     $i = 0;
-    foreach($urlTitles as $lang => $title)
+    foreach($urlTitlesForCategory as $lang => $title)
     {
       $catUrlTitles .= $lang.':"'.$title.'"';
       
@@ -67,9 +67,9 @@ $this->end();
   $catUrlTitles .= '};';
   
   $urlPath = "";
-  if(count($categoryUrlTitles) > 0)
+  if(isset($urlTitles) && count($urlTitles) > 0)
   {
-    $urlPath = "/".implode('/', $categoryUrlTitles)."/";
+    $urlPath = "/".implode('/', $urlTitles)."/";
   }
 ?>
 
@@ -182,7 +182,7 @@ $this->end();
       </footer>
     </div>
   </div>
-    
+      
 <?php // Zurb Foundation js really have to be at the bottom of the html file, otherwise it wont initialize correctly. ?>
   <?= $this->Html->script('zurb/foundation.min.js') ?>
   
@@ -206,7 +206,7 @@ if($userIsAuthor)
     function LanguageSelected()
     {
       var selLang = $("#LanguageSelector option:selected").val();
-     
+            
       if(catUrlTitles.hasOwnProperty(selLang))
       {
         // Page exists in the selected language.
@@ -214,8 +214,8 @@ if($userIsAuthor)
       }
       else
       {
-        // Page does not exist in the selected language, goto edit-page.
-        var path = '/pages/edit/<?= $richTextElement->id ?>/' + selLang; 
+        // Page does not exist in the selected language.
+        var path = '/categories/add_new_language/<?= $categoryElement->id ?>/' + selLang; 
         window.location.replace(path);
       }
     }

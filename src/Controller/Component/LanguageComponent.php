@@ -16,11 +16,11 @@ use Cake\ORM\TableRegistry;
 
 class LanguageComponent extends Component
 {
-	public $richTextElements;
+	public $catLangs;
 	
 	public function initialize(array $config)
 	{
-		$this->richTextElements = TableRegistry::get('RichTextElements');
+	    $this->catLangs = TableRegistry::get('CatLang');
 	}
 	
 	/* Returns all languages present at the site. 
@@ -28,22 +28,22 @@ class LanguageComponent extends Component
 	 */
 	public function GetLanguageCodes()
 	{
-		return $this->richTextElements->GetLanguageCodes();
+	    return $this->catLangs->GetLanguageCodes();
 	}
 	
-	/* Returns all languages for the given page id.
+	/* Returns all languages for the given category id.
 	 * 
 	 */
-	public function GetLanguagesFor($pageId)
+	public function GetLanguagesFor($categoryId)
 	{
-		return $this->richTextElements->GetLanguagesFor($pageId);
+	    return $this->catLangs->GetLanguagesFor($categoryId);
 	}
 	
-	/* Returns languages the given page id does not exist in.
+	/* Returns languages the given category id does not exist in.
 	 * 
 	 */
-	public function GetMissingLanguages($pageId)
+	public function GetMissingLanguages($categoryId)
 	{
-		return $this->richTextElements->GetMissingLanguages($pageId);
+	    return $this->catLangs->GetMissingLanguages($categoryId);
 	}
 }

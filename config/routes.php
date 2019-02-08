@@ -51,10 +51,10 @@ if($simplicity_setup_state > 1)
 {
   Router::scope('/', function (RouteBuilder $routes) {
       /**
-       * Here, we are connecting '/' (base path) to a controller called 'EditablePages',
+       * Here, we are connecting '/' (base path) to a controller called 'Categories',
        * its action called 'display', and we pass a param to select what page to view. 
        */
-      $routes->connect('/', ['controller' => 'EditablePages', 'action' => 'display', 'home']);
+      $routes->connect('/', ['controller' => 'Categories', 'action' => 'display', 'home']);
 
       /**
        * The /installer/success is always ok.
@@ -71,14 +71,16 @@ if($simplicity_setup_state > 1)
       $routes->connect('/users', ['controller' => 'Users', 'action' => 'index']);
       
       /**
-       * The /pages/edit is reserved for editing pages.
+       * The /categories/edit is reserved for editing pages.
        */
-      $routes->connect('/pages/edit/*', ['controller' => 'EditablePages', 'action' => 'edit']);
+      $routes->connect('/categories/edit/*', ['controller' => 'Categories', 'action' => 'edit']);
+      $routes->connect('/categories/create_from_url/*', ['controller' => 'Categories', 'action' => 'create_from_url']);
+      $routes->connect('/categories/add_new_language/*', ['controller' => 'Categories', 'action' => 'add_new_language']);
 
       /**
-       * ..the /pages/delete is reserved for deleting pages.
+       * ..the /pages/deleteElement is reserved for deleting pages.
        */
-      $routes->connect('/pages/delete/*', ['controller' => 'EditablePages', 'action' => 'delete']);
+      $routes->connect('/categories/deleteElement/*', ['controller' => 'Categories', 'action' => 'deleteElement']);
 
       /**
        * ..the simplicity_settings/* is reserved as well.
@@ -87,15 +89,10 @@ if($simplicity_setup_state > 1)
       $routes->connect('/simplicity_settings/:action', ['controller' => 'SimplicitySettings']);
       
       /**
-       * ..and connect all other pages to the 'EditablePages' controller. 
+       * ..and connect all other pages to the 'Categories' controller. 
        */
-      $routes->connect('/*', ['controller' => 'EditablePages', 'action' => 'display']);
+      $routes->connect('/*', ['controller' => 'Categories', 'action' => 'display']);
       
-      /**
-       * ...and connect the rest of 'EditablePages' controller's URLs.
-       */
-      // $routes->connect('/pages/*', ['controller' => 'EditablePages', 'action' => 'display']);
-
       /**
        * Connect catchall routes for all controllers.
        *
