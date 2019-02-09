@@ -38,7 +38,6 @@ class AppController extends Controller
     public static $defaultLayout = '';
 		public static $simplicity_site_title = '';
 		public static $simplicity_site_description = '';
-		public static $simplicity_footer_text = '';
 		
     /**
      * Initialization hook method.
@@ -125,8 +124,6 @@ class AppController extends Controller
         AppController::$simplicity_site_title = $kitchenSink->Retrieve('SimplicitySiteTitle', 'Simplicity CMS');
         AppController::$simplicity_site_description = $kitchenSink->Retrieve(
             'SimplicitySiteDescription', 'Simple yet powerful');
-        AppController::$simplicity_footer_text = $kitchenSink->Retrieve(
-            'SimplicityFooterText', '<div class="cell auto"><a href="https://github.com/madskullcreations/simplicity" target="_blank">Simplicity CMS</a>&nbsp;- Simple yet powerful</div><div class="cell auto">Powered by&nbsp;<a href="https://cakephp.org/" target="_blank">CakePHP</a>&nbsp;and&nbsp;<a href="https://foundation.zurb.com/" target="_blank">Zurb Foundation</a></div><div class="cell auto">A&nbsp;<a href="https://madskullcreations.com" target="_blank">Madskull Creations</a>&nbsp;product</div>');
         
         // To make it available from views as well. 
         $this->set('userIsLoggedIn', AppController::UserIsLoggedIn());

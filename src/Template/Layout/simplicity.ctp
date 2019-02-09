@@ -176,7 +176,15 @@ $this->end();
       <footer class="simplicity-footer">
         <div class="grid-container">
           <div class="grid-x grid-margin-x">
-            <?= $this->fetch('simplicity_footer_text'); ?>
+          	<div class="cell auto">
+          		<a href="https://github.com/madskullcreations/simplicity" target="_blank">Simplicity CMS</a>&nbsp;- Simple yet powerful
+          	</div>
+          	<div class="cell auto">
+          		Powered by&nbsp;<a href="https://cakephp.org/" target="_blank">CakePHP</a>&nbsp;and&nbsp;<a href="https://foundation.zurb.com/" target="_blank">Zurb Foundation</a>
+          	</div>
+          	<div class="cell auto">
+          		A&nbsp;<a href="https://madskullcreations.com" target="_blank">Madskull Creations</a>&nbsp;product
+          	</div>
           </div>
         </div>
       </footer>

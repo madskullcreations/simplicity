@@ -42,7 +42,6 @@ class AppView extends View
     	// Each view are free to define their own variants of those blocks, but here we define the sensible defaults.
     	$this->assign('simplicity_site_title', AppController::$simplicity_site_title);
     	$this->assign('simplicity_site_description', AppController::$simplicity_site_description);
-    	$this->assign('simplicity_footer_text', AppController::$simplicity_footer_text);
     	
     }
 }
