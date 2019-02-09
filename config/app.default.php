@@ -8,8 +8,12 @@ return [
      *
      * Development Mode:
      * true: Errors and warnings shown.
+     * 
+     * NOTE: A simplicity installation override this value with a user-setting from database. 
+     *   See bootstrap.php where it fetches the SimplicityDebugMode value from the KitchenSink.
+     * 
      */
-    'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
+    'debug' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN),
 
     /**
      * Configure basic information about the application.

@@ -264,14 +264,17 @@ class InstallerController extends Controller
       $categories = TableRegistry::get('Categories');
       $categories->DropTable($connection);
 
+      $catLang = TableRegistry::get('CatLang');
+      $catLang->DropTable($connection);
+      
       $kitchensink = TableRegistry::get('KitchenSink');
       $kitchensink->DropTable($connection);
 
       $languages = TableRegistry::get('Languages');
       $languages->DropTable($connection);
 
-      $rte = TableRegistry::get('RichTextElements');
-      $rte->DropTable($connection);
+      // $rte = TableRegistry::get('RichTextElements');
+      // $rte->DropTable($connection);
     }
     catch(\PDOException $ex) 
     {
@@ -301,14 +304,17 @@ class InstallerController extends Controller
       $categories = TableRegistry::get('Categories');
       $categories->CreateTable($connection);
 
+      $catLang = TableRegistry::get('CatLang');
+      $catLang->CreateTable($connection);
+      
       $kitchensink = TableRegistry::get('KitchenSink');
       $kitchensink->CreateTable($connection);
 
       $languages = TableRegistry::get('Languages');
       $languages->CreateTable($connection);
 
-      $rte = TableRegistry::get('RichTextElements');
-      $rte->CreateTable($connection);
+      // $rte = TableRegistry::get('RichTextElements');
+      // $rte->CreateTable($connection);
     }
     catch(\PDOException $ex) 
     {

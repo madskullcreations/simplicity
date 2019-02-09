@@ -17,7 +17,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
-use Cake\Core\Configure; // Ta bort?
+use Cake\Core\Configure;
 
 /**
  * Application Controller
@@ -35,6 +35,7 @@ class AppController extends Controller
 		
     public static $defaultLanguage = '';
 		public static $selectedLanguage = '';
+    public static $defaultLayout = '';
 		public static $simplicity_site_title = '';
 		public static $simplicity_site_description = '';
 		public static $simplicity_footer_text = '';
@@ -62,7 +63,7 @@ class AppController extends Controller
                 'action' => 'index'
             ],
             'logoutRedirect' => [
-              'controller' => 'EditablePages', 
+              'controller' => 'Categories', 
               'action' => 'display', 
               'home'
             ],
@@ -71,11 +72,28 @@ class AppController extends Controller
         
         $kitchenSink = TableRegistry::get('KitchenSink');
         
+        // Debug mode is by default off, but can be activated easily.
+// TODO: This is simply not working! Since bootstrap.php is fetching the Configure::read("debug")
+// in at least two places, it is reading the value before it is set here.
+// ..it means both model duration cache is affected and the DebugKit is loaded depending on the value in app.php.
+// 
+
+        $debugMode = intval($kitchenSink->Retrieve('SimplicityDebugMode', '0'));
+        // Configure::write('debug', $debugMode);
+
+        if($debugMode)
+        {
+          // Plugin::load('DebugKit', ['bootstrap' => false]);
+        }
+        
         // Set default language to your like, but make sure it is present in table languages, i18n.
         AppController::$defaultLanguage = $kitchenSink->Retrieve('SimplicityDefaultLanguage', 'sv');
         
         // Try get the chosen language as an url param, namely '?lang=SV-se'. 
         AppController::$selectedLanguage = $this->request->query('lang');
+        
+        // Default page layout are simplicity.ctp, but can be easily changed to your own layout.
+        AppController::$defaultLayout = $kitchenSink->Retrieve('SimplicityDefaultLayout', 'simplicity');
         
         if(AppController::$selectedLanguage != null && AppController::$selectedLanguage != '')
         {
@@ -170,9 +188,11 @@ class AppController extends Controller
         
         $this->set('availableLanguages', $availableLanguages);
         
-        // Default layout is simplicity. To define your own, copy and rename src/Template/Layout/simplicity.ctp 
-        // and change here. Each controller can have their own layout, and you can even define a layout per view. 
-        $this->viewBuilder()->layout('simplicity');
+        // Set default layout. To define your own, copy and rename src/Template/Layout/simplicity.ctp 
+        // and change the value SimplicityDefaultLayout in the kitchen sink. 
+        // You can define a different layout in each controller, and you can even define a layout per view.
+        // 
+        $this->viewBuilder()->layout(AppController::$defaultLayout);
               
         // TESTING
         if(false)
@@ -193,7 +213,7 @@ class AppController extends Controller
     }
     
     /**
-     * Some variables need to be set, since simplicity.ctp expect them to exist. When not in EditablePagesController and in some other cases
+     * Some variables need to be set, since simplicity.ctp expect them to exist. When not in CategoriesController and in some other cases
      * this function comes in handy, since it defines the variables needed.
      */
     protected function SetFakeSimplicityVariables($actionUrlName = '', $url = '')
@@ -206,7 +226,7 @@ class AppController extends Controller
       // CatLang should contain an array with one object.
       $ce = (object)[
         'id' => -1,
-        'CatLang' => [(object)[
+        'cat_lang' => [(object)[
           'url_title' => $actionUrlName, 
           'title' => $actionUrlName, 
           'path' => $url,

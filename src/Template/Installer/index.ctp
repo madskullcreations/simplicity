@@ -14,7 +14,7 @@ if($showResetTablesSetting)
 ?>
 <div class="callout warning">
   <p>Setup has detected the database tables already exists, but some step seem to be missing. If you know the database tables does not contain any important data (any data you have created, like pages) you can let setup destroy and recreate the tables for you.</p>
-  <p>NOTE! All data will be erased, and there are no undo!</p>
+  <p>NOTE! All data will be erased, and it can not be restored!</p>
 </div>
 <?php
 

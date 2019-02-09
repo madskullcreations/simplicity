@@ -340,9 +340,9 @@ class CategoriesTable extends Table
       ->all()
       ->toList();
       
-    debug($category);
-    debug($parentCategoryId);
-    debug($urlTitle);
+    // debug($category);
+    // debug($parentCategoryId);
+    // debug($urlTitle);
     
     if(count($category) == 0)
     {

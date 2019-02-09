@@ -44,6 +44,10 @@ use Cake\Mailer\Email;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 
+// NOTE: We can not fetch data from database at this stage of execution, this happen:
+//  Fatal error: Uncaught Cake\Datasource\Exception\MissingDatasourceConfigException: The datasource configuration "default" was not found.
+// use Cake\ORM\TableRegistry;
+
 /**
  * Uncomment block of code below if you want to use `.env` file during development.
  * You should copy `config/.env.default to `config/.env` and set/modify the
@@ -102,6 +106,15 @@ else
 }
 
 $simplicity_setup_state = Configure::read('simplicity_setup_state');
+
+/*if($simplicity_setup_state > 1)
+{
+  // After setup, the debug mode is fetched from database, overriding the setting in app.php.
+  $kitchenSink = TableRegistry::get('KitchenSink');
+  
+  $debugMode = intval($kitchenSink->Retrieve('SimplicityDebugMode', '0'));
+  Configure::write('debug', $debugMode);
+}*/
 
 /*
  * When debug = true the metadata cache should only last
@@ -238,6 +251,7 @@ if($simplicity_setup_state > 1)
  * Only try to load DebugKit in development mode
  * Debug Kit should not be installed on a production system
  */
-if ($simplicity_setup_state > 1 && Configure::read('debug')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
+if($simplicity_setup_state > 1 && Configure::read('debug'))
+{
+  Plugin::load('DebugKit', ['bootstrap' => true]);
 }
