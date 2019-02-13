@@ -55,11 +55,16 @@ echo $this->TinyMCE->GetScript();
     else
     {
       echo $this->Form->input('url_title', $arr);
-    }      
+    }
 
     echo $this->Form->input('title', ['title' => __('The title is visible in the menus.'), 'value' => ucfirst($urlTitle)]);
     
     echo $this->Form->input('content', ['type' => 'textarea']);
+
+  ?>
+  <br>
+  <?php
+    echo $this->element('LayoutSelector', ['defaultLayout' => $defaultLayout, 'layoutFiles' => $layoutFiles]);
     echo $this->Form->button(__('Save Page'), ['class' => 'button top-margin']);
     echo $this->Form->end();
 ?>

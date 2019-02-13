@@ -544,9 +544,9 @@ class CategoriesTable extends Table
    * Returns the created/updated category.
    * 
    */
-  public function CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content)
+  public function CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $layout)
   {
-    return $this->_CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content);
+    return $this->_CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $layout);
     
     // if($this->CategoryExists($parentCategoryId, $urlTitle, $i18n) == false)
     // {
@@ -705,10 +705,11 @@ class CategoriesTable extends Table
 	 * Create a category with the given parent. It must not exist when calling this function.
 	 * 
 	 */
-	protected function _CreateCategory($parent_id, $url_title, $language, $title, $content)
+	protected function _CreateCategory($parent_id, $url_title, $language, $title, $content, $layout)
 	{
 		$element = $this->newEntity();
 		$element->parent_id = $parent_id;
+    $element->layout = $layout;
         		
     $result = $this->save($element);
 		if($result)

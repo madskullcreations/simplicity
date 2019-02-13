@@ -130,6 +130,7 @@ class AppController extends Controller
         $this->set('userIsAdmin', AppController::UserIsAdmin());
         $this->set('userIsAuthor', AppController::UserIsAuthor());
         $this->set('selectedLanguage', AppController::$selectedLanguage);
+        $this->set('defaultLayout', AppController::$defaultLayout);
 
         if($this->request->getParam('controller') != 'Categories' || $this->request->getParam('action') != 'display')
         {

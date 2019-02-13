@@ -252,12 +252,13 @@ class CategoriesController extends AppController
       $urlTitle = $this->request->data['url_title'];
       $title = $this->request->data['title'];
       $content = $this->request->data['content'];
+      $layout = $this->request->data['layout'];
       
       // TODO: Path! Create all category elements in the url path.
       $parentCategoryId = null;
       
       // Create the category with it's title and content.
-      $categoryElement = $this->categories->CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content);
+      $categoryElement = $this->categories->CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $layout);
       // debug($categoryElement);
       
       // Redirect to the new page.
@@ -267,22 +268,20 @@ class CategoriesController extends AppController
       $this->Flash->success(__('The page was created.'));
       return $this->redirect($path);
     }
-    else
+
+    // Check to see if the category exists, just not in the requested language.
+    $urlTitles = $path;
+    $urlTitle = array_pop($urlTitles);
+    
+    $parentCategoryId = null;
+    
+    $elms = $this->categories->GetElementByUrlTitle($parentCategoryId, $urlTitle);
+    // debug($elms);
+    
+    if($elms != null)
     {
-      // Check to see if the category exists, just not in the requested language.
-      $urlTitles = $path;
-      $urlTitle = array_pop($urlTitles);
-      
-      $parentCategoryId = null;
-      
-      $elms = $this->categories->GetElementByUrlTitle($parentCategoryId, $urlTitle);
-      // debug($elms);
-      
-      if($elms != null)
-      {
-        // TODO: There are one or more translated versions. Lets redirect to add_new_language.
-        $categoryId = $elms[0]->id;
-      }
+      // TODO: There are one or more translated versions. Lets redirect to add_new_language.
+      $categoryId = $elms[0]->id;
     }
 
     $i18n = AppController::$selectedLanguage;
@@ -317,11 +316,11 @@ class CategoriesController extends AppController
       $this->Flash->default(__('Please add a language for your web page.'));
       return $this->redirect(['controller' => 'SimplicitySettings', 'action' => 'language']);
     }
-        
-    // $categoryElement = $this->Categories->newEntity();
-    // debug($categoryElement);
+
+    // Fetch available layout files.
+    $layoutFiles = $this->FetchLayoutFiles();
     
-    $this->set(compact('path','i18n','availableLanguageCodes','categoryElement'));
+    $this->set(compact('path','i18n','availableLanguageCodes','layoutFiles','categoryElement'));
   }
   
   /**
@@ -386,7 +385,10 @@ class CategoriesController extends AppController
 		$implementedLanguageCodes = $this->Language->GetLanguagesFor($categoryId);
 		$missingLanguages = $this->Language->GetMissingLanguages($categoryId);
     
-    $this->set(compact('i18n','availableLanguageCodes','implementedLanguageCodes','missingLanguages','categoryElement'));
+    // Fetch available layout files.
+    $layoutFiles = $this->FetchLayoutFiles();
+    
+    $this->set(compact('i18n','availableLanguageCodes','implementedLanguageCodes','missingLanguages', 'layoutFiles','categoryElement'));
   }
   
   /**
@@ -438,7 +440,14 @@ class CategoriesController extends AppController
 			// debug($this->request->data);
       
       // Update category element.
-      $catLangId = $this->request->data['id'];
+      $id = $this->request->data['id'];
+      $categoryElement = $this->categories->get($id);
+      $categoryElement->layout = $this->request->data['layout'];
+      $this->categories->save($categoryElement);
+      // debug($categoryElement);
+      
+      // Update catlang element.
+      $catLangId = $this->request->data['catlang_id'];
       $catLang = $this->catlangs->get($catLangId);
       // debug($catLang);
       
@@ -458,11 +467,15 @@ class CategoriesController extends AppController
     $availableLanguageCodes = $this->Language->GetLanguageCodes();
     $missingLanguages = $this->Language->GetMissingLanguages($categoryId);
     $categoryElement = $this->categories->GetElementById($categoryId, $i18n);
+    
+    // Fetch available layout files.
+    $layoutFiles = $this->FetchLayoutFiles();
+    
     // debug($categoryId);
     // debug($i18n);
     // debug($categoryElement);
     
-    $this->set(compact('i18n','availableLanguageCodes','missingLanguages','categoryElement'));
+    $this->set(compact('i18n','availableLanguageCodes','missingLanguages', 'layoutFiles','categoryElement'));
   }
   
   /**
@@ -513,7 +526,31 @@ class CategoriesController extends AppController
     }
 		
 		return $this->redirect('/');
-	}  
+	}
+  
+  /**
+   * Returns available layout files in the Template/Layout folder, excluding some irrelevant layout files.
+   * 
+   */
+  protected function FetchLayoutFiles()
+  {
+    $dir = APP.'Template'.DS.'Layout'.DS;
+    $res = scandir($dir);
+    // debug($res);
+    
+    $layoutFiles = array();
+    foreach($res as $key => $name)
+    {
+      if(strpos($name, '.ctp') && in_array($name, ['default.ctp', 'error.ctp', 'installer.ctp']) == false)
+      {
+        $name = str_replace('.ctp', '', $name);
+        $layoutFiles[$name] = $name;
+      }
+    }
+    // debug($layoutFiles);
+    
+    return $layoutFiles;
+  }
 }
 
 

@@ -81,7 +81,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </div>    
     <div class="row">
     	<div class="large-12 columns">
-    		<h1>Hej svej!</h1>
+    		<h1>Hello there.</h1>
     	</div>
     </div>
     <div class="row">

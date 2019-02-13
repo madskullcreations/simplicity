@@ -66,11 +66,20 @@ echo $this->TinyMCE->GetScript();
     echo $this->Form->input('url_title', $arr);
   }
   
-  echo $this->Form->hidden('id', ['value' => $categoryElement->cat_lang[0]->id]);
+  echo $this->Form->hidden('id', ['value' => $categoryElement->id]);
+  echo $this->Form->hidden('catlang_id', ['value' => $categoryElement->cat_lang[0]->id]);
 
   echo $this->Form->input('title', ['title' => __('The title is visible in the menus.')]);
   
   echo $this->Form->input('content', ['type' => 'textarea']);
+  
+  echo "<br>";
+  
+  if($categoryElement->layout != null)
+    $defaultLayout = $categoryElement->layout;
+  
+  echo $this->element('LayoutSelector', ['defaultLayout' => $defaultLayout, 'layoutFiles' => $layoutFiles]);
+  
   echo $this->Form->button(__('Save Page'), ['class' => 'button top-margin']);
   echo $this->Form->end();
 ?>
