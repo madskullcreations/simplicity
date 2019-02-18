@@ -25,6 +25,8 @@ use Exception;
 /**
  * Provides installation hooks for when this application is installed via
  * composer. Customize this class to suit your needs.
+ *
+ * NOTE: The InstallerSimplicity class is used by composer, not this class. (No harm running this one too)
  */
 class Installer
 {
@@ -170,8 +172,6 @@ class Installer
         $changePerms($dir . '/logs', $worldWritable, $io);
     }
 
-// TODO: När InstallerController fungerar, anropa denna då. Modifiera också detta scriptet så det inte sätter saltet. 
-//  <--Du drar ju ner cakephp/cakephp i composer.json, medan DENNA filen är simplicitys! (Sluta missförstå)
     /**
      * Set the security.salt value in the application's config file.
      *
