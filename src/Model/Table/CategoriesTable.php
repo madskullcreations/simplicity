@@ -63,11 +63,14 @@ class CategoriesTable extends Table
 		// We want the level, or deep, saved along with the category. 
 		$this->addBehavior('Tree', ['level' => 'level']);
 	}
-	
+  	
 	/**
 	 * Returns the childrens of the given category down to the given deep, 
    * or all root-categories if null is given as categoryId. 
 	 * 
+   * If $includeNotInMenus is true, all pages are included, otherwise only pages where in_menus are set to 1 
+   * will be included in the three.
+   * 
 	 * This can be used to fetch the immediate sub-menu-items for the currently active menu.
 	 * 
 	 * 1. Denna Helper/Component ska ha en MainMenu() som helt enkelt tar alla rot-element. 
@@ -82,35 +85,44 @@ class CategoriesTable extends Table
 	 *  EX: Huvudmenyn är fortfarande alla sidor och kategorier utan förälder.
 	 *  
 	 */
-	public function GetTree($categoryId, $deep, $language)
-	{
+	public function GetTree($categoryId, $deep, $language, $includeNotInMenus)
+	{    
 		if($categoryId != null)
 		{
 			$rootElement = $this->find()->where(['id' => $categoryId])->first();
 			// debug($rootElement);
 			
 			$level = $rootElement->level;
-						
+					
+      $where = ['level <=' => $level + $deep];
+      if($includeNotInMenus == false)
+      {
+        // Visitors only see pages meant for the menu.
+        $where['in_menus'] = '1';
+      }
+
 			// Limit the selection of children to those whose level is in bounds.
       // Fetch the CatLang for the given language.
 			$tree = $this->find('children', ['for' => $categoryId])
         ->contain(['CatLang' => ['conditions' => ['CatLang.i18n' => $language]]])
-				->where([
-						'level <=' => $level + $deep
-				])
+				->where($where)
 				// Get only the fields we want incorporates id and parent_id for 'threaded' to work. 
 		    ->find('threaded', ['fields' => ['parent_id','id','level']])
 				->toArray();
 		}
 		else 
 		{
+      $where = ['parent_id is' => null, 'level <=' => $deep];
+      if($includeNotInMenus == false)
+      {
+        // Visitors only see pages meant for the menu.
+        $where['in_menus'] = '1';
+      }
+      
 			// The Tree behaviour don't seem to support getting 'children' where parent_id is null.  
 			$rootElements = $this->find()
 				->contain(['CatLang' => ['conditions' => ['CatLang.i18n' => $language]]])
-        ->where([
-						'parent_id is' => null,
-						'level <=' => $deep
-				])
+        ->where($where)
 				->find('all', ['fields' => ['parent_id','id','level']])
 				->toArray();
 				
@@ -121,7 +133,7 @@ class CategoriesTable extends Table
 				
 				if($deep > 1)
 				{
-					$subTree = $this->GetTree($rootElement->id, $deep - 1, $language);
+				  $subTree = $this->GetTree($rootElement->id, $deep - 1, $language, $includeNotInMenus);
 					// debug($subTree);
 					
 					$rootElement->children = $subTree;
@@ -279,7 +291,7 @@ class CategoriesTable extends Table
     // 
     $query = $this->find('all', 
       [
-        'fields' => ['Categories.id', 'Categories.parent_id', 'Categories.layout']
+        'fields' => ['Categories.id', 'Categories.parent_id', 'Categories.in_menus', 'Categories.layout']
       ])
       ->contain(['CatLang' => function(Query $q) use($i18n){
         if($i18n != null)
@@ -544,9 +556,16 @@ class CategoriesTable extends Table
    * Returns the created/updated category.
    * 
    */
-  public function CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $layout)
+  public function CreateCategory($parentCategoryId, $requestData)
   {
-    return $this->_CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $layout);
+    $i18n = $requestData['i18n'];
+    $urlTitle = $requestData['url_title'];
+    $title = $requestData['title'];
+    $content = $requestData['content'];
+    $layout = $requestData['layout'];
+    $inMenus = $requestData['in_menus'];
+
+    return $this->_CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $inMenus, $layout);
     
     // if($this->CategoryExists($parentCategoryId, $urlTitle, $i18n) == false)
     // {
@@ -650,6 +669,7 @@ class CategoriesTable extends Table
       `rght` INT(10) NOT NULL,
       `level` INT(10) NOT NULL,
       `layout` VARCHAR(32) NULL,
+      `in_menus` TINYINT(1) NOT NULL DEFAULT '1',
       `created` DATETIME NULL,
       `modified` DATETIME NULL,
       PRIMARY KEY (`id`)
@@ -663,6 +683,7 @@ class CategoriesTable extends Table
     // If you ever need to update an old database, this one works.
     // $connection->execute("
       // ALTER TABLE `categories` ADD `layout` VARCHAR(32) NULL AFTER `level`;
+      // ALTER TABLE `categories` ADD `in_menus` TINYINT(1) NOT NULL DEFAULT '1' AFTER `layout`;
     // ");
   }
 
@@ -705,11 +726,12 @@ class CategoriesTable extends Table
 	 * Create a category with the given parent. It must not exist when calling this function.
 	 * 
 	 */
-	protected function _CreateCategory($parent_id, $url_title, $language, $title, $content, $layout)
+	protected function _CreateCategory($parent_id, $url_title, $language, $title, $content, $inMenus, $layout)
 	{
 		$element = $this->newEntity();
 		$element->parent_id = $parent_id;
     $element->layout = $layout;
+    $element->in_menus = $inMenus;
         		
     $result = $this->save($element);
 		if($result)

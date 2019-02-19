@@ -75,6 +75,22 @@ echo $this->TinyMCE->GetScript();
   
   echo "<br>";
   
+?>
+
+  <div class="callout">
+    <p><?= __('If you hide the page, it is not shown in the visitor\'s menu. You can still find the page in the administrators menu.') ?></p>
+    <p><?= __('Note that hiding/showing a page hide/show the page in every language.') ?></p>
+  </div>
+  
+<?php
+  // Checking a checkbox is always ...not easy.
+  echo $this->Form->input('in_menus', [
+    'label' => __('Show this page in the menus'),
+    'after' => 'tomten',
+    'type' => 'checkbox',
+    'checked' => ($categoryElement->in_menus == '1' || $categoryElement->in_menus === null) ? true:false
+    ]);
+    
   if($categoryElement->layout != null)
     $defaultLayout = $categoryElement->layout;
   

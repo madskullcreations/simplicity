@@ -121,8 +121,8 @@ $simplicity_setup_state = Configure::read('simplicity_setup_state');
  * for a short time.
  */
 if (Configure::read('debug')) {
-    Configure::write('Cache._cake_model_.duration', '+2 minutes');
-    Configure::write('Cache._cake_core_.duration', '+2 minutes');
+    Configure::write('Cache._cake_model_.duration', '+5 seconds');
+    Configure::write('Cache._cake_core_.duration', '+5 seconds');
 }
 
 /*

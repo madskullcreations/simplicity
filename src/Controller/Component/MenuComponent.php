@@ -108,13 +108,13 @@ class MenuComponent extends Component
 	 * 			dead
 	 * 	
 	 */
-	public function GetTree($parentCategoryId, $level, $language)
+	public function GetTree($parentCategoryId, $level, $language, $includeNotInMenus)
 	{
     // Just make it deep enough.
     if($level == 0)
       $level = 1000;
     
-		$tree = $this->categories->GetTree($parentCategoryId, $level, $language);
+    $tree = $this->categories->GetTree($parentCategoryId, $level, $language, $includeNotInMenus);
     // debug($tree);
 
 		// The main difference between all() and toArray() is that all() uses 'lazy loading' while toArray() uses 'eager loading'.
@@ -140,36 +140,6 @@ class MenuComponent extends Component
 		}
     unset($category);
 		// debug($names);
-		
-		// Get the RTEs for the root node.
-		/*$rtes = $this->richTextElements->ElementsForCategory($parentCategoryId, AppController::$selectedLanguage, true);
-		$rtes = $rtes->toArray();
-		
-		// Remove RTEs with same url_title as an existing category.
-		foreach($rtes as $id => &$rte)
-		{
-      if(in_array($rte->url_title, $names))
-			{
-				unset($rtes[$id]);
-			}
-		}
-		unset($rte);
-		
-		foreach($rtes as &$rte)
-		{
-		    $rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->url_title;
-      
-        $rte->class_name = $rte->source();
-		}
-		unset($rte);
-		
-		$tree = array_merge($tree, $rtes);*/
-		
-		// debug($tree);
-
-		// Get the name of the model for an object:
-// 		$repository = $element->source();
-// 		debug($repository);
 		
 		return $tree;
 	}
@@ -223,33 +193,6 @@ class MenuComponent extends Component
 		}
     unset($child);
     // debug($names);
-	
-		/*if($category->level < $level)
-		{
-			$rtes = $this->richTextElements->ElementsForCategory($category->id, AppController::$selectedLanguage, true);
-			$rtes = $rtes->toArray();
-      // debug($rtes);
-				
-			// Remove RTEs with same name as an existing category.
-			foreach($rtes as $id => &$rte)
-			{
-        if(in_array($rte->url_title, $names))
-				{
-					unset($rtes[$id]);
-				}
-			}
-			unset($rte);
-				
-			foreach($rtes as &$rte)
-			{
-        // debug($rte);
-        $rte->path = $this->_GetPath($rte->category_id, $rte->i18n).$rte->url_title;
-        $rte->class_name = $rte->source();
-			}
-			unset($rte);
-			
-			$category->children = array_merge($category->children, $rtes);
-		}*/
 	}
 	
 	/* Get the url path for the given category_id.

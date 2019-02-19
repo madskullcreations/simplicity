@@ -35,7 +35,7 @@ class CategoriesController extends AppController
     $this->catlangs = TableRegistry::get('CatLang');
     
     // The homeTree must contain the entire site.
-    $homeTree = $this->Menu->GetTree(null, 0, AppController::$selectedLanguage);
+    $homeTree = $this->Menu->GetTree(null, 0, AppController::$selectedLanguage, $this->UserIsAuthor());
     // debug($homeTree);
     $this->set(compact('homeTree'));
 	}
@@ -166,7 +166,7 @@ class CategoriesController extends AppController
     // debug($urlTitlesForCategory);
         
     // Get the menu tree with the root elements and their immediate children.
-    $sideMenuTree = $this->Menu->GetTree($parentCategoryId, $level, $i18n);
+    $sideMenuTree = $this->Menu->GetTree($parentCategoryId, $level, $i18n, $this->UserIsAuthor());
     // debug($sideMenuTree);
     
     if(AppController::UserIsAuthor() == true)
@@ -249,16 +249,12 @@ class CategoriesController extends AppController
 			// debug($this->request->data);
       
       $i18n = $this->request->data['i18n'];
-      $urlTitle = $this->request->data['url_title'];
-      $title = $this->request->data['title'];
-      $content = $this->request->data['content'];
-      $layout = $this->request->data['layout'];
       
       // TODO: Path! Create all category elements in the url path.
       $parentCategoryId = null;
       
       // Create the category with it's title and content.
-      $categoryElement = $this->categories->CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $layout);
+      $categoryElement = $this->categories->CreateCategory($parentCategoryId, $this->request->data);
       // debug($categoryElement);
       
       // Redirect to the new page.
@@ -390,27 +386,7 @@ class CategoriesController extends AppController
     
     $this->set(compact('i18n','availableLanguageCodes','implementedLanguageCodes','missingLanguages', 'layoutFiles','categoryElement'));
   }
-  
-  /**
-   * Create a new page with the given parent category in the given language.
-   * 
-   */
-  public function create($parentCategoryId = null, $i18n = null)
-  {
-    if($parentCategoryId == null || $i18n == null)
-    {
-      $this->Flash->error(__('Missing parameters.'));
-      return $this->redirect('/');
-    }
-    
-    // TODO: 
-    // 1. Create category.
-    // 2. Create corresponding catlang. (language version)
-    // 3. Redirect to edit().
-        
-    $category = $this->categories->get($categoryId);
-  }
-    
+      
   /**
    * Edit the page with the given id and language.
    * 
@@ -442,9 +418,12 @@ class CategoriesController extends AppController
       // Update category element.
       $id = $this->request->data['id'];
       $categoryElement = $this->categories->get($id);
-      $categoryElement->layout = $this->request->data['layout'];
-      $this->categories->save($categoryElement);
       // debug($categoryElement);
+      
+      $categoryElement->layout = $this->request->data['layout'];
+      $categoryElement->in_menus = $this->request->data['in_menus'];
+      $this->categories->save($categoryElement);
+      // debug($categoryElement);      
       
       // Update catlang element.
       $catLangId = $this->request->data['catlang_id'];
