@@ -63,7 +63,20 @@ echo $this->TinyMCE->GetScript();
 
   ?>
   <br>
-  <?php
+
+  <div class="callout">
+    <p><?= __('If you hide the page, it is not shown in the visitor\'s menu. You can still find the page in the administrators menu.') ?></p>
+    <p><?= __('Note that hiding/showing a page hide/show the page in every language.') ?></p>
+  </div>
+  
+<?php
+  echo $this->Form->input('in_menus', [
+    'label' => __('Show this page in the menus'),
+    'after' => 'tomten',
+    'type' => 'checkbox',
+    'checked' => true
+    ]);
+  
     echo $this->element('LayoutSelector', ['defaultLayout' => $defaultLayout, 'layoutFiles' => $layoutFiles]);
     echo $this->Form->button(__('Save Page'), ['class' => 'button top-margin']);
     echo $this->Form->end();
