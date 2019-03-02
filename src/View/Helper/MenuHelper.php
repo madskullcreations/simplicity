@@ -73,7 +73,8 @@ class MenuHelper extends Helper
 		return $html;
 	}
 	
-	/* Render the html for the given menu tree. 
+	/* Render the html for the given menu tree, with some zurb responsiveness for the menu 
+   * so it collapses into a nice button on small devices.
 	 * 
 	 */
 	public function GetMenu($menuTree, $menuId, $ulClass = 'simplicity', $subUlClass = 'menu', $liClass = 'simplicity')
@@ -88,6 +89,25 @@ class MenuHelper extends Helper
     ';
         
 		$html .= '<ul id="'.$menuId.'" class="'.$ulClass.' root level_1" aria-autoclose="false" data-dropdown-menu>';
+		$first = 'first';
+		foreach($menuTree as &$element)
+		{
+			$html .= $this->_GetMenu($element, $subUlClass, $liClass, $first, 1);
+			$first = '';
+		}
+		$html .= '</ul>';
+		
+		return $html;
+	}
+
+	/* Render the html for the given menu tree. 
+	 * 
+	 */
+	public function GetSimpleMenu($menuTree, $menuId, $ulClass = 'simplicity', $subUlClass = 'menu', $liClass = 'simplicity')
+	{
+		$html = '';
+
+		$html .= '<ul id="'.$menuId.'" class="'.$ulClass.' root level_1" data-dropdown-menu>';
 		$first = 'first';
 		foreach($menuTree as &$element)
 		{

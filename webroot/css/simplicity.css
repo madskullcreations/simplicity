@@ -26,7 +26,7 @@ body{
   background-color: #e6e6e6;
 }
 #simplicity-content{
-  flex: 1 0 auto;
+  flex: 1 1 auto;
 }
 .simplicity-footer{
   flex-shrink: 0;
@@ -38,9 +38,9 @@ body{
   white-space: nowrap;
 }
 .simplicity-footer .cell{
-  display: flex;
+/*  display: flex;
   align-items: center;  
-  justify-content: center;
+  justify-content: center;*/
 }
 
 .top-menu-bar{
@@ -68,17 +68,20 @@ body{
 }
 .site-title-description{
   font-family: "Open Sans";
-  align-items: center;  
-  justify-content: center;  
 }
 .site-title{
   margin-bottom: 0px;
   line-height: 0.95;
-  padding-left: 10px;
+  padding-left: 15px;
+  margin-top: 10px;
+  
+  font-size: 6vw;
 }
 .site-description{
   text-align: right;
   padding-left: 10px;
+  
+  font-size: 3vw;
 }
 
 .simplicity-accordion-menu{
@@ -139,9 +142,13 @@ ul.simplicity.breadcrumbs{
   line-height: 1;
 }
 
-@media print, screen and (max-width: 40em){
+@media print, screen and (max-width: 64em) { /* iPad and other medium sized screens */
+#simplicity_top_menu{
+  justify-content: space-around;
+}  
+}
+@media print, screen and (max-width: 40em){ /* Mobile */
 .site-title-description h2{
-    font-size: 1.5rem;
 }
 .button.login, .button.logout{
   background-image: url('/img/login.png');
@@ -157,5 +164,13 @@ ul.simplicity.breadcrumbs{
 }
 .button.logout{
   background-image: url('/img/logout.png');
+}
+
+#simplicity_top_menu{
+  flex-direction: column;
+}
+.simplicity-footer div{
+  flex-direction: column;
+  font-size: 3vw;
 }
 }
