@@ -195,13 +195,37 @@ $this->end();
   <?= $this->Html->script('zurb/foundation.min.js') ?>
   
   <script>
+    // TODO: Extract into a helper.
+    
+    // Zurb abide validator functions.
+    function Validate_MinStringLength(
+      $el,      /* jQuery element to validate */
+      required, /* is the element required according to the `[required]` attribute */
+      parent    /* parent of the jQuery element `$el` */
+    )
+    {
+      if(required == false)
+        return true;
+      
+      var text = $($el).val();
+      
+      if(text.length < $($el).attr("min_len"))
+        return false;
+      
+      return true;
+    }
+    
+    Foundation.Abide.defaults.validators['min_length'] = Validate_MinStringLength;
+    
+    $(document).foundation();
+  </script>
+  
+  <script>
     var urlPath = "<?= $urlPath ?>";
     // console.log(urlPath);
     
     <?= $catUrlTitles ?>
     // console.log(catUrlTitles);
-      
-    $(document).foundation();
     
     $('.site-logo').attr('draggable', false);
     

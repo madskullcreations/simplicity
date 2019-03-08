@@ -14,6 +14,11 @@ namespace App\Controller;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
+// Adaptations for contact form.
+use App\Form\ContactForm;
+use Cake\Validation\Validator;
+use Cake\Mailer\Email;
+
 /**
  * Category controller
  *
@@ -72,6 +77,63 @@ class CategoriesController extends AppController
 
     // Allow nothing. (Except 'display' which are explicitly allowed in beforeFilter().)
     return false;
+  }
+  /**
+   * display() call this function when the page 'contact' are viewed.
+   * 
+   */
+  protected function view_contact($categoryElement)
+  {
+    $form = new ContactForm();
+    $errors = [];
+    
+		if($this->request->is(['post', 'put'])) 
+		{
+			// debug($this->request->data);
+      
+      // The client side (the browser) check the fields as well, with the zurb abide form validation.
+      // This is the server side validation, to assure no one tries to hack us.
+      $validator = new Validator();
+      $validator->add('name', 'length', [
+        'rule' => ['minLength', 1],
+        // 'message' => _('Please fill in your name')
+      ])
+      ->add('email', 'format', [
+        'rule' => 'email',
+        // 'message' => __('This must be a valid email address')
+      ])
+      ->add('message', 'length', [
+        'rule' => ['minLength', 15],
+        'message' => __('The message must be at least 15 characters')
+      ]);
+     
+      $errors = $validator->errors($this->request->getData());
+      // debug($errors);
+      
+      if(count($errors) == 0)
+      {
+        // Values seem correct. Push away an email to support!
+        $data = $this->request->data;
+        
+        // https://book.cakephp.org/3.0/en/core-libraries/email.html
+        $email = new Email('default');
+        $email->setTo('support@madskullcreations.com')
+            ->setFrom($data['email'], $data['name'])
+            ->setSubject('Message via madskull contact form'.' - '.$data['name'])
+            ->send($data['message']);
+            
+        // debug($email);
+        $this->Flash->success(__('Thank you for contacting us, we will get in touch soon!'));
+      }
+      else 
+      {
+        $this->Flash->error(__('There was a problem submitting your form. Please check the error message below each input field.'));
+      }
+    }
+    
+    // debug($form);
+    $this->set('form', $form);
+    $this->set('errors', $errors);
   }
   
   /**
@@ -178,6 +240,20 @@ class CategoriesController extends AppController
     
     $this->set(compact(
       'urlTitles', 'urlTitlesForCategory', 'pageName', 'i18n', 'categoryElement', 'breadcrumbPath', 'sideMenuTree'));
+    
+    // Tries to call specific function in CategoriesController. (this class)
+    // 
+    // Example:
+    //  You have a path to your blog, like this:
+    //    /fancy/path/to/my/blog
+    //  It will look for a function named like so:
+    //    view_fancy_path_to_my_blog()
+    // 
+    $functionName = 'view_'.implode('_', $path);
+    if(method_exists($this, $functionName))
+    {
+      call_user_func_array(array($this, $functionName), array($categoryElement));
+    }
     
     // Tries to render specific .ctp file. If it does not exist, fall back to the default .ctp file.
     // Using DS as we will check for a file's existence on the server.
