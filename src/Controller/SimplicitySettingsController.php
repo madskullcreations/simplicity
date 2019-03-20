@@ -21,8 +21,50 @@ use Cake\ORM\TableRegistry;
  */
 class SimplicitySettingsController extends AppController
 {
+  public function initialize()
+  {
+    parent::initialize();
+  
+    // In admin pages the simplicity layout are always used.
+    $this->viewBuilder()->layout('simplicity');
+  }
+  
   public function index()
   {
+  }
+  
+  public function various()
+  {
+		if ($this->request->is(['post', 'put']))
+		{
+			// debug($this->request->data);
+      
+      // TODO: Validate.
+      $default_language = $this->request->data['default_language'];
+      $site_title = $this->request->data['site_title'];
+      $site_description = $this->request->data['simplicity_site_description'];
+      $layout = $this->request->data['layout'];
+
+      $kitchenSink = TableRegistry::get('KitchenSink');
+      $kitchenSink->Store('SimplicityDefaultLanguage', $default_language);
+      $kitchenSink->Store('SimplicitySiteTitle', $site_title);
+      $kitchenSink->Store('SimplicitySiteDescription', $site_description);
+      $kitchenSink->Store('SimplicityDefaultLayout', $layout);
+      
+      $this->Flash->success(__('Your changes were saved.'));
+      
+      return $this->redirect(['action' => 'index']);
+    }
+
+		// Get already present languages.
+		$catLangs = TableRegistry::get('CatLang');
+		$presentLanguages = $catLangs->GetLanguageCodes();
+		// debug($presentLanguages);
+   
+    // Fetch available layout files.
+    $layoutFiles = $this->FetchLayoutFiles();
+   
+    $this->set(compact('presentLanguages', 'layoutFiles'));
   }
   
 	public function language()

@@ -5,8 +5,8 @@
 ?>
 <h3><?= __('Add new language') ?></h3>
 <p>
-What actually happens when you add a new language, is that the page visit the (non-existing) start page in the selected language, thereby creating it.<br>
-After that, the language will be available for selection whenever you edit a page.
+<?= __('When you add a new language, you will be redirected to the home page with the chosen language selected, where you will be asked to translate it.'); ?><br>
+<?= __('After you translate and save the page, the language will be available for selection whenever you edit a page.'); ?>
 </p>
 <?php
 

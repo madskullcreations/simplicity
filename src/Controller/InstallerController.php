@@ -57,7 +57,7 @@ class InstallerController extends Controller
     
 		if($this->request->is(['post', 'put'])) 
 		{
-			debug($this->request->data);
+			// debug($this->request->data);
      
       if($form->execute($this->request->getData())) 
       {

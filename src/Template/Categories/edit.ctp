@@ -94,7 +94,13 @@ echo $this->TinyMCE->GetScript();
   if($categoryElement->layout != null)
     $defaultLayout = $categoryElement->layout;
   
-  echo $this->element('LayoutSelector', ['defaultLayout' => $defaultLayout, 'layoutFiles' => $layoutFiles]);
+  echo $this->element(
+  	'LayoutSelector', 
+  	[
+  		'defaultLayout' => $defaultLayout, 
+  		'layoutFiles' => $layoutFiles,
+  		'showCallout' => true
+  	]);
   
   echo $this->Form->button(__('Save Page'), ['class' => 'button top-margin']);
   echo $this->Form->end();

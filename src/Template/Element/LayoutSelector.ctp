@@ -1,3 +1,7 @@
+<?php
+  if($showCallout)
+  {
+?>
 <div class="callout secondary">
   <p><?= __('Normally you can leave the layout at it\'s default. If you have defined several layout files you can choose between them here. Explanation of the default layouts:') ?></p>
   <p><?= __('Explanation of the default layouts:') ?></p>
@@ -15,5 +19,13 @@
   ?>
 </div>
 <?php
-  echo $this->Form->input('layout', ['title' => __('Layout'), 'default' => $defaultLayout, 'options' => $layoutFiles]);
+  }
+?>
+<?php
+  if(!isset($label))
+  {
+    $label = __('Layout');
+  }
+  
+  echo $this->Form->input('layout', ['label' => $label, 'default' => $defaultLayout, 'options' => $layoutFiles]);
 ?>
