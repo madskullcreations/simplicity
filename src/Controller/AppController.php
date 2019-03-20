@@ -18,6 +18,7 @@ use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
+use Cake\I18n\I18n;
 
 /**
  * Application Controller
@@ -111,14 +112,20 @@ class AppController extends Controller
           }
         }
         
-        
         // TODO: Try to get from browser cookie, and if no cookie, use the default language of the site.
+        // http://www.localizingjapan.com/blog/2011/11/10/localizing-a-cakephp-application/
+        // TODO: Test this:
+        // locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         
         if(AppController::$selectedLanguage == null)
         {
           // No language found from url. Fetch default language.
           AppController::$selectedLanguage = AppController::$defaultLanguage;
         }
+
+        // Tell cake which language to use when translating text elements found in __('text').
+        I18n::setLocale(AppController::$selectedLanguage);
+        // debug(I18n::getLocale());
         
         // Fetch some site-global settings from the kitchen sink.
         AppController::$simplicity_site_title = $kitchenSink->Retrieve('SimplicitySiteTitle', 'Simplicity CMS');

@@ -115,7 +115,9 @@ class InstallerSimplicity
       $dest = $rootDir."/webroot/js/zurb/";
       static::xcopy($source, $dest);
       $io->write('Copied Zurb js files from "'.$source.'" to "'.$dest.'".');
-      
+    }
+    
+    { 
       // Copy the jquery files.
       $source = $rootDir."/vendor/components/jquery/jquery.min.js";
       $dest = $rootDir."/webroot/js/jquery.min.js";
@@ -134,6 +136,14 @@ class InstallerSimplicity
       $dest = $rootDir."/webroot/js/tinymce/";
       static::xcopy($source, $dest);
       $io->write('Copied Tinymce files from "'.$source.'" to "'.$dest.'".');
+    }
+    
+    {
+      // Copy the cakephp/localized files to the Locale folder.
+      $source = $rootDir."/vendor/cakephp/localized/src/Locale/";
+      $dest = $rootDir."/src/Locale/";
+      static::xcopy($source, $dest);
+      $io->write('Copied Locale translation files from "'.$source.'" to "'.$dest.'".');
     }
     
     $io->write('Finished Simplicity file copying.');

@@ -9,6 +9,7 @@
         "cakephp/cakephp": "3.5.*",
         "cakephp/migrations": "^1.0",
         "cakephp/plugin-installer": "^1.0",
+        "cakephp/localized": "^3.5",
         "josegonzalez/dotenv": "2.*",
         "mobiledetect/mobiledetectlib": "2.*",
         "components/jquery": "^3.2",

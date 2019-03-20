@@ -8,15 +8,24 @@ use App\Controller\CategoriesController;
 </div>
 
 <?php
+
+// NOTE: default.po are used by default! If you need to use a specific file, like cake.po, you must specify that!
+// This also allow you to have a file specific for Simplicity's own texts.
+//   <-TODO: This is the way to go. Stuff not yet translated go into simplicity.po, 
+//           and you use the _d("simplicity", "simple text to translate.");
+// 
+echo '<p>'.__("You are not authorized to access that location.").'</p>'; // Looks for default.po.
+echo '<p>'.__d("cake", "You are not authorized to access that location.").'</p>'; // Looks for cake.po
+
 // Using zurbs data-abide.
-echo $this->Form->create($form, ['id' => 'contactForm', 'data-abide' => '', 'novalidate' => true]);
+echo $this->Form->create(null, ['id' => 'contactForm', 'data-abide' => '', 'novalidate' => true]);
 
 ?>
 <div data-abide-error class="sr-only callout large alert" style="display: none;">
   <?= __('There was a problem submitting your form. Please check the error message below each input field.'); ?>
 </div>
 
-<?= $this->Form->input('name', ['title' => __('Name')]); ?>
+<?= $this->Form->input('name', ['title' => __d('simplicity', 'Name')]); ?>
 <label class="form-error" data-form-error-for="name"><?= __('Please fill in your name'); ?></label>
 
 <?= $this->Form->input('email', ['title' => __('Email')]); ?>

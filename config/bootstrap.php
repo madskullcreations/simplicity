@@ -246,6 +246,8 @@ if($simplicity_setup_state > 1)
  * Plugin::load('Migrations'); //Loads a single plugin named Migrations
  *
  */
+ 
+Plugin::load('Cake/Localized');
 
 /*
  * Only try to load DebugKit in development mode

@@ -84,7 +84,6 @@ class CategoriesController extends AppController
    */
   protected function view_contact($categoryElement)
   {
-    $form = new ContactForm();
     $errors = [];
     
 		if($this->request->is(['post', 'put'])) 
@@ -131,8 +130,6 @@ class CategoriesController extends AppController
       }
     }
     
-    // debug($form);
-    $this->set('form', $form);
     $this->set('errors', $errors);
   }
   
