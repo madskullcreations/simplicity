@@ -501,6 +501,7 @@ class CategoriesController extends AppController
       
       $categoryElement->layout = $this->request->data['layout'];
       $categoryElement->in_menus = $this->request->data['in_menus'];
+      $categoryElement->sort_by = $this->request->data['sort_by'];
       $this->categories->save($categoryElement);
       // debug($categoryElement);      
       

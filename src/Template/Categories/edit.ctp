@@ -69,7 +69,7 @@ echo $this->TinyMCE->GetScript();
   echo $this->Form->hidden('id', ['value' => $categoryElement->id]);
   echo $this->Form->hidden('catlang_id', ['value' => $categoryElement->cat_lang[0]->id]);
 
-  echo $this->Form->input('title', ['title' => __('The title is visible in the menus.')]);
+  echo $this->Form->input('title', ['label' => __('The title is visible in the menus.')]);
   
   echo $this->Form->input('content', ['type' => 'textarea']);
   
@@ -86,9 +86,14 @@ echo $this->TinyMCE->GetScript();
   // Checking a checkbox is always ...not easy.
   echo $this->Form->input('in_menus', [
     'label' => __('Show this page in the menus'),
-    'after' => 'tomten',
     'type' => 'checkbox',
     'checked' => ($categoryElement->in_menus == '1' || $categoryElement->in_menus === null) ? true:false
+    ]);
+    
+  // TODO: For some fantastic reason the value is not auto populated by cake...
+  echo $this->Form->input('sort_by', [
+    'label' => __('Used in the menus to decide in which order the pages comes. Leave at 1 if the order is not important.'),
+    'default' => $categoryElement->sort_by 
     ]);
     
   if($categoryElement->layout != null)

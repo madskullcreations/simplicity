@@ -72,18 +72,22 @@ echo $this->TinyMCE->GetScript();
 <?php
   echo $this->Form->input('in_menus', [
     'label' => __('Show this page in the menus'),
-    'after' => 'tomten',
     'type' => 'checkbox',
     'checked' => true
     ]);
-  
-    echo $this->element(
-    	'LayoutSelector',
-    	[
-    		'defaultLayout' => $defaultLayout, 
-    		'layoutFiles' => $layoutFiles,
-    		'showCallout' => true
-    	]);
-    echo $this->Form->button(__('Save Page'), ['class' => 'button top-margin']);
-    echo $this->Form->end();
+
+  echo $this->Form->input('sort_by', [
+    'label' => __('Used in the menus to decide in which order the pages comes. Leave at 1 if the order is not important.'),
+    'default' => 1
+    ]);
+    
+  echo $this->element(
+    'LayoutSelector',
+    [
+      'defaultLayout' => $defaultLayout, 
+      'layoutFiles' => $layoutFiles,
+      'showCallout' => true
+    ]);
+  echo $this->Form->button(__('Save Page'), ['class' => 'button top-margin']);
+  echo $this->Form->end();
 ?>

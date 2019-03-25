@@ -86,7 +86,7 @@ class CategoriesTable extends Table
 	 *  
 	 */
 	public function GetTree($categoryId, $deep, $language, $includeNotInMenus)
-	{    
+	{
 		if($categoryId != null)
 		{
 			$rootElement = $this->find()->where(['id' => $categoryId])->first();
@@ -108,6 +108,7 @@ class CategoriesTable extends Table
 				->where($where)
 				// Get only the fields we want incorporates id and parent_id for 'threaded' to work. 
 		    ->find('threaded', ['fields' => ['parent_id','id','level']])
+        ->order(['sort_by' => 'ASC'])
 				->toArray();
 		}
 		else 
@@ -124,6 +125,7 @@ class CategoriesTable extends Table
 				->contain(['CatLang' => ['conditions' => ['CatLang.i18n' => $language]]])
         ->where($where)
 				->find('all', ['fields' => ['parent_id','id','level']])
+        ->order(['sort_by' => 'ASC'])
 				->toArray();
 				
 			$tree = array();
@@ -291,7 +293,7 @@ class CategoriesTable extends Table
     // 
     $query = $this->find('all', 
       [
-        'fields' => ['Categories.id', 'Categories.parent_id', 'Categories.in_menus', 'Categories.layout']
+        'fields' => ['Categories.id', 'Categories.parent_id', 'Categories.in_menus', 'Categories.sort_by', 'Categories.layout']
       ])
       ->contain(['CatLang' => function(Query $q) use($i18n){
         if($i18n != null)
@@ -377,7 +379,7 @@ class CategoriesTable extends Table
     
     $query = $this->find('all')
             // NOTE: Can't find a way to select all fields from CatLang and some fields from Categories.
-            ->select(['Categories.id', 'Categories.parent_id', 'Categories.layout', 'CatLang.id', 'CatLang.category_id', 'CatLang.url_title', 'CatLang.i18n', 'CatLang.title', 'CatLang.content', 'CatLang.created', 'CatLang.modified'])
+            ->select(['Categories.id', 'Categories.parent_id', 'Categories.layout', 'Categories.sort_by', 'CatLang.id', 'CatLang.category_id', 'CatLang.url_title', 'CatLang.i18n', 'CatLang.title', 'CatLang.content', 'CatLang.created', 'CatLang.modified'])
             // ->select($this->CatLang, $this->CatLang->Categories)
             // ->contain('CatLang')
             ->join([
@@ -552,8 +554,8 @@ class CategoriesTable extends Table
   }
   
   /**
-   * Create or update a category. Add a CatLang with the given language and url_title.
-   * Returns the created/updated category.
+   * Create a category. Add a CatLang with the given language and url_title.
+   * Returns the created category.
    * 
    */
   public function CreateCategory($parentCategoryId, $requestData)
@@ -564,19 +566,9 @@ class CategoriesTable extends Table
     $content = $requestData['content'];
     $layout = $requestData['layout'];
     $inMenus = $requestData['in_menus'];
+    $sortBy = $requestData['sort_by'];
 
-    return $this->_CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $inMenus, $layout);
-    
-    // if($this->CategoryExists($parentCategoryId, $urlTitle, $i18n) == false)
-    // {
-      // // Create the category.
-      
-      // $category = $this->GetElementById($categoryId, $i18n);
-    // }
-    // else
-    // {
-      // $category = $this->GetElement($parentCategoryId, $urlTitle, $i18n);
-    // }
+    return $this->_CreateCategory($parentCategoryId, $urlTitle, $i18n, $title, $content, $inMenus, $layout, $sortBy);
   }
   
   /* Creates a new url-title for the existing category id.
@@ -670,6 +662,7 @@ class CategoriesTable extends Table
       `level` INT(10) NOT NULL,
       `layout` VARCHAR(32) NULL,
       `in_menus` TINYINT(1) NOT NULL DEFAULT '1',
+      `sort_by` INT(10) NOT NULL DEFAULT '1',
       `created` DATETIME NULL,
       `modified` DATETIME NULL,
       PRIMARY KEY (`id`)
@@ -681,9 +674,12 @@ class CategoriesTable extends Table
     
     // TODO: UpdateTable() ? With some version parameter, so it can perform changes between versions.
     // If you ever need to update an old database, this one works.
+    // (Newest additions comes last in this list)
     // $connection->execute("
       // ALTER TABLE `categories` ADD `layout` VARCHAR(32) NULL AFTER `level`;
       // ALTER TABLE `categories` ADD `in_menus` TINYINT(1) NOT NULL DEFAULT '1' AFTER `layout`;
+      // ALTER TABLE `categories` ADD `sort_by` INT(10) NOT NULL DEFAULT '1' AFTER `in_menus`;
+      
     // ");
   }
 
@@ -726,12 +722,13 @@ class CategoriesTable extends Table
 	 * Create a category with the given parent. It must not exist when calling this function.
 	 * 
 	 */
-	protected function _CreateCategory($parent_id, $url_title, $language, $title, $content, $inMenus, $layout)
+	protected function _CreateCategory($parent_id, $url_title, $language, $title, $content, $inMenus, $layout, $sortBy)
 	{
 		$element = $this->newEntity();
 		$element->parent_id = $parent_id;
     $element->layout = $layout;
     $element->in_menus = $inMenus;
+    $element->sort_by = $sortBy;
         		
     $result = $this->save($element);
 		if($result)
