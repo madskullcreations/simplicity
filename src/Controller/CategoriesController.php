@@ -357,28 +357,15 @@ class CategoriesController extends AppController
     $availableLanguageCodes = $this->Language->GetLanguageCodes();
     
     // If user are coming from SimplicitySettings, wanting to add a new language currently not present.
-    $kitchenSink = TableRegistry::get('KitchenSink');
-    $languageToAdd = $kitchenSink->Retrieve('LanguageToAdd');
-    // debug($languageToAdd);
-    
-    if($languageToAdd != null)
+    $arr = $this->FetchLanguageToAdd();
+    if(count($arr) > 0)
     {
-      $kitchenSink->Forget('LanguageToAdd');
-      
-      $languages = TableRegistry::get('Languages');
-      $lang = $languages->
-        find()->
-        select(['Languages.i18n','Languages.long_name'])->
-        where(['i18n' => $languageToAdd])->
-        first();
-      // debug($lang);
-      
-      $availableLanguageCodes[$lang->i18n] = $lang->long_name;
-      
+      $availableLanguageCodes[$arr['i18n']] = $arr['long_name'];
+
       // Preselect.
-      $i18n = $lang->i18n;
+      $i18n = $arr['i18n'];
     }
-    
+        
     if(count($availableLanguageCodes) == 0)
     {
       // There are no languages present yet! (No pages at all actually) Redirect user to settings page.
@@ -393,6 +380,41 @@ class CategoriesController extends AppController
     
     // In admin pages the simplicity layout are always used.
     $this->viewBuilder()->layout('simplicity');
+  }
+  
+  // Returns i18n from kitchensink LanguageToAdd, if present. If not present, null are returned.
+  protected function FetchLanguageToAdd()
+  {
+    // If user are coming from SimplicitySettings, wanting to add a new language currently not present.
+    $kitchenSink = TableRegistry::get('KitchenSink');
+    $languageToAdd = $kitchenSink->Retrieve('LanguageToAdd');
+    // debug($languageToAdd);
+    
+    $arr = array();
+    
+    if($languageToAdd != null)
+    {
+      $kitchenSink->Forget('LanguageToAdd');
+      
+      $languages = TableRegistry::get('Languages');
+      $lang = $languages->
+        find()->
+        select(['Languages.i18n','Languages.long_name'])->
+        where(['i18n' => $languageToAdd])->
+        first();
+      // debug($lang);
+      
+      //$availableLanguageCodes[$lang->i18n] = $lang->long_name;
+      
+      // Preselect.
+      $i18n = $lang->i18n;
+      
+      $arr['i18n'] = $i18n;
+      $arr['long_name'] = $lang->long_name;
+    }
+    // debug($arr);
+    
+    return $arr;
   }
   
   /**
@@ -456,6 +478,17 @@ class CategoriesController extends AppController
     $availableLanguageCodes = $this->Language->GetLanguageCodes();
 		$implementedLanguageCodes = $this->Language->GetLanguagesFor($categoryId);
 		$missingLanguages = $this->Language->GetMissingLanguages($categoryId);
+    
+    // If user are coming from SimplicitySettings, wanting to add a new language currently not present.
+    $arr = $this->FetchLanguageToAdd();
+    // debug($arr);
+    if(count($arr) > 0)
+    {
+      $missingLanguages[$arr['i18n']] = $arr['long_name'];
+
+      // Preselect.
+      $i18n = $arr['i18n'];
+    }
     
     // Fetch available layout files.
     $layoutFiles = $this->FetchLayoutFiles();

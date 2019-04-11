@@ -75,25 +75,43 @@ class SimplicitySettingsController extends AppController
 			
 			$i18n = $this->request->data['i18n'];
 			
-	  // A minor trick for the create_from_url page of Categories: Make it show the new language.
+      // A minor trick for the create_from_url page of Categories: Make it show the new language.
       $kitchenSink = TableRegistry::get('KitchenSink');
       $kitchenSink->Store('LanguageToAdd', $i18n);
 
-      // Try fetch home page, in the first language created.
+      // Try fetch home page in the default language.
       $this->categories = TableRegistry::get('Categories');
-      $categoryElement = $this->categories->GetElement(null, 'home', $i18n);
+      $categoryElement = $this->categories->GetElement(null, 'home', AppController::$defaultLanguage);
       // debug($i18n);
       // debug($categoryElement);
       
       if($categoryElement == null)
       {
-        // User has either deleted home page, or has just installed Simplicity. Create an empty page.
+        // User has either deleted home page, or has just installed Simplicity. 
+        
+        // If there are no pages at all, change default language to the selected language.
+        if(AppController::$defaultLanguage != $i18n)
+        {
+          $count = $this->categories
+            ->find()
+            ->count();
+          // debug($count);
+          
+          if($count == 0)
+          {
+            $kitchenSink->Store('SimplicityDefaultLanguage', $i18n);
+            
+            $this->Flash->success(__('Default language changed to ').$i18n);
+          }
+        }
+        
+        // Create an empty page.
         return $this->redirect(['controller' => 'Categories', 'action' => 'create_from_url', 'home']);
       }
       else
       {
         // Edit page, asking user to translate to the newly selected language.
-        return $this->redirect(['controller' => 'Categories', 'action' => 'edit', $categoryElement->id, $i18n]);
+        return $this->redirect(['controller' => 'Categories', 'action' => 'add_new_language', $categoryElement->id, $i18n]);
       }
 		}
 		
