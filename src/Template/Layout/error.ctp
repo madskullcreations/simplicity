@@ -32,7 +32,7 @@
 <body>
     <div id="container">
         <div id="header">
-            <h1><?= __('Error') ?></h1>
+            <h1><?= __d("simplicity", 'Error') ?></h1>
         </div>
         <div id="content">
             <?= $this->Flash->render() ?>
@@ -40,7 +40,7 @@
             <?= $this->fetch('content') ?>
         </div>
         <div id="footer">
-            <?= $this->Html->link(__('Back'), 'javascript:history.back()') ?>
+            <?= $this->Html->link(__d("simplicity", 'Back'), 'javascript:history.back()') ?>
         </div>
     </div>
 </body>

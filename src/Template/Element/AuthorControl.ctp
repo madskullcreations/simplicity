@@ -2,7 +2,7 @@
 	if($userIsAuthor)
 	{
 		echo $this->Html->link(
-				__('Edit page'), 
+				__d("simplicity", 'Edit page'), 
 				[
 						'action' => 'edit', 
 						$categoryElement->id,
@@ -14,7 +14,7 @@
 				]);
 		
 		echo $this->Form->postLink(
-				__('Erase page'), 
+				__d("simplicity", 'Erase page'), 
 				[
 						'action' => 'deleteElement', 
 						$categoryElement->id,
@@ -24,13 +24,13 @@
 						'class' => 'button',
             'style' => 'margin-right: 10px;',
 						'type' => 'post',
-						'confirm' => __('Are you sure?')
+						'confirm' => __d("simplicity", 'Are you sure?')
 				]);
     
     if(count($missingLanguages) > 0)
     {
       echo $this->Html->link(
-        __('Translate page'),
+        __d("simplicity", 'Translate page'),
         [
             'action' => 'add_new_language',
             $categoryElement->id,

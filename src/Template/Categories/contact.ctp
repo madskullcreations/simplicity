@@ -14,31 +14,33 @@ use App\Controller\CategoriesController;
 //   <-TODO: This is the way to go. Stuff not yet translated go into simplicity.po, 
 //           and you use the _d("simplicity", "simple text to translate.");
 // 
-echo '<p>'.__("You are not authorized to access that location.").'</p>'; // Looks for default.po.
+echo "smurfen";
+echo '<p>'.__d("simplicity", "You are not authorized to access that location.").'</p>'; // Looks for default.po.
 echo '<p>'.__d("cake", "You are not authorized to access that location.").'</p>'; // Looks for cake.po
+echo '<p>'.__d("simplicity", "Hamsters do eat cakes.").'</p>'; // Looks for simplicity.po
 
 // Using zurbs data-abide.
 echo $this->Form->create(null, ['id' => 'contactForm', 'data-abide' => '', 'novalidate' => true]);
 
 ?>
 <div data-abide-error class="sr-only callout large alert" style="display: none;">
-  <?= __('There was a problem submitting your form. Please check the error message below each input field.'); ?>
+  <?= __d("simplicity", 'There was a problem submitting your form. Please check the error message below each input field.'); ?>
 </div>
 
 <?= $this->Form->input('name', ['title' => __d('simplicity', 'Name')]); ?>
-<label class="form-error" data-form-error-for="name"><?= __('Please fill in your name'); ?></label>
+<label class="form-error" data-form-error-for="name"><?= __d("simplicity", 'Please fill in your name'); ?></label>
 
-<?= $this->Form->input('email', ['title' => __('Email')]); ?>
-<label class="form-error" data-form-error-for="email"><?= __('This must be a valid email address'); ?></label>
+<?= $this->Form->input('email', ['title' => __d("simplicity", 'Email')]); ?>
+<label class="form-error" data-form-error-for="email"><?= __d("simplicity", 'This must be a valid email address'); ?></label>
 
-<?= $this->Form->input('message', ['title' => __('Message'), 'type' => 'textarea', 'required' => 'required', 'maxlength' => 512, 'data-validator' => 'min_length', 'min_len' => 15]); ?>
-<label class="form-error" data-form-error-for="message"><?= __('The message must be at least 15 characters'); ?></label>
+<?= $this->Form->input('message', ['title' => __d("simplicity", 'Message'), 'type' => 'textarea', 'required' => 'required', 'maxlength' => 512, 'data-validator' => 'min_length', 'min_len' => 15]); ?>
+<label class="form-error" data-form-error-for="message"><?= __d("simplicity", 'The message must be at least 15 characters'); ?></label>
 
 <?php
 // TODO: recaptcha här!
 // TODO: Översätt fälten till svenska, läs vidare om det!
 
-echo $this->Form->submit(__('Submit'), ['class' => 'button top-margin']);
+echo $this->Form->submit(__d("simplicity", 'Submit'), ['class' => 'button top-margin']);
 echo $this->Form->end();
 ?>
 

@@ -39,7 +39,8 @@ class AppController extends Controller
     public static $defaultLayout = '';
 		public static $simplicity_site_title = '';
 		public static $simplicity_site_description = '';
-		
+		public static $displayingNormalPage = true;
+    
     /**
      * Initialization hook method.
      *
@@ -132,15 +133,10 @@ class AppController extends Controller
         AppController::$simplicity_site_description = $kitchenSink->Retrieve(
             'SimplicitySiteDescription', 'Simple yet powerful');
         
-        // To make it available from views as well. 
-        $this->set('userIsLoggedIn', AppController::UserIsLoggedIn());
-        $this->set('userIsAdmin', AppController::UserIsAdmin());
-        $this->set('userIsAuthor', AppController::UserIsAuthor());
-        $this->set('selectedLanguage', AppController::$selectedLanguage);
-        $this->set('defaultLayout', AppController::$defaultLayout);
-
         if($this->request->getParam('controller') != 'Categories' || $this->request->getParam('action') != 'display')
         {
+          AppController::$displayingNormalPage = false;
+
           // Not CategoriesController::display(), so we should create content for the menus and breadcrumbs following the cake-pattern controller/action.
           // NOTE: CategoriesController set these on its own, following it's own patterns.
           
@@ -171,14 +167,22 @@ class AppController extends Controller
           $this->SetFakeSimplicityVariables($actionUrlName, $url);
         }
         
+        // To make it available from views as well. 
+        $this->set('userIsLoggedIn', AppController::UserIsLoggedIn());
+        $this->set('userIsAdmin', AppController::UserIsAdmin());
+        $this->set('userIsAuthor', AppController::UserIsAuthor());
+        $this->set('selectedLanguage', AppController::$selectedLanguage);
+        $this->set('defaultLayout', AppController::$defaultLayout);
+        $this->set('displayingNormalPage', AppController::$displayingNormalPage);
+        
         if(AppController::UserIsLoggedIn())
         {
           $sideMenuTreeAdmin = array();
           
           $sub = array();
-          $sub[] = $this->Menu->CreateMenuElement(__("Add new language"), 1, 'simplicity_settings/language');
-          $sub[] = $this->Menu->CreateMenuElement(__("Various settings"), 1, 'simplicity_settings/various');
-          $sideMenuTreeAdmin[] = $this->Menu->CreateMenuElement(__("Overview"), 0, 'simplicity_settings', 'Categories', $sub);
+          $sub[] = $this->Menu->CreateMenuElement(__d("simplicity", "Add new language"), 1, 'simplicity_settings/language');
+          $sub[] = $this->Menu->CreateMenuElement(__d("simplicity", "Various settings"), 1, 'simplicity_settings/various');
+          $sideMenuTreeAdmin[] = $this->Menu->CreateMenuElement(__d("simplicity", "Overview"), 0, 'simplicity_settings', 'Categories', $sub);
                     
           $this->set('sideMenuTreeAdmin', $sideMenuTreeAdmin);
         }

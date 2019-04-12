@@ -24,7 +24,7 @@ use App\Controller\EditablePagesController;
 	if($userIsAuthor)
 	{
 		echo $this->Html->link(
-				__('Edit page'), 
+				__d("simplicity", 'Edit page'), 
 				[
 						'action' => 'edit', 
 						$richTextElement->id
@@ -36,7 +36,7 @@ use App\Controller\EditablePagesController;
 		
 		// A postlink does not seem to be able to have "?lang=smurfiska".
 		echo $this->Form->postLink(
-				__('Erase page'), 
+				__d("simplicity", 'Erase page'), 
 				[
 						'action' => 'delete', 
 						$richTextElement->id,
@@ -45,7 +45,7 @@ use App\Controller\EditablePagesController;
 				[
 						'class' => 'button',
 						'type' => 'post',
-						'confirm' => __('Are you sure?')
+						'confirm' => __d("simplicity", 'Are you sure?')
 				]);
 	}
 ?>

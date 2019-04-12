@@ -18,7 +18,7 @@ $this->start('simplicity_side_menu');
   {
 ?>
   <div style="margin-bottom: 30px;">
-    <h6><?= __('Administrator') ?></h6>
+    <h6><?= __d("simplicity", 'Administrator') ?></h6>
     <?= $this->Menu->GetAccordionMenu($sideMenuTreeAdmin); ?>
   </div>
 <?php
@@ -29,7 +29,7 @@ $this->start('simplicity_side_menu');
   {
 ?>
   <div style="margin-bottom: 30px;">
-    <h6><?= __('Local Content') ?></h6>
+    <h6><?= __d("simplicity", 'Local Content') ?></h6>
     <?= $this->Menu->GetAccordionMenu($sideMenuTree); ?>
   </div>
 <?php
@@ -43,34 +43,6 @@ $this->start('simplicity_page_name');
 	echo Cake\Utility\Inflector::camelize($categoryElement->cat_lang[0]->title);
 $this->end();
 
-?>
-
-<?php
-  // Argh, this is creating an js-object, do something about it!
-  $catUrlTitles = 'var catUrlTitles = {';
-  
-  // debug($urlTitlesForCategory);
-  if(isset($urlTitlesForCategory) && count($urlTitlesForCategory) > 0)
-  {
-    $count = count($urlTitlesForCategory);
-    $i = 0;
-    foreach($urlTitlesForCategory as $lang => $title)
-    {
-      $catUrlTitles .= $lang.':"'.$title.'"';
-      
-      if($i < $count - 1)
-        $catUrlTitles .= ',';
-      
-      $i++;
-    }
-  }
-  $catUrlTitles .= '};';
-  
-  $urlPath = "";
-  if(isset($urlTitles) && count($urlTitles) > 0)
-  {
-    $urlPath = "/".implode('/', $urlTitles)."/";
-  }
 ?>
 
 <!DOCTYPE html>
@@ -101,26 +73,29 @@ $this->end();
       <nav id="simplicity-top-bar" class="">
         <div class="control-box">
           <?php
-            echo '<select class="language-selector" id="LanguageSelector" onchange="LanguageSelected();" title="'.__("Select your language").'">';
-            foreach($availableLanguages as $key => $name)
+            if($displayingNormalPage)
             {
-              $selected = '';
-              if($key == $selectedLanguage)
+              echo '<select class="language-selector" id="LanguageSelector" onchange="LanguageSelected();" title="'.__d("simplicity", "Select your language").'">';
+              foreach($availableLanguages as $key => $name)
               {
-                $selected = 'selected';
+                $selected = '';
+                if($key == $selectedLanguage)
+                {
+                  $selected = 'selected';
+                }
+                
+                echo '<option value="'.$key.'" '.$selected.'>'.$name.'</option>';
               }
-              
-              echo '<option value="'.$key.'" '.$selected.'>'.$name.'</option>';
+              echo '</select>';
             }
-            echo '</select>';
             
             if($userIsLoggedIn)
             {
-              echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
+              echo '<a class="button logout" title="'.__d("simplicity", "Logout").'" href="/users/logout">'.__d("simplicity", "Logout").'</a>';
             }
             else
             {
-              echo '<a class="button login" title="'.__("Login").'" href="/users/login">'.__("Login").'</a>';
+              echo '<a class="button login" title="'.__d("simplicity", "Login").'" href="/users/login">'.__d("simplicity", "Login").'</a>';
             }            
           ?>
         </div>
@@ -218,69 +193,21 @@ $this->end();
     Foundation.Abide.defaults.validators['min_length'] = Validate_MinStringLength;
     
     $(document).foundation();
-  </script>
-  
-  <script>
-    var urlPath = "<?= $urlPath ?>";
-    // console.log(urlPath);
-    
-    <?= $catUrlTitles ?>
-    // console.log(catUrlTitles);
     
     $('.site-logo').attr('draggable', false);
-    
-<?php
-if($userIsAuthor)
-{
-  // An author is redirected to create page if it does not yet exist in the selected language.
-  // (this will make sure it keep the page_id.)
-?>
-    function LanguageSelected()
-    {
-      var selLang = $("#LanguageSelector option:selected").val();
-            
-      if(catUrlTitles.hasOwnProperty(selLang))
-      {
-        // Page exists in the selected language.
-        GotoTranslatedPage(selLang);
-      }
-      else
-      {
-        // Page does not exist in the selected language.
-        var path = '/categories/add_new_language/<?= $categoryElement->id ?>/' + selLang; 
-        window.location.replace(path);
-      }
-    }
-<?php
-}
-else
-{
-  // Not logged in users are redirected to the given language as normal.
-  // TODO: More correct would be to redirect to standard language if page does not exist. 
-  //    (Now it shows an empty page, or redirect to home.)
-  // TODO: Language dropdown should be visible only in view-mode, not edit or in admin pages.
-?>
-    function LanguageSelected()
-    {
-      var selLang = $("#LanguageSelector option:selected").val();
-      GotoTranslatedPage(selLang);
-    }
-<?php
-}
-?>
-    function GotoTranslatedPage(selLang)
-    {
-      var path = urlPath + catUrlTitles[selLang] + "?lang=" + selLang; 
-      // var path = window.location.pathname + "?lang=" + selLang;
-      // alert(path);      
-     
-      window.location.replace(path);
-      
-      // alert(window.location.href);
-      // alert(window.location.pathname);
-    }
   </script>
   
+  <?php
+    if($displayingNormalPage)
+    {
+      echo $this->element('LanguageSelector', [
+        'userIsAuthor' => $userIsAuthor, 
+        'urlTitlesForCategory' => $urlTitlesForCategory,
+        'urlTitles' => $urlTitles
+        ]);
+    }
+  ?>
+    
   <?= $this->Html->script('prism') ?>
 </body>
 </html>

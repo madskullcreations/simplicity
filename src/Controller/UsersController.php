@@ -64,7 +64,7 @@ class UsersController extends AppController
     if(AppController::UserIsLoggedIn())
     {
       // Already logged in.
-      $this->Flash->success(__('You have already logged in.'));
+      $this->Flash->success(__d("simplicity", 'You have already logged in.'));
       
       return $this->redirect(['action' => 'index']);
     }
@@ -79,7 +79,7 @@ class UsersController extends AppController
         return $this->redirect($this->Auth->redirectUrl());
       }
       
-      $this->Flash->error(__('Invalid username or password, try again'));
+      $this->Flash->error(__d("simplicity", 'Invalid username or password, try again'));
     }
   }
 
@@ -114,12 +114,12 @@ class UsersController extends AppController
 
       if ($this->Users->save($user)) 
       {
-        $this->Flash->success(__('The user has been created.'));
+        $this->Flash->success(__d("simplicity", 'The user has been created.'));
         return $this->redirect(['action' => 'index']);
       }
       else
       {
-        $this->Flash->error(__('Unable to add the user.'));
+        $this->Flash->error(__d("simplicity", 'Unable to add the user.'));
       }
     }
     

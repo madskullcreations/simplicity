@@ -95,15 +95,15 @@ class CategoriesController extends AppController
       $validator = new Validator();
       $validator->add('name', 'length', [
         'rule' => ['minLength', 1],
-        // 'message' => _('Please fill in your name')
+        // 'message' => __d("simplicity", 'Please fill in your name')
       ])
       ->add('email', 'format', [
         'rule' => 'email',
-        // 'message' => __('This must be a valid email address')
+        // 'message' => __d("simplicity", 'This must be a valid email address')
       ])
       ->add('message', 'length', [
         'rule' => ['minLength', 15],
-        'message' => __('The message must be at least 15 characters')
+        'message' => __d("simplicity", 'The message must be at least 15 characters')
       ]);
      
       $errors = $validator->errors($this->request->getData());
@@ -122,11 +122,11 @@ class CategoriesController extends AppController
             ->send($data['message']);
             
         // debug($email);
-        $this->Flash->success(__('Thank you for contacting us, we will get in touch soon!'));
+        $this->Flash->success(__d("simplicity", 'Thank you for contacting us, we will get in touch soon!'));
       }
       else 
       {
-        $this->Flash->error(__('There was a problem submitting your form. Please check the error message below each input field.'));
+        $this->Flash->error(__d("simplicity", 'There was a problem submitting your form. Please check the error message below each input field.'));
       }
     }
     
@@ -202,7 +202,7 @@ class CategoriesController extends AppController
         return $this->redirectFromNonExistantPage($path);
       }
       
-      $this->Flash->success(__('The page is shown in the default language.'));
+      $this->Flash->success(__d("simplicity", 'The page is shown in the default language.'));
     }
     // debug($categoryElement);
     
@@ -290,11 +290,11 @@ class CategoriesController extends AppController
       if(count($path) == 1 && $path[0] == 'home')
       {
         // The home page are gone. Redirect to login page and tell user the home page must exist.
-        $this->Flash->error(__('The page "home" does not exist for the selected language! Please login and create the home page.'));
+        $this->Flash->error(__d("simplicity", 'The page "home" does not exist for the selected language! Please login and create the home page.'));
         return $this->redirect(['controller' => 'Users', 'action' => 'login']);
       }
       
-      $this->Flash->error(__('Page does not exist.'));
+      $this->Flash->error(__d("simplicity", 'Page does not exist.'));
       return $this->redirect('/');
     }
   }
@@ -313,7 +313,7 @@ class CategoriesController extends AppController
     if(!$count) 
     {
       // Missing a path to use as identifier, just redirect home.
-      $this->Flash->error(__('Missing parameters.'));
+      $this->Flash->error(__d("simplicity", 'Missing parameters.'));
       return $this->redirect('/');
     }
      
@@ -334,7 +334,7 @@ class CategoriesController extends AppController
       $path = $this->categories->PathFor($categoryElement->id, $i18n);
       // debug($path);
       
-      $this->Flash->success(__('The page was created.'));
+      $this->Flash->success(__d("simplicity", 'The page was created.'));
       return $this->redirect($path);
     }
 
@@ -369,7 +369,7 @@ class CategoriesController extends AppController
     if(count($availableLanguageCodes) == 0)
     {
       // There are no languages present yet! (No pages at all actually) Redirect user to settings page.
-      $this->Flash->default(__('Please add a language for your web page.'));
+      $this->Flash->default(__d("simplicity", 'Please add a language for your web page.'));
       return $this->redirect(['controller' => 'SimplicitySettings', 'action' => 'language']);
     }
 
@@ -429,7 +429,7 @@ class CategoriesController extends AppController
     
     if($categoryId == null || $i18n == null)
     {
-      $this->Flash->error(__('Missing parameters.'));
+      $this->Flash->error(__d("simplicity", 'Missing parameters.'));
       return $this->redirect('/');
     }
 
@@ -454,7 +454,7 @@ class CategoriesController extends AppController
       $path .= '?lang='.$i18n;
       
       // Redirect to the new page.
-      $this->Flash->success(__('The page was created.'));
+      $this->Flash->success(__d("simplicity", 'The page was created.'));
       return $this->redirect($path);
     }
     
@@ -470,7 +470,7 @@ class CategoriesController extends AppController
       if($categoryElement == null)
       {
         // Odd, page does not exist.
-        $this->Flash->error(__('Page does not exist.'));
+        $this->Flash->error(__d("simplicity", 'Page does not exist.'));
         return $this->redirect('/');        
       }
     }
@@ -509,7 +509,7 @@ class CategoriesController extends AppController
 	{
     if($categoryId == null || $i18n == null)
     {
-      $this->Flash->error(__('Missing parameters.'));
+      $this->Flash->error(__d("simplicity", 'Missing parameters.'));
       return $this->redirect('/');
     }
      
@@ -519,7 +519,7 @@ class CategoriesController extends AppController
           
 		if($this->categories->exists(['id' => $categoryId]) == false)
 		{
-			$this->Flash->error(__('The page could not be found.'));
+			$this->Flash->error(__d("simplicity", 'The page could not be found.'));
 			return $this->redirect('/');
 		}
     
@@ -552,7 +552,7 @@ class CategoriesController extends AppController
       // Redirect to the new page.
       $path = $this->categories->PathFor($catLang->category_id, $catLang->i18n);
       
-      $this->Flash->success(__('Changes saved.'));
+      $this->Flash->success(__d("simplicity", 'Changes saved.'));
       return $this->redirect($path);
     }
     
@@ -583,7 +583,7 @@ class CategoriesController extends AppController
 	{
     if($categoryId == null || $i18n == null)
     {
-      $this->Flash->error(__('Missing parameters.'));
+      $this->Flash->error(__d("simplicity", 'Missing parameters.'));
       return $this->redirect('/');
     }
         
@@ -608,16 +608,16 @@ class CategoriesController extends AppController
       {
         $this->categories->DeleteElement($categoryId);
         
-        $this->Flash->success(__('The page was deleted.'));
+        $this->Flash->success(__d("simplicity", 'The page was deleted.'));
       }
       else
       {
-        $this->Flash->success(__('The page was deleted.').' '.__('It still exist in').' '.$count.' '.__('more languages.'));
+        $this->Flash->success(__d("simplicity", 'The page was deleted.').' '.__d("simplicity", 'It still exist in').' '.$count.' '.__d("simplicity", 'more languages.'));
       }
 		}
     else
     {
-      $this->Flash->error(__('The page could not be deleted.'));
+      $this->Flash->error(__d("simplicity", 'The page could not be deleted.'));
     }
 		
 		return $this->redirect('/');

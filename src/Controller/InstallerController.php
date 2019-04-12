@@ -92,7 +92,7 @@ class InstallerController extends Controller
           $connected = $conn->connect();
           if($connected == false)
           {
-            $this->Flash->error(__('Unable to connect to the database. Please check connection details.'));
+            $this->Flash->error(__d("simplicity", 'Unable to connect to the database. Please check connection details.'));
           }
           
           // The log ends up in /logs/queries.log, useful for finding any problems.
@@ -109,11 +109,11 @@ class InstallerController extends Controller
           // debug($attr["reason"]);
           // debug($connectionError->message);
           
-          $this->Flash->error(__('Database reported the following error: ').$attr["reason"]);
+          $this->Flash->error(__d("simplicity", 'Database reported the following error: ').$attr["reason"]);
 
           // NOTE: Same error message for different errors: it make no difference between wrong database name or wrong database user name.
-          // $this->Flash->error(__('It seems like the database user name or password are wrong.'));
-          $this->Flash->error(__('Please check the error message and correct any errors.'));
+          // $this->Flash->error(__d("simplicity", 'It seems like the database user name or password are wrong.'));
+          $this->Flash->error(__d("simplicity", 'Please check the error message and correct any errors.'));
         }
         
         if($connected)
@@ -138,7 +138,7 @@ class InstallerController extends Controller
             {
               if(!$anyErrors)
               {
-                $this->Flash->error(__('One or more errors happened. Please check them out.'));
+                $this->Flash->error(__d("simplicity", 'One or more errors happened. Please check them out.'));
               }
               
               $anyErrors = true;
@@ -155,7 +155,7 @@ class InstallerController extends Controller
           if($anyErrors == false)
           {
             // The installation went well. 
-            $this->Flash->success(__('Installation setup complete!'));
+            $this->Flash->success(__d("simplicity", 'Installation setup complete!'));
             
             foreach($res as $msg)
             {
@@ -183,7 +183,7 @@ class InstallerController extends Controller
       } 
       else 
       {
-        $this->Flash->error(__('There was a problem submitting your form. Please check the error message below each input field.'));
+        $this->Flash->error(__d("simplicity", 'There was a problem submitting your form. Please check the error message below each input field.'));
       }
     }
     
@@ -247,7 +247,7 @@ class InstallerController extends Controller
 
     if($users->save($user) == false) 
     {
-      $res[] = array('result' => false, 'message' => __('Could not create the user account.'));
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'Could not create the user account.'));
     }
   }
   
@@ -280,11 +280,11 @@ class InstallerController extends Controller
     {
       $msg = $ex->getMessage();
       
-      $res[] = array('result' => false, 'message' => __('Dropping of database tables failed with the following error: ').$msg);
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'Dropping of database tables failed with the following error: ').$msg);
       return;
     }
     
-    $res[] = array('result' => true, 'message' => __('Database tables dropped.'));
+    $res[] = array('result' => true, 'message' => __d("simplicity", 'Database tables dropped.'));
   }
   
   /**
@@ -320,11 +320,11 @@ class InstallerController extends Controller
     {
       $msg = $ex->getMessage();
       
-      $res[] = array('result' => false, 'message' => __('Creation of database tables failed with the following error: ').$msg);
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'Creation of database tables failed with the following error: ').$msg);
       return;
     }
     
-    $res[] = array('result' => true, 'message' => __('Database tables created.'));
+    $res[] = array('result' => true, 'message' => __d("simplicity", 'Database tables created.'));
   }
   
   /**
@@ -344,42 +344,42 @@ class InstallerController extends Controller
     $content = str_replace('__DB_USERNAME__', $db_username, $content, $count);
     if ($count == 0) 
     {
-      $res[] = array('result' => false, 'message' => __('No database username (__DB_USERNAME__) to replace in').' config/' . $file);
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'No database username (__DB_USERNAME__) to replace in').' config/' . $file);
       return;
     }
     $content = str_replace('__DB_PASSWORD__', $db_password, $content, $count);
     if ($count == 0) 
     {
-      $res[] = array('result' => false, 'message' => __('No database password (__DB_PASSWORD__) to replace in').' config/' . $file);
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'No database password (__DB_PASSWORD__) to replace in').' config/' . $file);
       return;
     }
     $content = str_replace('__DB_DATABASENAME__', $db_database, $content, $count);
     if ($count == 0) 
     {
-      $res[] = array('result' => false, 'message' => __('No database name (__DB_DATABASENAME__) to replace in').' config/' . $file);
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'No database name (__DB_DATABASENAME__) to replace in').' config/' . $file);
       return;
     }
     $content = str_replace('__DB_ENCODING__', $db_encoding, $content, $count);
     if ($count == 0) 
     {
-      $res[] = array('result' => false, 'message' => __('No database encoding (__DB_ENCODING__) to replace in').' config/' . $file);
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'No database encoding (__DB_ENCODING__) to replace in').' config/' . $file);
       return;
     }
     $content = str_replace('__DB_TIMEZONE__', $db_timezone, $content, $count);
     if ($count == 0) 
     {
-      $res[] = array('result' => false, 'message' => __('No database encoding (__DB_TIMEZONE__) to replace in').' config/' . $file);
+      $res[] = array('result' => false, 'message' => __d("simplicity", 'No database encoding (__DB_TIMEZONE__) to replace in').' config/' . $file);
       return;
     }
     
     $result = file_put_contents($config, $content);
     if($result)
     {
-      $res[] = array('result' => true, 'message' => __('Database connection details stored in').' config/' . $file);
+      $res[] = array('result' => true, 'message' => __d("simplicity", 'Database connection details stored in').' config/' . $file);
       return;
     }
     
-    $res[] = array('result' => false, 'message' => __('Unable to store database connection details in').' config/' . $file);
+    $res[] = array('result' => false, 'message' => __d("simplicity", 'Unable to store database connection details in').' config/' . $file);
   }
   
   /**
@@ -401,18 +401,18 @@ class InstallerController extends Controller
     if ($count == 0) 
     {
       // ..this usually just means this step has been performed already, so not an error.
-      $res[] = array('result' => true, 'message' => __('No Security.salt placeholder to replace in').' config/' . $file);
+      $res[] = array('result' => true, 'message' => __d("simplicity", 'No Security.salt placeholder to replace in').' config/' . $file);
       return;
     }
 
     $result = file_put_contents($config, $content);
     if($result)
     {
-      $res[] = array('result' => true, 'message' => __('Updated Security.salt value in').' config/' . $file);
+      $res[] = array('result' => true, 'message' => __d("simplicity", 'Updated Security.salt value in').' config/' . $file);
       return;
     }
     
-    $res[] = array('result' => false, 'message' => __('Unable to update Security.salt value in').' config/' . $file);
+    $res[] = array('result' => false, 'message' => __d("simplicity", 'Unable to update Security.salt value in').' config/' . $file);
   }
   
   /**
@@ -435,7 +435,7 @@ class InstallerController extends Controller
       {
         $gnarg = array();
         $gnarg['result'] = true;
-        $gnarg['message'] = __('Folder permissions already set for path').' '.$path;
+        $gnarg['message'] = __d("simplicity", 'Folder permissions already set for path').' '.$path;
         $res[] = $gnarg;
         return;
       }
@@ -445,14 +445,14 @@ class InstallerController extends Controller
       {
         $gnarg = array();
         $gnarg['result'] = true;
-        $gnarg['message'] = __('Permissions set on').' '.$path;
+        $gnarg['message'] = __d("simplicity", 'Permissions set on').' '.$path;
         $res[] = $gnarg;
       } 
       else 
       {
         $gnarg = array();
         $gnarg['result'] = false;
-        $gnarg['message'] = __('Failed to set permissions on').' '.$path;
+        $gnarg['message'] = __d("simplicity", 'Failed to set permissions on').' '.$path;
         $res[] = $gnarg;
       }
     };
@@ -513,13 +513,13 @@ class InstallerController extends Controller
       
       copy($appConfig, $stash);
     
-      $this->appendRes($res, __('Stashed away old app.php file to').' `'.$stash.'`.');
+      $this->appendRes($res, __d("simplicity", 'Stashed away old app.php file to').' `'.$stash.'`.');
     }
 
     // Create/restore app.php to original state.
     copy($defaultConfig, $appConfig);
 
-    $this->appendRes($res, __('Created `config/app.php` file'));
+    $this->appendRes($res, __d("simplicity", 'Created `config/app.php` file'));
   }
     
   protected function appendRes(&$res, $message, $result = true)

@@ -3,11 +3,11 @@
  * 
  */
 ?>
-<h3><?= __('Simplicity Settings') ?></h3>
+<h3><?= __d("simplicity", 'Simplicity Settings') ?></h3>
 <div class="stacked-for-small button-group">
 <?php 
 	echo $this->Html->link(
-		__('Add new language'),
+		__d("simplicity", 'Add new language'),
 		[
 				'controller' => 'SimplicitySettings',
 				'action' => 'language',
@@ -16,7 +16,7 @@
 				'class' => 'button top-margin',
 		]);
 	echo $this->Html->link(
-		__('Various settings'),
+		__d("simplicity", 'Various settings'),
 		[
 				'controller' => 'SimplicitySettings',
 				'action' => 'various',

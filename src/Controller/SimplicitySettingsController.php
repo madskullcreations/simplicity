@@ -51,7 +51,7 @@ class SimplicitySettingsController extends AppController
       $kitchenSink->Store('SimplicitySiteDescription', $site_description);
       $kitchenSink->Store('SimplicityDefaultLayout', $layout);
       
-      $this->Flash->success(__('Your changes were saved.'));
+      $this->Flash->success(__d("simplicity", 'Your changes were saved.'));
       
       return $this->redirect(['action' => 'index']);
     }
@@ -101,7 +101,7 @@ class SimplicitySettingsController extends AppController
           {
             $kitchenSink->Store('SimplicityDefaultLanguage', $i18n);
             
-            $this->Flash->success(__('Default language changed to ').$i18n);
+            $this->Flash->success(__d("simplicity", 'Default language changed to ').$i18n);
           }
         }
         
