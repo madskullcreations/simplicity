@@ -26,13 +26,13 @@ echo $this->Form->create(null, ['id' => 'contactForm', 'data-abide' => '', 'nova
   <?= __d("simplicity", 'There was a problem submitting your form. Please check the error message below each input field.'); ?>
 </div>
 
-<?= $this->Form->input('name', ['title' => __d('simplicity', 'Name')]); ?>
+<?= $this->Form->input('name', ['label' => __d('simplicity', 'Name')]); ?>
 <label class="form-error" data-form-error-for="name"><?= __d("simplicity", 'Please fill in your name'); ?></label>
 
-<?= $this->Form->input('email', ['title' => __d("simplicity", 'Email')]); ?>
+<?= $this->Form->input('email', ['label' => __d("simplicity", 'Email')]); ?>
 <label class="form-error" data-form-error-for="email"><?= __d("simplicity", 'This must be a valid email address'); ?></label>
 
-<?= $this->Form->input('message', ['title' => __d("simplicity", 'Message'), 'type' => 'textarea', 'required' => 'required', 'maxlength' => 512, 'data-validator' => 'min_length', 'min_len' => 15]); ?>
+<?= $this->Form->input('message', ['label' => __d("simplicity", 'Message'), 'type' => 'textarea', 'required' => 'required', 'maxlength' => 512, 'data-validator' => 'min_length', 'min_len' => 15]); ?>
 <label class="form-error" data-form-error-for="message"><?= __d("simplicity", 'The message must be at least 15 characters'); ?></label>
 
 <?php

@@ -270,7 +270,7 @@ msgstr "Sidan saknar översättning till följande språk:"
 #: Template/Categories/add_new_language.ctp:24
 #: Template/EditablePages/edit.ctp:69
 msgid "To create the page for a new language; Select a language below, edit and save. This will be saved as a new page."
-msgstr "För att översätta sidan till ett nytt språk; Välje ett språk nedan, redigera och spara. Sidan sparas som en ny sida."
+msgstr "För att översätta sidan till ett nytt språk; Välj ett språk nedan, redigera och spara. Sidan sparas som en ny sida."
 
 #: Template/Categories/add_new_language.ctp:37
 #: Template/Categories/create_from_url.ctp:36
@@ -373,12 +373,12 @@ msgstr "Används för att avgöra i vilken ordning sidorna visas i menyerna. Lå
 #: Template/Categories/edit.ctp:13;33
 #: Template/Element/AuthorControl.ctp:33
 msgid "Translate page"
-msgstr "Översätt sida"
+msgstr "Översätt Sida"
 
 #: Template/Categories/edit.ctp:25
 #: Template/EditablePages/edit.ctp:21
 msgid "Edit Page"
-msgstr "Redigera sida"
+msgstr "Redigera Sida"
 
 #: Template/Categories/edit.ctp:28
 msgid "The page language is in"
@@ -407,12 +407,12 @@ msgstr "För att skapa sidan, klicka på knappen."
 #: Template/EditablePages/default.ctp:27
 #: Template/Element/AuthorControl.ctp:5
 msgid "Edit page"
-msgstr "Redigera sida"
+msgstr "Redigera Sida"
 
 #: Template/EditablePages/default.ctp:39
 #: Template/Element/AuthorControl.ctp:17
 msgid "Erase page"
-msgstr "Radera sida"
+msgstr "Radera Sida"
 
 #: Template/EditablePages/default.ctp:48
 #: Template/Element/AuthorControl.ctp:27
@@ -503,6 +503,10 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
+#: Template/Layout/mscr_home.ctp:108
+msgid "Toggle menu"
+msgstr ""
+
 #: Template/SimplicitySettings/index.ctp:6
 msgid "Simplicity Settings"
 msgstr ""
@@ -525,6 +529,42 @@ msgstr ""
 
 #: Template/SimplicitySettings/language.ctp:39
 msgid "Add language"
+msgstr "Lägg till språk"
+
+#: Template/SimplicitySettings/various.ctp:25
+msgid "Select default language"
+msgstr "Välj standardspråk"
+
+#: Template/SimplicitySettings/various.ctp:31
+msgid "When a user visit the site for the first time, this is the language he or she will see."
+msgstr ""
+
+#: Template/SimplicitySettings/various.ctp:36
+msgid "Set your website's title."
+msgstr ""
+
+#: Template/SimplicitySettings/various.ctp:39
+msgid "The title are shown in the webpage header section and in the browsers tab or window title. Do not use any html tags here."
+msgstr ""
+
+#: Template/SimplicitySettings/various.ctp:44
+msgid "Set your website's description."
+msgstr ""
+
+#: Template/SimplicitySettings/various.ctp:47
+msgid "The description are shown below the site title."
+msgstr ""
+
+#: Template/SimplicitySettings/various.ctp:55
+msgid "Set default layout"
+msgstr ""
+
+#: Template/SimplicitySettings/various.ctp:57
+msgid "This will be the default layout when you create a new page. It will not change the layout for already created pages."
+msgstr ""
+
+#: Template/SimplicitySettings/various.ctp:66
+msgid "Save changes"
 msgstr ""
 
 #: Template/Users/add.ctp:7;12
