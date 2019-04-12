@@ -1,0 +1,545 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright 2019 Madskull Creations AB <support@madskullcreations.com>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2019-04-12 11:17+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Controller/AppController.php:179
+#: Template/EditablePages/edit.ctp:11
+#: Template/SimplicitySettings/index.ctp:10
+#: Template/SimplicitySettings/language.ctp:6
+msgid "Add new language"
+msgstr "Lägg till språk"
+
+#: Controller/AppController.php:180
+#: Template/SimplicitySettings/index.ctp:19
+msgid "Various settings"
+msgstr "Inställningar"
+
+#: Controller/AppController.php:181
+msgid "Overview"
+msgstr "Översikt"
+
+#: Controller/CategoriesController.php:106
+#: Template/Categories/contact.ctp:36
+msgid "The message must be at least 15 characters"
+msgstr "Meddelandet måste bestå av minst 15 tecken"
+
+#: Controller/CategoriesController.php:125
+msgid "Thank you for contacting us, we will get in touch soon!"
+msgstr "Tack för ditt intresse, vi återkommer!"
+
+#: Controller/CategoriesController.php:129
+#: Controller/InstallerController.php:186
+#: Template/Categories/contact.ctp:26
+msgid "There was a problem submitting your form. Please check the error message below each input field."
+msgstr "Meddelandet skickades inte. Kontrollera felmeddelandena under respektive fält och prova igen."
+
+#: Controller/CategoriesController.php:205
+msgid "The page is shown in the default language."
+msgstr "Sidan visas på standardspråket."
+
+#: Controller/CategoriesController.php:293
+msgid "The page \"home\" does not exist for the selected language! Please login and create the home page."
+msgstr "Sidan \"home\" existerar inte för det valda språket! Logga in och skapa sidan."
+
+#: Controller/CategoriesController.php:297;473
+#: Controller/EditablePagesController.php:191
+msgid "Page does not exist."
+msgstr "Sidan existerar inte."
+
+#: Controller/CategoriesController.php:316;432;512;586
+msgid "Missing parameters."
+msgstr "Parametrar saknas"
+
+#: Controller/CategoriesController.php:337;457
+msgid "The page was created."
+msgstr "Sidan har skapats."
+
+#: Controller/CategoriesController.php:372
+msgid "Please add a language for your web page."
+msgstr "Lägg till ett språk för hemsidan."
+
+#: Controller/CategoriesController.php:522
+#: Controller/EditablePagesController.php:259
+msgid "The page could not be found."
+msgstr "Sidan kunde inte hittas."
+
+#: Controller/CategoriesController.php:555
+msgid "Changes saved."
+msgstr "Ändringar sparade."
+
+#: Controller/CategoriesController.php:611;615
+#: Controller/EditablePagesController.php:407
+msgid "The page was deleted."
+msgstr "Sidan har raderats."
+
+#: Controller/CategoriesController.php:615
+msgid "It still exist in"
+msgstr ""
+
+#: Controller/CategoriesController.php:615
+msgid "more languages."
+msgstr ""
+
+#: Controller/CategoriesController.php:620
+#: Controller/EditablePagesController.php:411
+msgid "The page could not be deleted."
+msgstr "Sidan kunde inte raderas."
+
+#: Controller/EditablePagesController.php:151
+msgid "Path does not exist."
+msgstr "Sökvägen finns inte."
+
+#: Controller/EditablePagesController.php:325
+msgid "Your page has been created in the new language."
+msgstr "Sidan har skapats i det nya språket."
+
+#: Controller/EditablePagesController.php:351;381
+msgid "The page could not be saved."
+msgstr "Sidan kunde inte sparas."
+
+#: Controller/EditablePagesController.php:370
+msgid "Your page has been updated."
+msgstr "Sidan har uppdaterats."
+
+#: Controller/InstallerController.php:95
+msgid "Unable to connect to the database. Please check connection details."
+msgstr "Det gick inte att ansluta till databasen. Kontrollera att du angivit rätt uppgifter."
+
+#: Controller/InstallerController.php:112
+msgid "Database reported the following error: "
+msgstr "Databasen rapporterar följande fel: "
+
+#: Controller/InstallerController.php:116
+msgid "Please check the error message and correct any errors."
+msgstr "Kontrollera felmeddelandet och rätta till felen."
+
+#: Controller/InstallerController.php:141
+msgid "One or more errors happened. Please check them out."
+msgstr "Ett eller flera fel uppstod. Kolla igenom dem."
+
+#: Controller/InstallerController.php:158
+msgid "Installation setup complete!"
+msgstr "Installationen färdig!"
+
+#: Controller/InstallerController.php:250
+msgid "Could not create the user account."
+msgstr "Det gick inte att skapa användarkontot."
+
+#: Controller/InstallerController.php:283
+msgid "Dropping of database tables failed with the following error: "
+msgstr "Följande fel uppstod när databas-tabellerna skulle raderas: "
+
+#: Controller/InstallerController.php:287
+msgid "Database tables dropped."
+msgstr "Databastabeller raderade."
+
+#: Controller/InstallerController.php:323
+msgid "Creation of database tables failed with the following error: "
+msgstr "Följande fel uppstod när databastabellerna skulle skapas: "
+
+#: Controller/InstallerController.php:327
+msgid "Database tables created."
+msgstr "Databastabeller skapade."
+
+#: Controller/InstallerController.php:347
+msgid "No database username (__DB_USERNAME__) to replace in"
+msgstr "Det finns inget databas-användarnamn (__DB_USERNAME__) att ersätta i "
+
+#: Controller/InstallerController.php:353
+msgid "No database password (__DB_PASSWORD__) to replace in"
+msgstr "Det finns inget databas-lösenord (__DB_PASSWORD__) att ersätta i "
+
+#: Controller/InstallerController.php:359
+msgid "No database name (__DB_DATABASENAME__) to replace in"
+msgstr "Det finns inget databasnamn (__DB_DATABASENAME__) att ersätta i "
+
+#: Controller/InstallerController.php:365
+msgid "No database encoding (__DB_ENCODING__) to replace in"
+msgstr "Det finns ingen databas-teckenkodning (__DB_ENCODING__) att ersätta i "
+
+#: Controller/InstallerController.php:371
+msgid "No database encoding (__DB_TIMEZONE__) to replace in"
+msgstr ""
+
+#: Controller/InstallerController.php:378
+msgid "Database connection details stored in"
+msgstr ""
+
+#: Controller/InstallerController.php:382
+msgid "Unable to store database connection details in"
+msgstr ""
+
+#: Controller/InstallerController.php:404
+msgid "No Security.salt placeholder to replace in"
+msgstr ""
+
+#: Controller/InstallerController.php:411
+msgid "Updated Security.salt value in"
+msgstr ""
+
+#: Controller/InstallerController.php:415
+msgid "Unable to update Security.salt value in"
+msgstr ""
+
+#: Controller/InstallerController.php:438
+msgid "Folder permissions already set for path"
+msgstr ""
+
+#: Controller/InstallerController.php:448
+msgid "Permissions set on"
+msgstr ""
+
+#: Controller/InstallerController.php:455
+msgid "Failed to set permissions on"
+msgstr ""
+
+#: Controller/InstallerController.php:516
+msgid "Stashed away old app.php file to"
+msgstr ""
+
+#: Controller/InstallerController.php:522
+msgid "Created `config/app.php` file"
+msgstr ""
+
+#: Controller/SimplicitySettingsController.php:54
+msgid "Your changes were saved."
+msgstr ""
+
+#: Controller/SimplicitySettingsController.php:104
+msgid "Default language changed to "
+msgstr ""
+
+#: Controller/UsersController.php:67
+msgid "You have already logged in."
+msgstr ""
+
+#: Controller/UsersController.php:82
+msgid "Invalid username or password, try again"
+msgstr ""
+
+#: Controller/UsersController.php:117
+msgid "The user has been created."
+msgstr ""
+
+#: Controller/UsersController.php:122
+msgid "Unable to add the user."
+msgstr ""
+
+#: Model/Table/UsersTable.php:26
+msgid "A username is required"
+msgstr ""
+
+#: Model/Table/UsersTable.php:27
+msgid "A password is required"
+msgstr ""
+
+#: Model/Table/UsersTable.php:28
+msgid "A role is required"
+msgstr ""
+
+#: Model/Table/UsersTable.php:31
+msgid "Please enter a valid role"
+msgstr ""
+
+#: Template/Categories/add_new_language.ctp:9
+msgid "Translate Page"
+msgstr "Översätt sidan"
+
+#: Template/Categories/add_new_language.ctp:15
+#: Template/EditablePages/edit.ctp:60
+msgid "This page is available in the following languages"
+msgstr "Sidan finns tillgänglig på följande språk"
+
+#: Template/Categories/add_new_language.ctp:23
+#: Template/EditablePages/edit.ctp:68
+msgid "This page is missing in the following languages:"
+msgstr "Sidan saknar översättning till följande språk:"
+
+#: Template/Categories/add_new_language.ctp:24
+#: Template/EditablePages/edit.ctp:69
+msgid "To create the page for a new language; Select a language below, edit and save. This will be saved as a new page."
+msgstr "För att översätta sidan till ett nytt språk; Välje ett språk nedan, redigera och spara. Sidan sparas som en ny sida."
+
+#: Template/Categories/add_new_language.ctp:37
+#: Template/Categories/create_from_url.ctp:36
+msgid "The page will be created in the selected language"
+msgstr "Sidan kommer att skapas i det valda språket"
+
+#: Template/Categories/add_new_language.ctp:38
+#: Template/Categories/create_from_url.ctp:37
+msgid "Select a language.."
+msgstr "Välj ett språk.."
+
+#: Template/Categories/add_new_language.ctp:46
+#: Template/Categories/create_from_url.ctp:45
+#: Template/Categories/edit.ctp:54
+#: Template/EditablePages/edit.ctp:106
+msgid "The url title is visible in the browsers address bar."
+msgstr "Url-titeln syns i browserns adress-fält."
+
+#: Template/Categories/add_new_language.ctp:51
+#: Template/Categories/create_from_url.ctp:48
+#: Template/Categories/edit.ctp:57
+msgid "You cannot change the Url Title of the starting page. It must always have the name \"home\". However, you can change the Title, visible in the menus."
+msgstr "Du kan inte ändra Url Titel för startsidan, den måste alltid vara \"home\". Du kan däremot ändra Titeln, som är det som visas i menyerna."
+
+#: Template/Categories/add_new_language.ctp:67
+#: Template/Categories/create_from_url.ctp:60
+#: Template/Categories/edit.ctp:72
+#: Template/EditablePages/edit.ctp:115
+msgid "The title is visible in the menus."
+msgstr "Titeln är synlig i menyerna."
+
+#: Template/Categories/add_new_language.ctp:76
+#: Template/Categories/create_from_url.ctp:91
+#: Template/Categories/edit.ctp:110
+#: Template/EditablePages/edit.ctp:118
+msgid "Save Page"
+msgstr "Spara sidan"
+
+#: Template/Categories/contact.ctp:17
+msgid "You are not authorized to access that location."
+msgstr "Du har inte tillåtelse att se den sidan."
+
+#: Template/Categories/contact.ctp:19
+msgid "Hamsters do eat cakes."
+msgstr "Hamstrar äter kakor."
+
+#: Template/Categories/contact.ctp:29
+msgid "Name"
+msgstr "Namn"
+
+#: Template/Categories/contact.ctp:30
+msgid "Please fill in your name"
+msgstr "Fyll i ditt namn"
+
+#: Template/Categories/contact.ctp:32
+msgid "Email"
+msgstr "Email"
+
+#: Template/Categories/contact.ctp:33
+msgid "This must be a valid email address"
+msgstr "Det måste vara en fungerande email-adress"
+
+#: Template/Categories/contact.ctp:35
+msgid "Message"
+msgstr "Meddelande"
+
+#: Template/Categories/contact.ctp:42
+msgid "Submit"
+msgstr "Skicka"
+
+#: Template/Categories/create_from_url.ctp:9
+#: Template/EditablePages/ask_to_create.ctp:10
+msgid "Create Page"
+msgstr "Skapa sida"
+
+#: Template/Categories/create_from_url.ctp:21
+msgid "When creating this page, the following parent pages will be created if they don't already exist"
+msgstr "När du skapar denna sidan så kommer följande förälder-sidor också att skapas ifall de inte redan finns"
+
+#: Template/Categories/create_from_url.ctp:68
+#: Template/Categories/edit.ctp:81
+msgid "If you hide the page, it is not shown in the visitor's menu. You can still find the page in the administrators menu."
+msgstr "Om du gömmer sidan så visas den inte i menyerna för besökare. Som inloggad administratör kommer sidan fortfarande att synas."
+
+#: Template/Categories/create_from_url.ctp:69
+#: Template/Categories/edit.ctp:82
+msgid "Note that hiding/showing a page hide/show the page in every language."
+msgstr "Observera att gömma/visa en sida slår igenom på samtliga språk."
+
+#: Template/Categories/create_from_url.ctp:74
+#: Template/Categories/edit.ctp:88
+msgid "Show this page in the menus"
+msgstr "Visa sidan i menyerna"
+
+#: Template/Categories/create_from_url.ctp:80
+#: Template/Categories/edit.ctp:95
+msgid "Used in the menus to decide in which order the pages comes. Leave at 1 if the order is not important."
+msgstr "Används för att avgöra i vilken ordning sidorna visas i menyerna. Låt vara 1 ifall ordningen kvittar."
+
+#: Template/Categories/edit.ctp:13;33
+#: Template/Element/AuthorControl.ctp:33
+msgid "Translate page"
+msgstr "Översätt sida"
+
+#: Template/Categories/edit.ctp:25
+#: Template/EditablePages/edit.ctp:21
+msgid "Edit Page"
+msgstr "Redigera sida"
+
+#: Template/Categories/edit.ctp:28
+msgid "The page language is in"
+msgstr "Sidans språk är"
+
+#: Template/Categories/edit.ctp:33
+msgid "To translate the page into another language, click the button"
+msgstr "För att översätta sidan till ett annat språk, klicka på knappen"
+
+#: Template/Categories/edit.ctp:39
+msgid "This page is translated into all available languages."
+msgstr "Sidan är översatt till alla språk."
+
+#: Template/Categories/edit.ctp:39
+msgid "To add another language, go to administrators overview pages."
+msgstr "Gå till administratörssidan för att lägga till ytterligare språk."
+
+#: Template/EditablePages/ask_to_create.ctp:5
+msgid "Page does not exist"
+msgstr "Sidan finns inte"
+
+#: Template/EditablePages/ask_to_create.ctp:6
+msgid "To create this page, click the button."
+msgstr "För att skapa sidan, klicka på knappen."
+
+#: Template/EditablePages/default.ctp:27
+#: Template/Element/AuthorControl.ctp:5
+msgid "Edit page"
+msgstr "Redigera sida"
+
+#: Template/EditablePages/default.ctp:39
+#: Template/Element/AuthorControl.ctp:17
+msgid "Erase page"
+msgstr "Radera sida"
+
+#: Template/EditablePages/default.ctp:48
+#: Template/Element/AuthorControl.ctp:27
+msgid "Are you sure?"
+msgstr "Är du säker?"
+
+#: Template/EditablePages/edit.ctp:27
+msgid "Please translate this page from"
+msgstr "Översätt sidan från"
+
+#: Template/EditablePages/edit.ctp:31
+msgid "The page's current language is"
+msgstr "Sidans språk är"
+
+#: Template/EditablePages/edit.ctp:42
+msgid "This page does not yet exist in"
+msgstr "Sidan finns ännu inte i"
+
+#: Template/EditablePages/edit.ctp:89
+msgid "Select to create a new page in the choosen language..."
+msgstr "Välj för att skapa sidan i det valda språket..."
+
+#: Template/EditablePages/edit.ctp:103
+msgid "This page is available in every language for this site. To add a new language to the site, please click \"Add new language\" above."
+msgstr "Sidan är översatt till alla språk. Klicka på \"Lägg till språk\" för att lägga till ytterligare språk."
+
+#: Template/EditablePages/edit.ctp:109
+msgid "You cannot change the Url Title of the starting page. It must always have the name \"home\". You can always change the Title, which is the part visible in menus."
+msgstr ""
+
+#: Template/Element/LayoutSelector.ctp:6
+msgid "Normally you can leave the layout at it's default. If you have defined several layout files you can choose between them here. Explanation of the default layouts:"
+msgstr ""
+
+#: Template/Element/LayoutSelector.ctp:7
+msgid "Explanation of the default layouts:"
+msgstr ""
+
+#: Template/Element/LayoutSelector.ctp:9
+msgid "simplicity - The standard layout in Simplicity, based on Zurb Foundation."
+msgstr ""
+
+#: Template/Element/LayoutSelector.ctp:10
+msgid "ajax - Used for ajax views; It outputs content with no additional formatting."
+msgstr ""
+
+#: Template/Element/LayoutSelector.ctp:16
+msgid "If you add your own layout file it will be available for selection here."
+msgstr ""
+
+#: Template/Element/LayoutSelector.ctp:27
+msgid "Layout"
+msgstr ""
+
+#: Template/Layout/error.ctp:35
+msgid "Error"
+msgstr ""
+
+#: Template/Layout/error.ctp:43
+msgid "Back"
+msgstr ""
+
+#: Template/Layout/mscr_home.ctp:18
+#: Template/Layout/simplicity.ctp:21
+#: Template/Users/add.ctp:21
+msgid "Administrator"
+msgstr ""
+
+#: Template/Layout/mscr_home.ctp:136
+msgid "Toggle menu"
+msgstr ""
+
+#: Template/Layout/mscr_home.ctp:139
+#: Template/Layout/simplicity.ctp:104
+msgid "Select your language"
+msgstr ""
+
+#: Template/Layout/simplicity.ctp:32
+msgid "Local Content"
+msgstr ""
+
+#: Template/Layout/simplicity.ctp:119
+msgid "Logout"
+msgstr ""
+
+#: Template/Layout/simplicity.ctp:123
+#: Template/Users/login.ctp:15
+msgid "Login"
+msgstr ""
+
+#: Template/SimplicitySettings/index.ctp:6
+msgid "Simplicity Settings"
+msgstr ""
+
+#: Template/SimplicitySettings/language.ctp:8
+msgid "When you add a new language, you will be redirected to the home page with the chosen language selected, where you will be asked to translate it."
+msgstr ""
+
+#: Template/SimplicitySettings/language.ctp:9
+msgid "After you translate and save the page, the language will be available for selection whenever you edit a page."
+msgstr ""
+
+#: Template/SimplicitySettings/language.ctp:16
+msgid "The website already has pages in the following languages"
+msgstr ""
+
+#: Template/SimplicitySettings/language.ctp:36
+msgid "Select to add"
+msgstr ""
+
+#: Template/SimplicitySettings/language.ctp:39
+msgid "Add language"
+msgstr ""
+
+#: Template/Users/add.ctp:7;12
+msgid "Add new user"
+msgstr ""
+
+#: Template/Users/add.ctp:22
+msgid "Author"
+msgstr ""
+
+#: Template/Users/add.ctp:26
+msgid "Create user"
+msgstr ""
+
+#: Template/Users/login.ctp:11
+msgid "Please enter your username and password"
+msgstr ""
+

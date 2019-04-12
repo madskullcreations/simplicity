@@ -9,15 +9,14 @@ use App\Controller\CategoriesController;
 
 <?php
 
-// NOTE: default.po are used by default! If you need to use a specific file, like cake.po, you must specify that!
+// NOTE: default.po are used by default. If you need to use a specific file, like cake.po, you must specify that!
 // This also allow you to have a file specific for Simplicity's own texts.
 //   <-TODO: This is the way to go. Stuff not yet translated go into simplicity.po, 
 //           and you use the _d("simplicity", "simple text to translate.");
 // 
-echo "smurfen";
-echo '<p>'.__d("simplicity", "You are not authorized to access that location.").'</p>'; // Looks for default.po.
-echo '<p>'.__d("cake", "You are not authorized to access that location.").'</p>'; // Looks for cake.po
-echo '<p>'.__d("simplicity", "Hamsters do eat cakes.").'</p>'; // Looks for simplicity.po
+// echo '<p>'.__d("simplicity", "You are not authorized to access that location.").'</p>'; // Looks for default.po.
+// echo '<p>'.__d("cake", "You are not authorized to access that location.").'</p>'; // Looks for cake.po
+// echo '<p>'.__d("simplicity", "Hamsters do eat cakes.").'</p>'; // Looks for simplicity.po
 
 // Using zurbs data-abide.
 echo $this->Form->create(null, ['id' => 'contactForm', 'data-abide' => '', 'novalidate' => true]);
