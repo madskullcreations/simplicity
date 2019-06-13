@@ -93,13 +93,12 @@ class CategoriesController extends AppController
       // The client side (the browser) check the fields as well, with the zurb abide form validation.
       // This is the server side validation, to assure no one tries to hack us.
       $validator = new Validator();
-      $validator->add('name', 'length', [
-        'rule' => ['minLength', 1],
-        // 'message' => __d("simplicity", 'Please fill in your name')
-      ])
+      $validator
+      ->notEmpty('name', __d("simplicity", 'Please fill in your name'))
+      ->notEmpty('email', __d("simplicity", 'Please fill in your email'))
       ->add('email', 'format', [
         'rule' => 'email',
-        // 'message' => __d("simplicity", 'This must be a valid email address')
+        'message' => __d("simplicity", 'This must be a valid email address')
       ])
       ->add('message', 'length', [
         'rule' => ['minLength', 15],

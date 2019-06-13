@@ -182,6 +182,8 @@ class AppController extends Controller
           $sub = array();
           $sub[] = $this->Menu->CreateMenuElement(__d("simplicity", "Add new language"), 1, 'simplicity_settings/language');
           $sub[] = $this->Menu->CreateMenuElement(__d("simplicity", "Various settings"), 1, 'simplicity_settings/various');
+          $sub[] = $this->Menu->CreateMenuElement(__d("simplicity", "Users"), 1, 'users/index');
+          
           $sideMenuTreeAdmin[] = $this->Menu->CreateMenuElement(__d("simplicity", "Overview"), 0, 'simplicity_settings', 'Categories', $sub);
                     
           $this->set('sideMenuTreeAdmin', $sideMenuTreeAdmin);

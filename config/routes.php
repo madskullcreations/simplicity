@@ -71,6 +71,11 @@ if($simplicity_setup_state > 1)
       $routes->connect('/users', ['controller' => 'Users', 'action' => 'index']);
       
       /**
+       * The /tinymce_templates/* is always ok, used by the TinyMCE element.
+       */
+      $routes->connect('/tinymce_templates/*', ['controller' => 'TinyMCETemplates', 'action' => 'index']);
+      
+      /**
        * The /categories/edit is reserved for editing pages.
        */
       $routes->connect('/categories/edit/*', ['controller' => 'Categories', 'action' => 'edit']);

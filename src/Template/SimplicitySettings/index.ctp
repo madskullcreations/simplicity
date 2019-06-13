@@ -23,6 +23,15 @@
 		],
 		[
 				'class' => 'button top-margin',
+		]);    
+	echo $this->Html->link(
+		__d("simplicity", 'Users'),
+		[
+				'controller' => 'Users',
+				'action' => 'index',
+		],
+		[
+				'class' => 'button top-margin',
 		]);
 ?>
 </div>

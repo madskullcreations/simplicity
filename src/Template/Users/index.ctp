@@ -5,15 +5,21 @@
 ?>
 
 <div class="users index">
+  <?= $this->Html->link(
+		__d("simplicity", 'Add user account'),
+		[
+				'controller' => 'Users',
+				'action' => 'add',
+		],
+		[
+				'class' => 'button float-right top-margin',
+		]);
+  ?>
   <?= $this->Flash->render() ?>
-  <h3>User listing</h3>
+  <h3><?= __d("simplicity", "User listing") ?></h3>
   <?php
     foreach($users as $user)
     {
-      // $user contains the hashed password. (Not anymore since I specify which fields I want.)
-      
-      // ..but toArray will remove it since it Entity User specifies this.
-      // $slork = $user->toArray();
       // debug($user);
       // debug($slork);
       

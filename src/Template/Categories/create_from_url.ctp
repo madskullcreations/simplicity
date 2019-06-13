@@ -3,7 +3,7 @@
  * 
  */
 
-echo $this->TinyMCE->GetScript();
+echo $this->element('TinyMCE');
 ?>
 
 <h1><?= __d("simplicity", "Create Page") ?></h1>

@@ -11,7 +11,7 @@ use App\Controller\CategoriesController;
 
 // NOTE: default.po are used by default. If you need to use a specific file, like cake.po, you must specify that!
 // This also allow you to have a file specific for Simplicity's own texts.
-//   <-TODO: This is the way to go. Stuff not yet translated go into simplicity.po, 
+//   <-This is the way to go. Stuff not yet translated go into simplicity.po, 
 //           and you use the _d("simplicity", "simple text to translate.");
 // 
 // echo '<p>'.__d("simplicity", "You are not authorized to access that location.").'</p>'; // Looks for default.po.
@@ -37,7 +37,6 @@ echo $this->Form->create(null, ['id' => 'contactForm', 'data-abide' => '', 'nova
 
 <?php
 // TODO: recaptcha här!
-// TODO: Översätt fälten till svenska, läs vidare om det!
 
 echo $this->Form->submit(__d("simplicity", 'Submit'), ['class' => 'button top-margin']);
 echo $this->Form->end();

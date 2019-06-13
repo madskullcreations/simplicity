@@ -223,31 +223,31 @@ msgstr ""
 
 #: Controller/UsersController.php:67
 msgid "You have already logged in."
-msgstr ""
+msgstr "Du är redan inloggad."
 
 #: Controller/UsersController.php:82
 msgid "Invalid username or password, try again"
-msgstr ""
+msgstr "Fel användarnamn eller lösenord, försök igen"
 
 #: Controller/UsersController.php:117
 msgid "The user has been created."
-msgstr ""
+msgstr "Användaren har skapats."
 
 #: Controller/UsersController.php:122
 msgid "Unable to add the user."
-msgstr ""
+msgstr "Kunde inte skapa användare."
 
 #: Model/Table/UsersTable.php:26
 msgid "A username is required"
-msgstr ""
+msgstr "Ett användarnamn krävs"
 
 #: Model/Table/UsersTable.php:27
 msgid "A password is required"
-msgstr ""
+msgstr "Ett lösenord krävs"
 
 #: Model/Table/UsersTable.php:28
 msgid "A role is required"
-msgstr ""
+msgstr "En roll krävs"
 
 #: Model/Table/UsersTable.php:31
 msgid "Please enter a valid role"
@@ -469,47 +469,43 @@ msgstr ""
 
 #: Template/Layout/error.ctp:35
 msgid "Error"
-msgstr ""
+msgstr "Fel"
 
 #: Template/Layout/error.ctp:43
 msgid "Back"
-msgstr ""
+msgstr "Tillbaka"
 
 #: Template/Layout/mscr_home.ctp:18
 #: Template/Layout/simplicity.ctp:21
 #: Template/Users/add.ctp:21
 msgid "Administrator"
-msgstr ""
+msgstr "Administratör"
 
 #: Template/Layout/mscr_home.ctp:136
 msgid "Toggle menu"
-msgstr ""
+msgstr "Växla meny"
 
 #: Template/Layout/mscr_home.ctp:139
 #: Template/Layout/simplicity.ctp:104
 msgid "Select your language"
-msgstr ""
+msgstr "Välj ditt språk"
 
 #: Template/Layout/simplicity.ctp:32
 msgid "Local Content"
-msgstr ""
+msgstr "Lokalt"
 
 #: Template/Layout/simplicity.ctp:119
 msgid "Logout"
-msgstr ""
+msgstr "Logga ut"
 
 #: Template/Layout/simplicity.ctp:123
 #: Template/Users/login.ctp:15
 msgid "Login"
-msgstr ""
-
-#: Template/Layout/mscr_home.ctp:108
-msgid "Toggle menu"
-msgstr ""
+msgstr "Logga in"
 
 #: Template/SimplicitySettings/index.ctp:6
 msgid "Simplicity Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #: Template/SimplicitySettings/language.ctp:8
 msgid "When you add a new language, you will be redirected to the home page with the chosen language selected, where you will be asked to translate it."
@@ -537,49 +533,49 @@ msgstr "Välj standardspråk"
 
 #: Template/SimplicitySettings/various.ctp:31
 msgid "When a user visit the site for the first time, this is the language he or she will see."
-msgstr ""
+msgstr "Detta är standardspråket som visas när en besökare kommer till webbsidan första gången."
 
 #: Template/SimplicitySettings/various.ctp:36
 msgid "Set your website's title."
-msgstr ""
+msgstr "Ange webbplatsens titel"
 
 #: Template/SimplicitySettings/various.ctp:39
 msgid "The title are shown in the webpage header section and in the browsers tab or window title. Do not use any html tags here."
-msgstr ""
+msgstr "Titeln visas på webbsidans huvudrubrik samt i browserns flik eller fönstertitel. Använd endast ren text."
 
 #: Template/SimplicitySettings/various.ctp:44
 msgid "Set your website's description."
-msgstr ""
+msgstr "Ange webbplatsens beskrivning i en kort kärnfull fras"
 
 #: Template/SimplicitySettings/various.ctp:47
 msgid "The description are shown below the site title."
-msgstr ""
+msgstr "Beskrivningen visas under webbplatsens titel."
 
 #: Template/SimplicitySettings/various.ctp:55
 msgid "Set default layout"
-msgstr ""
+msgstr "Ange standard sidlayout"
 
 #: Template/SimplicitySettings/various.ctp:57
 msgid "This will be the default layout when you create a new page. It will not change the layout for already created pages."
-msgstr ""
+msgstr "Detta är standard sidlayout när du skapar en ny sida. Det ändrar inte vald sidlayout för sidor som redan skapats."
 
 #: Template/SimplicitySettings/various.ctp:66
 msgid "Save changes"
-msgstr ""
+msgstr "Spara ändringar"
 
 #: Template/Users/add.ctp:7;12
 msgid "Add new user"
-msgstr ""
+msgstr "Lägg till ny användare"
 
 #: Template/Users/add.ctp:22
 msgid "Author"
-msgstr ""
+msgstr "Författare"
 
 #: Template/Users/add.ctp:26
 msgid "Create user"
-msgstr ""
+msgstr "Skapa användare"
 
 #: Template/Users/login.ctp:11
 msgid "Please enter your username and password"
-msgstr ""
+msgstr "Ange användarnamn och lösenord"
 

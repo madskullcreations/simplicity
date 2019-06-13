@@ -11,12 +11,13 @@
 ?>
 <legend><?= __d("simplicity", "Add new user") ?></legend>
 <?php
-    echo $this->Form->control('username');
-    echo $this->Form->control('password');
+    echo $this->Form->control('username', ['label' => __d("simplicity", "Username")]);
+    echo $this->Form->control('password', ['label' => __d("simplicity", "Password")]);
     
     echo $this->Form->control(
       'role', 
       [
+        'label' => __d("simplicity", "Role"),
         'options' => [
           'admin' => __d("simplicity", 'Administrator'), 
           'author' => __d("simplicity", 'Author')]
